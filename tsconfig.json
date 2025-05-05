@@ -6,6 +6,7 @@
     "types": ["astro/client"],
     "paths": {
       "@lib/*": ["lib/*"],
+      "@styles/*": ["styles/*"],
       "@utils/*": ["utils/*"],
       "@components/*": ["components/*"],
       "@layouts/*": ["layouts/*"],
