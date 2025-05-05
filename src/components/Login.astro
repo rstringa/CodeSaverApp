@@ -1,0 +1,78 @@
+---
+import LayoutBase from "@layouts/LayoutBase.astro";
+const title = "Login in";
+
+// Get the error message from the query parameter
+const error = Astro.url.searchParams.get("error");
+---
+
+
+  <main class="flex-1 flex flex-col gap-4 items-center p-4 justify-center">
+    <section class="w-full max-w-md">
+      <h1
+        class="font-semibold text-2xl dark:text-zinc-100 text-zinc-900 w-full mb-1"
+      >
+        {title}
+      </h1>
+      <p class="text-zinc-500 dark:text-zinc-400 text-sm mb-8 w-full">
+        New to demo? <a
+          href="/register"
+          class="dark:text-blue-400 text-blue-600 underline underline-offset-2 font-medium"
+          >Create an account</a
+        >
+      </p>
+
+      <!-- Display the error message if it exists -->
+      {error && (
+        <div class="bg-red-100 text-red-700 p-3 rounded-md mb-4">
+          {error}
+        </div>
+      )}
+
+      <form
+        action="/api/auth/login"
+        method="post"
+        enctype="application/x-www-form-urlencoded"
+        class="grid grid-cols-1 gap-3 w-full"
+      >
+        <div class="grid grid-cols-1 gap-2">
+          <label
+            for="email"
+            class="font-medium dark:text-zinc-300 text-zinc-900 text-sm"
+            >Email</label
+          >
+          <input
+            id="email"
+            type="email"
+            name="email"
+            class="rounded-md py-1 px-3 dark:bg-zinc-800 dark:text-zinc-300 border bg-zinc-50 border-zinc-300 dark:border-zinc-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:bg-zinc-900 focus:bg-white focus:ring-opacity-60"
+          />
+        </div>
+        <label
+          for="password"
+          class="font-medium dark:text-zinc-300 text-zinc-900 text-sm"
+          >Password</label
+        >
+        <input
+          id="password"
+          type="password"
+          name="password"
+          class="rounded-md py-1 px-3 dark:bg-zinc-800 dark:text-zinc-300 border bg-zinc-50 border-zinc-300 dark:border-zinc-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:bg-zinc-900 focus:bg-white focus:ring-opacity-60"
+        />
+        <button
+          type="submit"
+          class="dark:bg-zinc-100 bg-zinc-900 border-zinc-900 py-1.5 border dark:border-zinc-100 rounded-md mt-2 dark:text-zinc-900 text-zinc-100 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-zinc-900 disabled:opacity-50 disabled:cursor-not-allowed"
+          >Sign In</button
+        >
+      </form>
+      <hr class="h-0 border-t mt-8 dark:border-zinc-600 border-zinc-300" />
+      <p class="-mt-2.5 text-xs text-center dark:text-zinc-400 text-zinc-500">
+        <span class="dark:bg-zinc-900 bg-zinc-50 px-4">Or with</span>
+      </p>
+      <form action="/api/auth/login" method="POST" enctype="application/x-www-form-urlencoded">
+        <input type="hidden" name="provider" value="google" />
+        <button type="submit">Sign In with Google</button>
+      </form>
+    </section>
+  </main>
+

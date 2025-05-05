@@ -1,0 +1,131 @@
+---
+import { supabase } from "@lib/supabaseClient";
+const { data: userSession } = await supabase.auth.getSession();
+const userSessionId = userSession?.session?.user.id;
+
+let categorias:any = [];
+if (userSessionId) {
+  const { data, error } = await supabase
+    .from("categorias")
+    .select("*")
+    .eq("usuario_id", userSessionId);
+
+  if (error) console.error(error);
+  categorias = data;
+}
+---
+
+<dialog id="new-snippet-modal" 
+class="open:flex open:items-center open:justify-center open:m-auto 
+open:rounded-0 shadow-lg p-0 w-[450px] max-w-[90%] bg-transparent backdrop:bg-slate-900/50 backdrop:backdrop-blur-[2px]">
+  
+  <div class="_inner relative flex-col bg-slate-800 border border-green-900  p-8 w-full overflow-hidden rounded-2xl">
+  <h2 class="text-2xl mb-4 text-slate-100">Crear nuevo snippet</h2>
+
+<form
+  action="/api/snippets"
+  method="POST"
+  class="flex flex-col gap-2 rounded-lg bg-slate-600/10 p-6 text-sm transition-all transition-discrete duration-300"
+>
+  <label for="titulo" class="font-semibold text-slate-400">Titulo: </label>
+  <input
+    type="text"
+    id="titulo"
+    name="titulo"
+    required
+    class="rounded-lg bg-slate-800 p-3 mb-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+  />
+
+  <label for="categoria" class="font-semibold text-slate-400">
+    Categoria:
+  </label>
+  <select
+    id="categoria"
+    name="categoria"
+    class="rounded-lg bg-slate-800 p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+  >
+   
+    {
+      categorias?.map((categoria) => (
+        <option value={categoria.id}>{categoria.nombre=="Base" ? "Todas" : categoria.nombre}</option>
+      ))
+    }
+  </select>
+
+  <label for="contenido" class="font-semibold text-slate-400">
+    Contenido:
+  </label>
+  <textarea
+    id="contenido"
+    name="contenido"
+    required
+    class="rounded-lg bg-slate-800 p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 
+    mb-4 min-h-40"
+  ></textarea>
+
+  <button
+    type="submit"
+    class="rounded-lg text-green-200 bg-green-800 border-1 border-slate-600/10 py-3 px-4 text-md text-center
+        hover:bg-blue-500/5  hover:border-slate-700 mb-6 cursor-pointer"
+  >
+    Crear Snippet
+  </button>
+</form>
+  </div>
+  </div>
+  </dialog>
+
+
+
+<script>
+const form = document.querySelector("form");
+const newSnippetLink = document.querySelector('._new_snippet');
+const newSnippetModal = document.getElementById('new-snippet-modal');
+const closeModalNewSnippet = newSnippetModal?.querySelector('._close');
+const createModalNewSnippet = newSnippetModal?.querySelector('._create');
+const messageModalNewSnippet = newSnippetModal?.querySelector('._message');
+
+    newSnippetLink?.addEventListener('click', function (e) {
+        e.preventDefault();
+        (newSnippetModal as HTMLDialogElement).showModal();           
+    });
+
+closeModalNewSnippet?.addEventListener('click', function (e) {
+    e.preventDefault();
+    (newSnippetModal as HTMLDialogElement).close();
+});
+newSnippetModal?.addEventListener('click', function (e) {
+  if (e.target === newSnippetModal) {
+    (newSnippetModal as HTMLDialogElement).close();
+    }
+});
+createModalNewSnippet?.addEventListener('click', function (e) {
+    e.preventDefault();
+    const snippetName = newSnippetModal?.querySelector('._name');
+    if (!snippetName) {
+        console.error("No se encontró el input con el nombre de la categoría.");
+        return;
+    }
+    //saveNewCategory(snippetName);
+});
+
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+
+    const res = await fetch("/api/snippets", {
+      method: "POST",
+      body: formData,
+    });
+
+    const result = await res.json();
+    // Manage errors
+    if (result.error && messageModalNewSnippet) {
+      messageModalNewSnippet.textContent = result.error;
+      return;
+    }
+    console.log(result);
+    window.location.href = "/";
+  });
+</script>

@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@layer utilities {
+    .scrollbar-custom {
+      /* ancho */
+      &::-webkit-scrollbar { @apply w-2 rounded }
+      /* thumb */
+      &::-webkit-scrollbar-thumb { @apply bg-slate-700 rounded; }
+      /* track */
+      &::-webkit-scrollbar-track { @apply bg-slate-800  rounded; }
+    }
+  }
