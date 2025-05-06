@@ -17,58 +17,60 @@ if (userSessionId) {
 
 <dialog id="new-snippet-modal" 
 class="open:flex open:items-center open:justify-center open:m-auto 
-open:rounded-0 shadow-lg p-0 w-[450px] max-w-[90%] bg-transparent backdrop:bg-slate-900/50 backdrop:backdrop-blur-[2px]">
+open:rounded-0 shadow-lg p-0 w-[600px] max-w-[90%] bg-transparent backdrop:bg-slate-900/50 backdrop:backdrop-blur-[2px]">
   
-  <div class="_inner relative flex-col bg-slate-800 border border-green-900  p-8 w-full overflow-hidden rounded-2xl">
-  <h2 class="text-2xl mb-4 text-slate-100">Crear nuevo snippet</h2>
+  <div class="_inner relative flex-col bg-[#1c283e] border border-slate-900 p-6 px-8 w-full overflow-hidden rounded">
+  <h2 class="text-2xl mb-6 text-slate-100">Crear nuevo snippet</h2>
 
 <form
   action="/api/snippets"
   method="POST"
-  class="flex flex-col gap-2 rounded-lg bg-slate-600/10 p-6 text-sm transition-all transition-discrete duration-300"
+  class="flex flex-col gap-2 rounded transition-all transition-discrete duration-300"
 >
-  <label for="titulo" class="font-semibold text-slate-400">Titulo: </label>
+  <label for="titulo" class="font-regular text-slate-300 text-md">Título: </label>
   <input
     type="text"
     id="titulo"
     name="titulo"
     required
-    class="rounded-lg bg-slate-800 p-3 mb-4 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+    class="rounded bg-trasnparent p-3 mb-4 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-green-800"
   />
 
-  <label for="categoria" class="font-semibold text-slate-400">
-    Categoria:
+  <label for="categoria" class="font-regular text-slate-300 text-md">
+    Categoría:
   </label>
   <select
     id="categoria"
     name="categoria"
-    class="rounded-lg bg-slate-800 p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+    class="rounded bg-trasnparent p-3 mb-4 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-green-800"
   >
-   
+
     {
       categorias?.map((categoria) => (
-        <option value={categoria.id}>{categoria.nombre=="Base" ? "Todas" : categoria.nombre}</option>
+        <option 
+        class="bg-slate-800 text-white"
+        value={categoria.id}>{categoria.nombre=="Base" ? "Todas" : categoria.nombre}</option>
       ))
     }
   </select>
 
-  <label for="contenido" class="font-semibold text-slate-400">
-    Contenido:
+  <label for="contenido" class="font-regular text-slate-300 text-md">
+    Código:
   </label>
   <textarea
     id="contenido"
     name="contenido"
     required
-    class="rounded-lg bg-slate-800 p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 
-    mb-4 min-h-40"
+    class="
+    rounded bg-trasnparent p-3 mb-4 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-green-800 
+    min-h-40"
   ></textarea>
 
   <button
     type="submit"
-    class="rounded-lg text-green-200 bg-green-800 border-1 border-slate-600/10 py-3 px-4 text-md text-center
-        hover:bg-blue-500/5  hover:border-slate-700 mb-6 cursor-pointer"
+    class="_btn-featured bg-green-600/50! p-3! text-green-100!"
   >
-    Crear Snippet
+    Guardar Snippet
   </button>
 </form>
   </div>

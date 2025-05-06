@@ -4,39 +4,42 @@ import { userLoggedIn } from "@utils/userLoggedIn";
 const userLogged = await userLoggedIn();
 ---
 
-<header class="_header flex justify-between p-6 m-auto border-b-1 border-slate-600">
-  <div class="_container flex justify-between w-full m-auto">
+<header class="_header flex justify-between p-6 py-3 m-auto border-b-1 border-slate-700">
+  <div class="_container flex justify-between items-center w-full m-auto">
     <div class="_logo">
-      <a href="/">
+      <a href="/" class="flex items-center gap-2">
         <Icon name="home" class="w-7 h-7" />
+        <span class="text-slate-400">Code<b>Saver</b>App</span>
       </a>
     </div>
-    <nav class="_menu">
+    <nav class="_menu flex items-center justify-center">
 
       
       {userLogged ? (
+        <p class="text-md font-regular mr-6 text-slate-400">Hola, {userLogged.email}!</p>
         <a
           href="#"
           id="btn_logout"
-          class="_logout bg-slate-600 text-white px-4 py-2 rounded-md mt-4"
+          class="_logout _btn-normal"
           onclick="handleLogout()"
         >
-          Log Out
+          Cerrar Sesión
         </a>
       ) : (
         <a
           href="/login"
           id="btn_register"
-          class="_register bg-slate-600 text-white px-4 py-2 rounded-md mt-4 mr-2"
+          class="_register _btn-normal" 
         >
-          Ingresar
+          Iniciar sesión
         </a>
+        <span class="m-3 inline-flex text-slate-400">o</span> 
         <a
           href="/register"
           id="btn_login"
-          class="_login bg-slate-600 text-white px-4 py-2 rounded-md mt-4"
+          class="_login _btn-normal"
         >
-          Nuevo usuario
+          Registrarse
         </a>
       )}
 

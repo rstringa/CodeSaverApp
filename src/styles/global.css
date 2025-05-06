@@ -1,6 +1,12 @@
 @import "tailwindcss";
 
 @layer utilities {
+  a {
+    @apply text-green-600;
+  }
+  a:hover {
+    @apply text-green-400;
+  }
     .scrollbar-custom {
       /* ancho */
       &::-webkit-scrollbar { @apply w-2 rounded }
@@ -9,4 +15,22 @@
       /* track */
       &::-webkit-scrollbar-track { @apply bg-slate-800  rounded; }
     }
-  }
+    ._btn-normal {
+      @apply border border-slate-700 text-slate-300 text-center px-6 py-2 rounded
+      flex  justify-center items-center cursor-pointer
+      ;
+    }
+    ._btn-normal:hover {
+      @apply bg-blue-500/5  border-slate-600;
+    }
+    ._btn-normal:active {
+      @apply bg-blue-500/10 border-slate-700;
+    }
+    ._btn-featured {
+      @apply border border-green-700 text-green-400 text-center px-6 py-2 rounded  
+      flex  justify-center items-center cursor-pointer
+    }
+    ._btn-featured:hover {
+      @apply bg-green-500/5  border-green-600;
+    }
+  } 

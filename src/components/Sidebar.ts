@@ -10,7 +10,9 @@ catLink.forEach(link => {
         catLink.forEach(link => link.classList.remove('_active'));
         link.classList.add('_active');
         const categoryId = (link as HTMLElement).dataset.category_id;
+        const categoryNameText = link.querySelector('span')?.textContent;
         showSnippets(categoryId);
+        showCategoryName(categoryNameText);
     });
 });
 // CLOSE ITEMS ACTIONS ON CLICK OUTSIDE
@@ -33,6 +35,14 @@ function showSnippets(categoryId) {
         snippet.classList.toggle('hidden', !isVisible);
     });
 }
+// SHOW CATEGORY NAME
+function showCategoryName(categoryNameText) {
+    const categoryName = document.querySelector('._top ._category-name ._category-text');
+    if (categoryName) {
+        categoryName.textContent = categoryNameText;
+    }
+}
+
 
 // SHOW ACTIONS (EDIT, DELETE)
 const actions = document.querySelectorAll('._actions');

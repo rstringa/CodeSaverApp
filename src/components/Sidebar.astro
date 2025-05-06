@@ -1,5 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components'
+import { userLoggedIn } from "@utils/userLoggedIn";
+const userLogged = await userLoggedIn();
 
 // Get categories from database
 import { supabase } from "@lib/supabaseClient";
@@ -16,42 +18,47 @@ if (userSessionId) {
   categorias = data;
 }
 ---
-<aside class="_sidebar w-full h-full border-r-1 border-slate-600 p-4 pt-6">
+<aside class="_sidebar w-full h-full border-r-1 border-slate-700 p-6 pt-6">
     <div class="_content m-auto">
         <a 
-        class="_new_category flex w-full items-center justify-center gap-2 rounded-lg text-green-200 border  border-slate-600 py-1 px-4 text-md text-center
-                hover:bg-blue-500/5  hover:border-slate-700 mb-6"
-        href="#" data-category_id=`0`>Crear categoría
+        class=`_new_category _btn-normal mb-6
+         ${!userLogged ? "pointer-events-none opacity-50" : "" }
+        ` 
+        href="#" data-category_id=`0`><Icon name="folderPlus" 
+        class=`w-6 h-6 mr-2 text-green-400 fill-current
+        ` /> Crear categoría
         </a>
         <h4 class="uppercase text-sm text-slate-500 mb-2">Categorias</h4> 
         <a 
-        class="_category-item _active flex w-full items-center justify-between gap-2 rounded-lg text-slate-400 bg-slate-600/10 border-1 border-slate-600/10 py-1.5 px-2 mb-2 text-md
-                    hover:bg-blue-500/5  hover:border-slate-700 hover:text-slate-300"
-        href="#" data-category_id=`0`>
-            Todas
-        </a>    
-        {
+        class=`_category-item _active _btn-normal justify-start! mb-3 px-3!
+        ${!userLogged ? "pointer-events-none opacity-50" : "" }
+        `
+        href="#" data-category_id='0'>
+        <Icon name="folderCode" class="w-5 h-5 mr-2" /> 
+            <span>Todas</span></a>     
+        { 
         categorias?.map((categoria) => (
             categoria.nombre != "Base" && (
                 <div>
                     <a 
-                    class="group _category-item  flex w-full items-center justify-between gap-2 rounded-lg text-slate-400 bg-slate-600/10 border-1 border-slate-600/10 py-1.5 px-2  mb-2 text-md
-                    
-                    hover:bg-blue-500/5  hover:border-slate-700  hover:text-slate-300
+                    class="group _category-item 
+                    _btn-normal 
+                    px-3! mb-3 
                      group-hover:inline   
                     "
                     href="#" data-category_id=`${categoria.id}`>
-                        <span class="whitespace-nowrap flex w-full max-[calc(100% - 40px)] overflow-hidden overflow-ellipsis">{categoria.nombre}</span>
+                    <Icon name="folderCode" class="w-5 h-5 mr-2 text-slate-400 fill-current" /> 
+                        <span class="flex w-full max-[calc(100% - 40px)] overflow-hidden overflow-ellipsis text-left">{categoria.nombre}</span>
                         <span class="_category-item_icons flex items-center gap-0 flex-nowrap">
                         <Icon name="arrowRight" class="w-4 h-4 " />
-                        <Icon name="more" class="_actions relative z-10 w-4 h-4 text-slate-400 hidden group-hover:inline hover:text-slate-200 focus:bg-slate-500" />
+                        <Icon name="more" class="_actions relative z-10 w-6 h-6 text-slate-400 hidden group-hover:inline hover:text-slate-200 focus:bg-slate-500" />
                         </span>
                     </a> 
-                    <div class="_category-item-actions flex flex-col items-center justify-between gap-2 hidden transition-discrete duration-300
-                    p-2 -mt-1 mb-4 bg-slate-600/10 rounded-md
+                    <div class="_category-item-actions flex items-center justify-between gap-2 hidden transition-discrete duration-300
+                    p-2 -mt-3 mb-4 bg-slate-600/10 rounded-md
                     ">
-                        <a href="#" class="_edit flex text-sm text-slate-500 hover:text-slate-400" data-category_id=`${categoria.id}`>Editar</a>
-                        <a href="#" class="_delete flex text-sm text-slate-500 hover:text-slate-400" data-category_id=`${categoria.id}`>Eliminar</a>
+                        <a href="#" class="_edit flex w-1/2 justify-center items-center text-sm text-slate-400 hover:text-slate-200" data-category_id=`${categoria.id}`>Editar</a>
+                        <a href="#" class="_delete flex w-1/2 justify-center items-center text-sm text-slate-400 hover:text-slate-200" data-category_id=`${categoria.id}`>Eliminar</a>
                     </div>
                 </div>
             )
@@ -84,16 +91,23 @@ open:rounded-0 shadow-lg p-0 w-[450px] max-w-[90%] bg-transparent backdrop:bg-sl
 </dialog>
 
  
-<style is:inline> 
-._category-item._active { 
-    //  border-color: oklch(0.48 0.13 152.08);
-     background-color: oklch(0.39 0.1 152.54 / 0.50); 
-     color: var(--color-slate-100);
-}   
-._category-item._active svg {
-    color: var(--color-slate-400); 
+<style is:inline>
+._category-item > svg{
+   flex:0 0 auto;
 }
-._category-item._active:hover ._actions:hover { 
+._category-item span {
+    color:var(--color-slate-400);
+    }       
+._category-item._active span {  
+    // border-color: var(--color-green-800);
+     color:var(--color-green-600)!important;
+     //background-color: color-mix(in oklab, var(--color-blue-500) 5%, transparent);
+      
+}    
+._category-item._active svg {
+    color: var(--color-green-600); 
+}
+._category-item._active:hover ._actions:hover {  
     color: var(--color-slate-200); 
 }    
 </style>  
