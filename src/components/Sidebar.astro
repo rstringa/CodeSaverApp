@@ -8,6 +8,7 @@ import { supabase } from "@lib/supabaseClient";
 const { data: userSession } = await supabase.auth.getSession();
 const userSessionId = userSession?.session?.user.id;
 let categorias:any = [];
+let categoriasLength:boolean = false;
 if (userSessionId) {
   const { data, error } = await supabase
     .from("categorias")
@@ -16,13 +17,14 @@ if (userSessionId) {
 
   if (error) console.error(error);
   categorias = data;
+  categoriasLength = categorias.length > 1 ? true : false;
 }
 ---
 <aside class="_sidebar w-full h-full border-r-1 border-slate-700 p-6 pt-6">
     <div class="_content m-auto">
         <a 
         class=`_new_category _btn-normal mb-6
-         ${!userLogged ? "pointer-events-none opacity-50" : "" }
+         ${ !userLogged ? "pointer-events-none opacity-50" : "" }
         ` 
         href="#" data-category_id=`0`><Icon name="folderPlus" 
         class=`w-6 h-6 mr-2 text-green-400 fill-current
@@ -31,11 +33,17 @@ if (userSessionId) {
         <h4 class="uppercase text-sm text-slate-500 mb-2">Categorias</h4> 
         <a 
         class=`_category-item _active _btn-normal justify-start! mb-3 px-3!
-        ${!userLogged ? "pointer-events-none opacity-50" : "" }
+        ${(!userLogged || !categoriasLength) ? "pointer-events-none opacity-50" : "" }
         `
         href="#" data-category_id='0'>
         <Icon name="folderCode" class="w-5 h-5 mr-2" /> 
-            <span>Todas</span></a>     
+            <span>Todas</span></a>
+        {!categoriasLength ?
+        <div class="flex flex-col items-center justify-center">
+        {/* <Icon name="folderPlus" class="w-16 h-16 mt-6 text-slate-400 fill-current opacity-15" />   */}
+        <p class="text-center text-slate-400 mt-3 tracking-wide">No tienes categorías aún.</p> 
+        </div>
+        : null}
         { 
         categorias?.map((categoria) => (
             categoria.nombre != "Base" && (
@@ -64,7 +72,9 @@ if (userSessionId) {
             )
         ))
         }
-     </div>   
+     </div>  
+     
+     
 </aside>
 
 <dialog id="new-category-modal" 
