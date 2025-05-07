@@ -9,7 +9,7 @@ import { userLoggedIn } from "@utils/userLoggedIn";
 import CreateSnippet from "@components/code/CreateSnippet.astro";
 
 const userLogged = await userLoggedIn();
-
+console.log("index-" + userLogged);
 ---
 
 <LayoutBase>
