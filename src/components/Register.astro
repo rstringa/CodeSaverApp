@@ -66,13 +66,30 @@ const error = Astro.url.searchParams.get("error");
         >
       </form>
       <hr class="h-0 border-t mt-8 dark:border-zinc-600 border-zinc-300" />
-      <p class="-mt-2.5 text-xs text-center dark:text-zinc-400 text-zinc-500">
-        <span class="dark:bg-zinc-900 bg-zinc-50 px-4">Or with</span>
+      <p class="text-xs text-center text-slate-50 -mt-2.5">  
+        <span class="bg-green-800 rounded-xl p-4 py-1 ">O con</span>
       </p>
-      <form action="/api/auth/login" method="POST" enctype="application/x-www-form-urlencoded">
-        <input type="hidden" name="provider" value="google" />
-        <button type="submit">Sign In with Google</button>
-      </form>
+
+      <div class="flex justify-center mt-6">
+        <form 
+          action="/api/auth/google" 
+          method="POST" 
+          class="w-full"
+        >
+          <button
+            type="submit"
+            class="w-full flex items-center justify-center gap-2 px-4 py-2 border rounded-md dark:border-zinc-700 border-zinc-300 dark:bg-zinc-800 bg-zinc-50 dark:text-zinc-300 text-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-60"
+          >
+            <img
+              src="/google-icon.svg"
+              alt="Google Icon"
+              class="w-5 h-5"
+            />
+            <span>Sign up with Google</span>
+          </button>
+        </form>
+      </div>
+      
     </section>
   </main>
 
