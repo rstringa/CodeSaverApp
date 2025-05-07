@@ -5,16 +5,20 @@ import Sidebar from "@components/Sidebar.astro";
 // import { supabase } from "@lib/supabaseClient";
 // import type { User } from "@supabase/supabase-js";
 import ShowSnippets from "@components/code/ShowSnippets.astro";
-import { userLoggedIn } from "@utils/userLoggedIn";
+import { userLoggedIn, userData } from "@utils/userLoggedIn";
 import CreateSnippet from "@components/code/CreateSnippet.astro";
 
 const userLogged = await userLoggedIn();
+const userDataLog = await userData();
 console.log("index-" + userLogged);
 ---
 
 <LayoutBase>
   <main class=`relative grid grid-cols-[270px_1fr] h-full ${userLogged ? 'logged-in' : 'logged-out'}`>  
     <Sidebar />
+    
+    { console.log( userLogged +"-"+ userDataLog) }
+
     <div class="content h-full p-6">
       <div class="_top flex gap-4 justify-between items-center mb-4">
        <div> 

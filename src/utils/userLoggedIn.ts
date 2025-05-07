@@ -10,4 +10,7 @@ export const userLoggedIn = async () => {
   }
 };
 
-
+export const userData = async () => {
+  const { data } = await supabase.auth.getSession();
+  return data
+}
