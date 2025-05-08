@@ -16,8 +16,11 @@ if (userSessionId) {
     .eq("usuario_id", userSessionId);
 
   if (error) console.error(error);
+
   categorias = data;
+  
   categoriasLength = categorias.length > 1 ? true : false;
+  console.log("categorias", categorias.length);
 }
 ---
 <aside class="_sidebar w-full h-full border-r-1 border-slate-700 p-6 pt-6">
@@ -43,7 +46,8 @@ if (userSessionId) {
         {/* <Icon name="folderPlus" class="w-16 h-16 mt-6 text-slate-400 fill-current opacity-15" />   */}
         <p class="text-center text-slate-400 mt-3 tracking-wide">No tienes categorías aún.</p> 
         </div>
-        : null}
+        : null
+        }
         { 
         categorias?.map((categoria) => (
             categoria.nombre != "Base" && (

@@ -112,7 +112,7 @@ async function deleteCategory(categoryId) {
     const response = await fetch("/api/deleteCategory",
         {
             method: "DELETE",
-            headers: { "Content-Type": "application/json", },
+          //  headers: { "Content-Type": "application/json", },
             body: JSON.stringify({ id: categoryId, }),
         });
     if (!response.ok) {

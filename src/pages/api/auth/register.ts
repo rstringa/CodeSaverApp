@@ -42,11 +42,13 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
       return redirect(`/register?error=${encodeURIComponent(error.message)}`);
     }
 
+
+    // CREATE BASE CATEGORY IF IS EMAIL PROVIDER
+
     const userId = data.user?.id;
     if (!userId) {
       return redirect(`/register?error=${encodeURIComponent("Failed to create user")}`);
     }
-
     const { error: insertError } = await supabase
       .from('categorias')
       .insert([{ usuario_id: userId, nombre: 'Base' }]);
@@ -55,8 +57,8 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
       console.error('Error creando categoría Base:', insertError);
       return redirect(`/register?error=${encodeURIComponent("Failed to create initial category")}`);
     }
-
     console.log('Categoría Base creada');
+
     return redirect(`/login?message=${encodeURIComponent("Registration successful. Please check your email to confirm your account.")}`);
 
   } catch (err) {

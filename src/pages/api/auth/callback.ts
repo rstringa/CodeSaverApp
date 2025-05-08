@@ -26,5 +26,18 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
     secure: true,
     httpOnly: true,
   });
-  return redirect("/dashboard");
+
+  // CREATE BASE CATEGORY IF IS GOOGLE PROVIDER
+  const userId = data.user?.id;
+
+  const { error: insertError } = await supabase
+  .from('categorias')
+  .insert([{ usuario_id: userId, nombre: 'Base' }]);
+
+if (insertError) {
+  console.error('Error creando categoría Base:', insertError);
+  return redirect(`/register?error=${encodeURIComponent("Failed to create initial category")}`);
+}
+
+  return redirect("/");
 };
