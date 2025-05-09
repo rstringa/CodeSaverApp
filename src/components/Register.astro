@@ -1,6 +1,6 @@
 ---
 import LayoutBase from "@layouts/LayoutBase.astro";
-const title = "Registrase en la app";
+const title = "Registrate en la app";
 
 // Get the error message from the query parameter
 const error = Astro.url.searchParams.get("error");
@@ -33,7 +33,7 @@ const error = Astro.url.searchParams.get("error");
         action="/api/auth/register"
         method="post"
         enctype="application/x-www-form-urlencoded"
-        class="grid grid-cols-1 gap-3 w-full"
+        class="grid grid-cols-1 gap-1 w-full"
       >
       <div class="grid grid-cols-1 gap-2 mb-2">
         <label
@@ -68,7 +68,7 @@ const error = Astro.url.searchParams.get("error");
         class="
         _btn-featured bg-green-600/50! p-3! text-green-100!
         disabled:cursor-not-allowed"
-        >Registrarse</button
+        >Registrarme</button
       >
       </form>
       <hr class="h-0 border-t  border-slate-700 mt-6" />  
