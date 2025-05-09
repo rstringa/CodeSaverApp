@@ -8,16 +8,16 @@ const snippetsNumber = document.querySelectorAll('_sidebar ._category-item ._num
 catLink.forEach(link => {
     const categoryId = (link as HTMLElement).dataset.category_id;
     const linkNumber = link.querySelector('._number');
-    const categorySnippets=  Array.from(snippets).filter(snippet => (snippet as HTMLAnchorElement)?.dataset.category_id == categoryId); 
+    const categorySnippets = Array.from(snippets).filter(snippet => (snippet as HTMLAnchorElement)?.dataset.category_id == categoryId);
     const totalSnippets = categorySnippets.length;
     if (linkNumber) {
         linkNumber.textContent = totalSnippets.toString();
     }
-})            
+})
 
 /* SHOW HIDE SNIPPETS */
 catLink.forEach(link => {
-    
+
     link.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -32,19 +32,18 @@ catLink.forEach(link => {
 // CLOSE ITEMS ACTIONS ON CLICK OUTSIDE
 window?.addEventListener('click', function (e) {
     console.log('clickoutside');
-    catLink.forEach( link => 
-    {
-       
+    catLink.forEach(link => {
+
         let nextElement = link.nextElementSibling;
         if (nextElement && nextElement.classList.contains('_category-item-actions')) {
             nextElement.classList.add('hidden');
         }
     }
-     ); 
+    );
 });
 function showSnippets(categoryId) {
     snippets.forEach(snippet => {
-       
+
         const isVisible = categoryId == 0 || (snippet as HTMLElement).dataset.category_id == categoryId;
         snippet.classList.toggle('hidden', !isVisible);
     });
@@ -64,7 +63,7 @@ const actions = document.querySelectorAll('._actions');
 actions.forEach(action => {
     action.addEventListener('click', function (e) {
         e.preventDefault();
-        e.stopPropagation(); 
+        e.stopPropagation();
         (action?.parentElement?.parentElement?.nextElementSibling as HTMLElement)?.classList.toggle('hidden');
     });
 });
@@ -104,7 +103,7 @@ async function updateCategory(categoryId, editedName) {
             id: categoryId,
             name: editedName,
         }),
-  
+
     });
     await showCategoryName(editedName);
 
@@ -130,7 +129,7 @@ async function deleteCategory(categoryId) {
     const response = await fetch("/api/deleteCategory",
         {
             method: "DELETE",
-          //  headers: { "Content-Type": "application/json", },
+            //  headers: { "Content-Type": "application/json", },
             body: JSON.stringify({ id: categoryId, }),
         });
     if (!response.ok) {
@@ -148,20 +147,20 @@ const closeModalNewCategory = newCategoryModal?.querySelector('._close');
 const createModalNewCategory = newCategoryModal?.querySelector('._create');
 const messageModalNewCategory = newCategoryModal?.querySelector('._message');
 
-    newCategoryLink?.addEventListener('click', function (e) {
-        e.preventDefault();
-        (newCategoryModal as HTMLDialogElement).showModal();           
-    });
+newCategoryLink?.addEventListener('click', function (e) {
+    e.preventDefault();
+    (newCategoryModal as HTMLDialogElement).showModal();
+});
 
 closeModalNewCategory?.addEventListener('click', function (e) {
     e.preventDefault();
     (newCategoryModal as HTMLDialogElement).close();
 });
-newCategoryModal ?.addEventListener('click', function (e) {
-    if (e.target === newCategoryModal ) {
-      (newCategoryModal  as HTMLDialogElement).close();
-      }
-  });
+newCategoryModal?.addEventListener('click', function (e) {
+    if (e.target === newCategoryModal) {
+        (newCategoryModal as HTMLDialogElement).close();
+    }
+});
 createModalNewCategory?.addEventListener('click', function (e) {
     e.preventDefault();
     const categoryName = newCategoryModal?.querySelector('._name');
@@ -177,8 +176,8 @@ async function saveNewCategory(categoryName) {
         {
             method: "POST",
             //headers: { "Content-Type": "application/json", },
-            body: JSON.stringify({ 
-                  name: (categoryName as HTMLInputElement).value,  
+            body: JSON.stringify({
+                name: (categoryName as HTMLInputElement).value,
             }),
         });
     if (!response.ok) {

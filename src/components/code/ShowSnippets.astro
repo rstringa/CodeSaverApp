@@ -1,4 +1,5 @@
 ---
+import { Icon } from 'astro-icon/components';
 import { supabase } from "@lib/supabaseClient";
 
 // Import highlight.js
@@ -54,30 +55,34 @@ if (userSessionId) {
       snippetsWithCategories.map((snippet) => {
         return (
           <li
-            class="_snippet flex flex-col gap-2 rounded bg-slate-600/10 p-6 text-sm transition-all transition-discrete duration-300"
+            class="_snippet 
+            group
+            flex flex-col gap-2 rounded bg-slate-600/10 p-6 text-sm transition-all transition-discrete duration-300"
             data-category_id={snippet.categoria_id}
             data-snippet-id={snippet.id}
           >
-            <div class="flex justify-between items-center">
-              <h2 class="text-xl font-semibold mb-2">{snippet.titulo}</h2>
+            <div class="flex justify-between items-center mb-2">
+              <h2 class="text-xl font-semibold ">{snippet.titulo}</h2>
 
               <!-- Editar / Eliminar -->
-              <div class="flex gap-2 items-center">
+              <div class="
+              opacity-45 group-hover:opacity-100 transition-opacity duration-300
+              flex gap-2 items-center">
                 <a
                   href="#"
-                  class="_edit-snippet _btn-normal"
+                  class="_edit-snippet _btn-normal px-2! text-slate-400"
                   data-id={snippet.id}
                   title="Editar"
                 >
-                  Editar
+                  <Icon name="edit" class="w-4 h-4 pointer-events-none " />
                 </a>
                 <a
                   href="#"
-                  class="_delete-snippet _btn-normal"
+                  class="_delete-snippet _btn-normal px-2! text-slate-400 "
                   data-id={snippet.id}
                   title="Eliminar"
                 >
-                  Eliminar
+                 <Icon name="delete" class="w-4 h-4 pointer-events-none " />
                 </a>
               </div>
             </div>
