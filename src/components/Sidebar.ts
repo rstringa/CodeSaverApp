@@ -1,16 +1,30 @@
 const catLink = document.querySelectorAll('._sidebar ._category-item');
 const snippets = document.querySelectorAll('._snippet');
 const sidebar = document.querySelector('._sidebar');
+const snippetsNumber = document.querySelectorAll('_sidebar ._category-item ._number');
+
+
+/* NUMBER OF SNIPPETS PER CATEGORY*/
+catLink.forEach(link => {
+    const categoryId = (link as HTMLElement).dataset.category_id;
+    const linkNumber = link.querySelector('._number');
+    const categorySnippets=  Array.from(snippets).filter(snippet => (snippet as HTMLAnchorElement)?.dataset.category_id == categoryId); 
+    const totalSnippets = categorySnippets.length;
+    if (linkNumber) {
+        linkNumber.textContent = totalSnippets.toString();
+    }
+})            
+
 /* SHOW HIDE SNIPPETS */
 catLink.forEach(link => {
     
     link.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        catLink.forEach(link => link.classList.remove('_active'));
-        link.classList.add('_active');
+        catLink.forEach(link => link.classList.remove('is-active'));
+        link.classList.add('is-active');
         const categoryId = (link as HTMLElement).dataset.category_id;
-        const categoryNameText = link.querySelector('span')?.textContent;
+        const categoryNameText = link.querySelector('._category-name')?.textContent;
         showSnippets(categoryId);
         showCategoryName(categoryNameText);
     });
@@ -39,6 +53,7 @@ function showSnippets(categoryId) {
 function showCategoryName(categoryNameText) {
     const categoryName = document.querySelector('._top ._category-name ._category-text');
     if (categoryName) {
+        categoryName.textContent = "";
         categoryName.textContent = categoryNameText;
     }
 }
@@ -69,10 +84,11 @@ editLink.forEach(editLink => {
 function editCategory(categoryId) {
     const category_item = document.querySelector(`[data-category_id="${categoryId}"]`);
     category_item?.setAttribute("contenteditable", "true");
+    category_item?.querySelector('._number')?.setAttribute("contenteditable", "false");
     (category_item as HTMLElement).focus();
     category_item?.addEventListener("blur", () => {
         category_item?.removeAttribute("contenteditable");
-        const editedName = category_item?.textContent;
+        const editedName = category_item?.querySelector('._category-name')?.textContent;
         if (editedName) {
             updateCategory(categoryId, editedName);
         }
@@ -88,7 +104,9 @@ async function updateCategory(categoryId, editedName) {
             id: categoryId,
             name: editedName,
         }),
+  
     });
+    await showCategoryName(editedName);
 
     if (!response.ok) {
         console.error("Error al actualizar la categoría:", response.statusText);

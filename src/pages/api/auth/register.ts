@@ -1,68 +1,39 @@
 export const prerender = false;
 import type { APIRoute } from "astro";
-import type { Provider } from "@supabase/supabase-js";
 import { supabase } from "@lib/supabaseClient";
+import type { Provider } from "@supabase/auth-js";
 
-export const POST: APIRoute = async ({ request, cookies, redirect }) => {
+export const POST: APIRoute = async ({ request, redirect }) => {
   try {
-    console.log("Procesando solicitud de registro...");
     const formData = await request.formData();
-
     const email = formData.get("email")?.toString();
     const password = formData.get("password")?.toString();
-    const provider = formData.get("provider")?.toString();
+    const provider = formData.get("provider")?.toString() as Provider;
 
     if (provider) {
       const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: provider as Provider,
-        options: {
-          redirectTo: `${import.meta.env.PUBLIC_SITE_URL}/api/auth/callback`,
-        },
+        provider,
+        options: { redirectTo: `${import.meta.env.PUBLIC_SITE_URL}/api/auth/callback` },
       });
-
-      if (error) {
-        console.error("Error en signInWithOAuth:", error.message);
-        return redirect(`/register?error=${encodeURIComponent("OAuth registration failed")}`);
-      }
-
+      if (error) throw new Error("OAuth registration failed");
       return redirect(data.url);
     }
 
-    if (!email || !password) {
-      return redirect(`/register?error=${encodeURIComponent("Email or password missing")}`);
-    }
+    if (!email || !password) throw new Error("Email or password missing");
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (error) {
-      console.error("Error en signUp:", error.message);
-      return redirect(`/register?error=${encodeURIComponent(error.message)}`);
-    }
-
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (error) throw new Error(error.message);
 
     // CREATE BASE CATEGORY IF IS EMAIL PROVIDER
-
     const userId = data.user?.id;
-    if (!userId) {
-      return redirect(`/register?error=${encodeURIComponent("Failed to create user")}`);
-    }
-    const { error: insertError } = await supabase
-      .from('categorias')
-      .insert([{ usuario_id: userId, nombre: 'Base' }]);
+    if (!userId) throw new Error("Failed to create user");
 
-    if (insertError) {
-      console.error('Error creando categoría Base:', insertError);
-      return redirect(`/register?error=${encodeURIComponent("Failed to create initial category")}`);
-    }
-    console.log('Categoría Base creada');
+    const { error: insertError } = await supabase.from("categorias").insert([{ usuario_id: userId, nombre: "Base" }]);
+    if (insertError) throw new Error("Failed to create initial category");
 
     return redirect(`/login?message=${encodeURIComponent("Registration successful. Please check your email to confirm your account.")}`);
-
   } catch (err) {
-    console.error("Error procesando la solicitud:", err);
-    return redirect(`/register?error=${encodeURIComponent("An unexpected error occurred")}`);
+    console.error("register.ts-",err.message);
+    return redirect(`/register?error=${encodeURIComponent(err.message)}`);
   }
 };

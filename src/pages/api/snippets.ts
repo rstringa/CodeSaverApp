@@ -1,10 +1,9 @@
 import { supabase } from '@lib/supabaseClient';
 import type { APIRoute } from 'astro';
 
-const { data: userSession } = await supabase.auth.getSession(); 
-
 
 export const POST: APIRoute = async ({ request }) => {
+  const { data: userSession } = await supabase.auth.getSession(); 
   const body = await request.formData();
   const titulo = body.get('titulo');
   const contenido = body.get('contenido');

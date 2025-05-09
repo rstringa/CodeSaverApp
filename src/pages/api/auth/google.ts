@@ -7,21 +7,13 @@ export const POST: APIRoute = async ({ redirect }) => {
       provider: "google",
       options: {
         redirectTo: `${import.meta.env.PUBLIC_SITE_URL}/api/auth/callback`,
-        queryParams: {
-          access_type: 'offline',
-          prompt: 'consent',
-        },
+        queryParams: { access_type: "offline", prompt: "consent" },
       },
     });
-
-    if (error) {
-      console.error("Error in Google OAuth:", error.message);
-      return redirect(`/login?error=${encodeURIComponent("Google login failed")}`);
-    }
-
+    if (error) throw new Error("Google login failed");
     return redirect(data.url);
   } catch (err) {
-    console.error("Unexpected error during Google auth:", err);
-    return redirect(`/login?error=${encodeURIComponent("An unexpected error occurred")}`);
+    console.error(err.message);
+    return redirect(`/login?error=${encodeURIComponent(err.message)}`);
   }
 };
