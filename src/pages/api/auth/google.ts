@@ -7,7 +7,7 @@ export const POST: APIRoute = async ({ redirect }) => {
       provider: "google",
       options: {
         redirectTo: `${import.meta.env.PUBLIC_SITE_URL}/api/auth/callback`,
-        queryParams: { access_type: "offline", prompt: "consent" },
+       // queryParams: { access_type: "offline", prompt: "consent" },
       },
     });
     if (error) throw new Error("Google login failed");
