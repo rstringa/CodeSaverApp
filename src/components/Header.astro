@@ -2,6 +2,9 @@
 import { Icon } from 'astro-icon/components'
 import { userLoggedIn } from "@utils/userLoggedIn";
 const userLogged = await userLoggedIn();
+// Get page url
+const url = new URL(Astro.url.pathname, Astro.url.origin);
+const urlPath = url.pathname;
 ---
 
 <header class="_header flex justify-between p-6 py-3 m-auto border-b-1 border-slate-700">
@@ -29,15 +32,15 @@ const userLogged = await userLoggedIn();
         <a
           href="/login"
           id="btn_register"
-          class="_register _btn-normal" 
+          class={`_login _btn-normal ${urlPath === '/login' ? 'text-green-600!' : ''}`}
         >
-          Iniciar sesión
+          Ingresar
         </a>
         <span class="m-3 inline-flex text-slate-400">o</span> 
         <a
           href="/register"
           id="btn_login"
-          class="_login _btn-normal"
+          class={`_register _btn-normal ${urlPath === '/register' ? 'text-green-600!' : ''}`}
         >
           Registrarse
         </a>

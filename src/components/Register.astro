@@ -1,6 +1,6 @@
 ---
 import LayoutBase from "@layouts/LayoutBase.astro";
-const title = "Registrate en la app";
+const title = "Registrarse en la app";
 
 // Get the error message from the query parameter
 const error = Astro.url.searchParams.get("error");
@@ -16,7 +16,7 @@ const error = Astro.url.searchParams.get("error");
     </h1>
     <p class="text-zinc-500 dark:text-zinc-400 text-sm -mt-1 mb-2 w-full">
       ¿Ya eres usuario? <a
-        href="/register"
+        href="/login"
         class="text-green-600"
         >Ingresar a tu cuenta</a
       >
