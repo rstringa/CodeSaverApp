@@ -20,8 +20,12 @@
       flex  justify-center items-center cursor-pointer
       ;
     }
-    ._btn-normal:hover {
+    ._btn-normal:hover, 
+    ._btn-normal:focus {
       @apply bg-blue-500/5  border-slate-600;
+    }
+    ._btn-normal:focus {
+      @apply outline-none border-green-700;
     }
     ._btn-normal:active {
       @apply bg-blue-500/10 border-slate-700;

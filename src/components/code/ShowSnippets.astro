@@ -1,5 +1,6 @@
 ---
 import { supabase } from "@lib/supabaseClient";
+
 // Import highlight.js
 import hljs from 'highlight.js';
 let code = hljs.highlightAuto("").value;
@@ -50,33 +51,82 @@ if (userSessionId) {
 <div>
   <ul class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
     {
-      snippetsWithCategories.map((snippet) =>
-        //snippet.snippet_categorias.map((categoria) => {
-          //console.log(categoria.categorias);
-          {
-          return (
-            <li
-              class="_snippet flex flex-col gap-2 rounded bg-slate-600/10 p-6 text-sm transition-all transition-discrete duration-300"
-              data-category_id={snippet.categoria_id}
-            >
-              <div data-id={snippet.id}>
-                {/* <p class="inline-flex items-center gap-1 rounded-lg bg-blue-500/10 px-3 py-1 mb-2 text-sm text-blue-500">
-                    {[categoria.categorias].map(cat => (
-  <span>{cat.nombre}</span>
-))}
-                </p> */}
-                <h2 class="text-xl font-semibold mb-2">{snippet.titulo}</h2>
-                <div class="_snippet_content scrollbar-custom bg-slate-800 p-4 rounded flex flex-col max-h-90 overflow-y-auto 
-                scroll-smooth">
-                  <p class="text-[1rem]"> 
-                    <pre class="hljs text-wrap break-words"><code set:html={hljs.highlightAuto(snippet.contenido).value} /></pre>
-                  </p>
-                </div>
+      snippetsWithCategories.map((snippet) => {
+        return (
+          <li
+            class="_snippet flex flex-col gap-2 rounded bg-slate-600/10 p-6 text-sm transition-all transition-discrete duration-300"
+            data-category_id={snippet.categoria_id}
+            data-snippet-id={snippet.id}
+          >
+            <div class="flex justify-between items-center">
+              <h2 class="text-xl font-semibold mb-2">{snippet.titulo}</h2>
+
+              <!-- Editar / Eliminar -->
+              <div class="flex gap-2 items-center">
+                <a
+                  href="#"
+                  class="_edit-snippet _btn-normal"
+                  data-id={snippet.id}
+                  title="Editar"
+                >
+                  Editar
+                </a>
+                <a
+                  href="#"
+                  class="_delete-snippet _btn-normal"
+                  data-id={snippet.id}
+                  title="Eliminar"
+                >
+                  Eliminar
+                </a>
               </div>
-            </li>
-          );
-        })
-      
+            </div>
+
+            <!-- CONFIRM DELETE SNIPPET -->
+            <div
+              class="_snippet-confirm 
+                  flex flex-col gap-2 items-center mb-3 hidden
+                  bg-slate-800/90 p-4 rounded-md
+                  "
+            >
+              <p class="text-sm text-slate-400">
+                ¿Estás seguro de que deseas eliminar éste snippet?
+              </p>
+              <div class="flex gap-2 items-center justify-between">
+                <a
+                  href="#"
+                  class="_snippet-confirm-delete _btn-normal"
+                  data-id={snippet.id}
+                  title="Editar"
+                >
+                  Sí, eliminar
+                </a>
+                <a
+                  href="#"
+                  class="_snippet-confirm-cancel _btn-normal"
+                  data-id={snippet.id}
+                  title="Eliminar"
+                >
+                  No, cancelar
+                </a>
+              </div>
+            </div>
+            <div
+              class="_snippet_content scrollbar-custom bg-slate-800 p-4 rounded flex flex-col max-h-90 overflow-y-auto 
+                scroll-smooth"
+            >
+              <p class="text-[1rem]">
+                <pre class="hljs text-wrap break-words">
+                  <code set:html={hljs.highlightAuto(snippet.contenido).value} />
+                </pre>
+              </p>
+            </div>
+          </li>
+        );
+      })
     }
   </ul>
 </div>
+<script>
+  import "./Snippets.ts";
+</script>

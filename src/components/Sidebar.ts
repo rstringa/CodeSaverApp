@@ -71,7 +71,7 @@ actions.forEach(action => {
 
 
 /* EDIT CATEGORY */
-const editLink = document.querySelectorAll('._edit');
+const editLink = document.querySelectorAll('._edit-category');
 
 editLink.forEach(editLink => {
     editLink.addEventListener('click', function (e) {
@@ -116,7 +116,7 @@ async function updateCategory(categoryId, editedName) {
 }
 
 /* DELETE CATEGORY */
-const deleteLinks = document.querySelectorAll('._delete');
+const deleteLinks = document.querySelectorAll('._delete-category');
 
 deleteLinks.forEach(deleteLink => {
     deleteLink.addEventListener('click', function (e) {
