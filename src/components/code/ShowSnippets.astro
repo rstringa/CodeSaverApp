@@ -94,13 +94,13 @@ if (userSessionId) {
                   bg-slate-800/90 p-4 rounded-md
                   "
             >
-              <p class="text-sm text-slate-400">
+              <p class="text-md text-green-500 mb-2">
                 ¿Estás seguro de que deseas eliminar éste snippet?
               </p>
-              <div class="flex gap-2 items-center justify-between">
+              <div class="flex flex-wrap gap-3 items-center justify-between w-full">
                 <a
                   href="#"
-                  class="_snippet-confirm-delete _btn-normal"
+                  class="_snippet-confirm-delete _btn-normal flex-1   [min-width:150px]"
                   data-id={snippet.id}
                   title="Editar"
                 >
@@ -108,7 +108,7 @@ if (userSessionId) {
                 </a>
                 <a
                   href="#"
-                  class="_snippet-confirm-cancel _btn-normal"
+                  class="_snippet-confirm-cancel _btn-normal  flex-1 [min-width:150px]"
                   data-id={snippet.id}
                   title="Eliminar"
                 >

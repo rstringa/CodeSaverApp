@@ -27,8 +27,8 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw new Error("Invalid email or password");
 
-    cookies.set("sb-access-token", data.session.access_token, { sameSite: "strict", path: "/", secure: true });
-    cookies.set("sb-refresh-token", data.session.refresh_token, { sameSite: "strict", path: "/", secure: true });
+    cookies.set("sb-access-token", data.session.access_token, { sameSite: "none", path: "/", secure: true });
+    cookies.set("sb-refresh-token", data.session.refresh_token, { sameSite: "none", path: "/", secure: true });
 
     return redirect(redirectUrl);
   } catch (err) {

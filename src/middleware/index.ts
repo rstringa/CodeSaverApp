@@ -6,6 +6,10 @@ import micromatch from "micromatch";
 const protectedRoutes = [
   "/dashboard",
   "/dashboard/**",
+  "/api/snippets",
+  "/profile",
+  "/settings",
+  "/snippets",
 ];
 
 export const onRequest = defineMiddleware(async (context, next) => {

@@ -20,6 +20,7 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
     path: "/",
     secure: true,
     httpOnly: true,
+    sameSite: "none", 
   });
   cookies.set("sb-refresh-token", refresh_token, {
     path: "/",
