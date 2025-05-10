@@ -26,6 +26,7 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
     path: "/",
     secure: true,
     httpOnly: true,
+    sameSite: "none",
   });
 
   // CREATE BASE CATEGORY IF IS GOOGLE PROVIDER
