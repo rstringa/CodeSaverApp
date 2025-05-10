@@ -15,17 +15,17 @@ if (userSessionId) {
 }
 ---
 
-<dialog id="new-snippet-modal" 
+<dialog id="edit-snippet-modal" 
 class="open:flex open:items-center open:justify-center open:m-auto 
 open:rounded-0 shadow-lg p-0 w-[600px] max-w-[90%] bg-transparent backdrop:bg-slate-900/50 backdrop:backdrop-blur-[2px]">
   
   <div class="_inner relative flex-col bg-[#1c283e] border border-slate-900 p-6 px-8 w-full overflow-hidden rounded">
-  <h2 class="text-2xl mb-6 text-slate-100">Crear nuevo snippet</h2>
+  <h2 class="text-2xl mb-6 text-slate-100">Editar snippet</h2>
 
 <form
-  action="/api/snippets"
+  action="/api/edit-snippets"
   method="POST"
-  class="_create-snippet-form flex flex-col gap-2 rounded transition-all transition-discrete duration-300"
+  class="_edit-snippet-form flex flex-col gap-2 rounded transition-all transition-discrete duration-300"
 >
   <label for="titulo" class="font-regular text-slate-300 text-md">Título: </label>
   <input
@@ -77,57 +77,9 @@ open:rounded-0 shadow-lg p-0 w-[600px] max-w-[90%] bg-transparent backdrop:bg-sl
   </div>
   </dialog>
 
-
-
 <script>
-const form = document.querySelector("._create-snippet-form") as HTMLFormElement;
-const newSnippetLink = document.querySelector('._new_snippet');
-const newSnippetModal = document.getElementById('new-snippet-modal');
-const closeModalNewSnippet = newSnippetModal?.querySelector('._close');
-const createModalNewSnippet = newSnippetModal?.querySelector('._create');
-const messageModalNewSnippet = newSnippetModal?.querySelector('._message');
+const form = document.querySelector("._edit-snippet-form");
+const newSnippetLink = document.querySelectorAll('._edit_snippet');
+const newSnippetModal = document.getElementById('edit-snippet-modal');
 
-    newSnippetLink?.addEventListener('click', function (e) {
-        e.preventDefault();
-        (newSnippetModal as HTMLDialogElement).showModal();           
-    });
-
-closeModalNewSnippet?.addEventListener('click', function (e) {
-    e.preventDefault();
-    (newSnippetModal as HTMLDialogElement).close();
-});
-newSnippetModal?.addEventListener('click', function (e) {
-  if (e.target === newSnippetModal) {
-    (newSnippetModal as HTMLDialogElement).close();
-    }
-});
-createModalNewSnippet?.addEventListener('click', function (e) {
-    e.preventDefault();
-    const snippetName = newSnippetModal?.querySelector('._name');
-    if (!snippetName) {
-        console.error("No se encontró el input con el nombre de la categoría.");
-        return;
-    }
-    //saveNewCategory(snippetName);
-});
-
-
-  form?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const formData = new FormData(form);
-
-    const res = await fetch("/api/snippets", {
-      method: "POST",
-      body: formData,
-    });
-
-    const result = await res.json();
-    // Manage errors
-    if (result.error && messageModalNewSnippet) {
-      messageModalNewSnippet.textContent = result.error;
-      return;
-    }
-    console.log(result);
-    window.location.href = "/";
-  });
 </script>

@@ -65,6 +65,7 @@ actions.forEach(action => {
     action.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
+        //action.classList.remove('hidden');
         (action?.parentElement?.parentElement?.nextElementSibling as HTMLElement)?.classList.remove('hidden');
     });
 });
@@ -75,7 +76,7 @@ const editLinks = document.querySelectorAll('._category-item-actions ._edit-cate
 
 editLinks.forEach(editLink => {
     editLink.addEventListener('click', function (e) {
-       
+
         e.preventDefault();
         const categoryId = (e.target as HTMLElement).dataset.category_id;
         editCategory(categoryId);
@@ -97,7 +98,7 @@ function editCategory(categoryId) {
         selection?.removeAllRanges();
         selection?.addRange(range);
         (category_item as HTMLElement).focus();
-      }
+    }
     // Escuchar el evento de "blur" para guardar los cambios
     category_item?.addEventListener("blur", () => {
         category_item?.removeAttribute("contenteditable");

@@ -1,6 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components';
 import { supabase } from "@lib/supabaseClient";
+import EditSnippet from './EditSnippet.astro'; 
 
 // Import highlight.js
 import hljs from 'highlight.js';
@@ -8,8 +9,7 @@ let code = hljs.highlightAuto("").value;
 
 const { data: userSession } = await supabase.auth.getSession();
 const userSessionId = userSession?.session?.user.id;
-
-// console.log(userSessionId);
+let totalSnippets = 0; 
 
 let snippetsWithCategories: {
   id: any;
@@ -41,14 +41,22 @@ if (userSessionId) {
   if (error) {
     console.error("Error fetching snippets:", error);
   } else {
+    totalSnippets = data.length;
     snippetsWithCategories = data;
   }
 }
 
-// console.log("--" + snippetsWithCategories[0]);
-// console.log(snippetsWithCategories[0].snippet_categorias[0].categorias.nombre);
 ---
 
+{
+  totalSnippets == 0 ? (
+    <div class="flex flex-col items-center justify-center ml-7 border border-slate-800 rounded p-6">
+      <p class="text-xl text-slate-400 tracking-wide">
+        No tienes snippets aún.
+      </p>
+    </div>
+  ) : 
+(
 <div>
   <ul class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
     {
@@ -57,12 +65,13 @@ if (userSessionId) {
           <li
             class="_snippet 
             group
+      
             flex flex-col gap-2 rounded bg-slate-600/10 p-6 text-sm transition-all transition-discrete duration-300"
             data-category_id={snippet.categoria_id}
             data-snippet-id={snippet.id}
           >
             <div class="flex justify-between items-center mb-2">
-              <h2 class="text-xl font-semibold ">{snippet.titulo}</h2>
+              <h2 class="_snippet-title text-xl font-semibold ">{snippet.titulo}</h2>
 
               <!-- Editar / Eliminar -->
               <div class="
@@ -91,10 +100,11 @@ if (userSessionId) {
             <div
               class="_snippet-confirm 
                   flex flex-col gap-2 items-center mb-3 hidden
-                  bg-slate-800/90 p-4 rounded-md
+                  bg-slate-800/50 p-6 rounded-md
                   "
             >
-              <p class="text-md text-green-500 mb-2">
+              <p class="flex flex-1 justify-between items-start text-md text-balance bg-amber-900/10 text-amber-600 mb-2 border border-amber-800 rounded p-2.5">
+               <Icon name="warning" class="w-8 h-8 mr-3 text-amber-600" />
                 Una vez eliminado, no podrás recuperar el snippet.
               </p>
               <div class="flex flex-wrap gap-3 items-center justify-between w-full">
@@ -117,14 +127,15 @@ if (userSessionId) {
               </div>
             </div>
             <div
-              class="_snippet_content scrollbar-custom bg-slate-800 p-4 rounded flex flex-col max-h-90 overflow-y-auto 
+              class="_snippet-content scrollbar-custom bg-slate-800 p-4 rounded flex flex-col max-h-90 overflow-y-auto 
                 scroll-smooth"
             >
-              <p class="text-[1rem]">
-                <pre class="hljs text-wrap break-words">
+              
+                <pre class="hljs m-0 p-0 whitespace-pre-line break-words ">
                   <code set:html={hljs.highlightAuto(snippet.contenido).value} />
+                  
                 </pre>
-              </p>
+             
             </div>
           </li>
         );
@@ -132,6 +143,48 @@ if (userSessionId) {
     }
   </ul>
 </div>
+)}
+
+<style is:inline>
+  ._snippet {
+    outline: none;
+    border:1px dashed transparent;
+    transition: all 0.5s;
+  }
+  ._snippet.is-editing {
+    border:1px dashed var(--color-slate-600);
+  }
+  ._snippet.is-editing ._snippet-content {
+    background-color: var(--color-slate-900);
+    border:1px dashed var(--color-green-700);
+  }
+    ._snippet.is-editing ._snippet-content:focus-visible {
+    outline: none;
+    border:1px dashed var(--color-green-600);
+  }
+  ._snippet.is-editing ._snippet-content pre[contenteditable="true"]{
+    background: transparent!important;
+    white-space: pre-line!important;
+    outline: none; 
+  }
+    ._snippet ._snippet-content pre  div {
+    background: transparent!important;
+    white-space: pre-line!important;
+    outline: none;  
+    }
+   ._snippet.is-editing ._snippet-title[contenteditable="true"] {
+    padding: 5px 10px;
+    border:1px dashed var(--color-green-700);
+    border-radius: 0.25rem;
+  }
+  ._snippet.is-editing ._snippet-title[contenteditable="true"]:focus-visible {
+    outline: none;
+    border:1px dashed var(--color-green-600);
+  }
+</style>
+
 <script>
-  import "./Snippets.ts";
+  import "./snippets.ts";
+  import "./editSnippet.ts";
 </script>
+
