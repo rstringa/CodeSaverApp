@@ -1,7 +1,7 @@
 import { supabase } from '@lib/supabaseClient';
 import type { APIRoute } from 'astro';
 
-const { data: userSession } = await supabase.auth.getSession(); 
+const { data: userSession } = await supabase.auth.getSession();
 
 export const PUT: APIRoute = async ({ request }) => {
   const body = await request.json();

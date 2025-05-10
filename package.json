@@ -15,8 +15,6 @@
     "astro": "^5.7.10",
     "highlight.js": "^11.11.1",
     "micromatch": "^4.0.8",
-    "prettier": "^3.5.3",
-    "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^4.1.5"
   },
@@ -24,6 +22,8 @@
     "@tailwindcss/postcss": "^4.1.5",
     "astro-icon": "^1.1.5",
     "autoprefixer": "^10.4.21",
-    "postcss": "^8.5.3"
+    "postcss": "^8.5.3",
+    "prettier": "^3.5.3",
+    "prettier-plugin-astro": "^0.14.1"
   }
 }
