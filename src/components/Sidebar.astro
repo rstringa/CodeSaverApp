@@ -39,7 +39,7 @@ if (userSessionId) {
         `
         href="#" data-category_id='0'>
         <Icon name="folderCode" class="w-6 h-5 mr-2" /> 
-            <span>Todas</span>
+            <span class="_category-name">Todos los snippets</span>
         </a>
         {!categoriasLength ?
         <div class="flex flex-col items-center justify-center">
@@ -154,7 +154,17 @@ open:rounded-0 shadow-lg p-0 w-[450px] max-w-[90%] bg-transparent backdrop:bg-sl
 }
 ._category-item.is-active:hover ._actions:hover {  
     color: var(--color-green-600);
-} 
+}
+._category-item[contenteditable="true"] {
+    background-color: var(--color-slate-900);
+    border-style: dashed;    
+}
+._category-item[contenteditable="true"] ._category-name {
+    color: var(--color-slate-300); 
+}
+._category-item[contenteditable="true"] ._number {
+    background-color: var(--color-slate-900);
+}   
 </style>  
  
 

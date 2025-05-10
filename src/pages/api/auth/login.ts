@@ -22,10 +22,12 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
       return redirect(data.url);
     }
 
-    if (!email || !password) throw new Error("Email or password missing");
+    if (!email || !password) throw new Error("Email o password faltantes");
+    if (password.length < 6) throw new Error("La contraseña debe tener al menos 6 caracteres");
+
 
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) throw new Error("Invalid email or password");
+    if (error) throw new Error("Email o password incorrectos");
 
     cookies.set("sb-access-token", data.session.access_token, { sameSite: "none", path: "/", secure: true });
     cookies.set("sb-refresh-token", data.session.refresh_token, { sameSite: "none", path: "/", secure: true });

@@ -19,21 +19,39 @@ export const POST: APIRoute = async ({ request, redirect }) => {
       return redirect(data.url);
     }
 
-    if (!email || !password) throw new Error("Email or password missing");
+    if (!email || !password) throw new Error("Email o password faltantes");
+    if (password.length < 6) throw new Error("La contraseña debe tener al menos 6 caracteres");
 
     const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) throw new Error(error.message);
 
+    
     // CREATE BASE CATEGORY IF IS EMAIL PROVIDER
     const userId = data.user?.id;
-    if (!userId) throw new Error("Failed to create user");
+    if (!userId) throw new Error("Error al obtener el ID del usuario");
+    
+    const { data: existingCategory, error: fetchError } = await supabase
+      .from("categorias")
+      .select("*")
+      .eq("usuario_id", userId)
+      .eq("nombre", "Base")
+      .single();
 
-    const { error: insertError } = await supabase.from("categorias").insert([{ usuario_id: userId, nombre: "Base" }]);
-    if (insertError) throw new Error("Failed to create initial category");
-
-    return redirect(`/login?message=${encodeURIComponent("Registration successful. Please check your email to confirm your account.")}`);
+      if (!existingCategory) {
+        const { error: insertError } = await supabase
+          .from('categorias')
+          .insert([{ usuario_id: userId, nombre: 'Base' }]);
+    
+        if (insertError) {
+          console.error('Error creando categoría Base:', insertError);
+         // return redirect(`/register?error=${encodeURIComponent("Failed to create initial category")}`);
+        }
+      }
+      return redirect('/');
+     //return redirect(`/login?message=${encodeURIComponent("Registro exitoso. Ahora puedes ingresar a tu cuenta.")}`);
   } catch (err) {
     console.error("register.ts-",err.message);
-    return redirect(`/register?error=${encodeURIComponent(err.message)}`);
+    return redirect(`/register?error=${encodeURIComponent("Error: " + err.message)}`);
   }
+ // return redirect("/login");
 };

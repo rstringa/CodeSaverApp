@@ -4,6 +4,7 @@ const title = "Ingresar";
 
 // Get the error message from the query parameter
 const error = Astro.url.searchParams.get("error");
+const loginMessage = Astro.url.searchParams.get("message");
 ---
 
 
@@ -28,7 +29,12 @@ const error = Astro.url.searchParams.get("error");
           {error}
         </div>
       )}
-
+      <!-- Display the login message if it exists -->
+       {loginMessage && (
+        <div class="bg-green-100 text-green-700 p-3 rounded-md mb-4">
+          {loginMessage}
+        </div>
+      )}
       <form
         action="/api/auth/login"
         method="post"

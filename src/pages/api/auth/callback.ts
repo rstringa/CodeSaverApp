@@ -40,10 +40,10 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
     .eq('nombre', 'Base')
     .single();
 
-  if (fetchError) {
-    console.error('Error fetching existing category:', fetchError);
-    return redirect(`/register?error=${encodeURIComponent("Failed to check existing category")}`);
-  }
+  // if (fetchError) {
+  //   console.error('Error fetching existing category:', fetchError);
+  //   return redirect(`/register?error=${encodeURIComponent("Failed to check existing category")}`);
+  // }
 
   if (!existingCategory) {
     const { error: insertError } = await supabase
@@ -52,7 +52,7 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
 
     if (insertError) {
       console.error('Error creando categoría Base:', insertError);
-      return redirect(`/register?error=${encodeURIComponent("Failed to create initial category")}`);
+     // return redirect(`/register?error=${encodeURIComponent("Failed to create initial category")}`);
     }
   }
 
