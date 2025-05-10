@@ -33,14 +33,28 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
   // CREATE BASE CATEGORY IF IS GOOGLE PROVIDER
   const userId = data.user?.id;
 
-  const { error: insertError } = await supabase
-  .from('categorias')
-  .insert([{ usuario_id: userId, nombre: 'Base' }]);
+  const { data: existingCategory, error: fetchError } = await supabase
+    .from('categorias')
+    .select('*')
+    .eq('usuario_id', userId)
+    .eq('nombre', 'Base')
+    .single();
 
-if (insertError) {
-  console.error('Error creando categoría Base:', insertError);
-  return redirect(`/register?error=${encodeURIComponent("Failed to create initial category")}`);
-}
+  if (fetchError) {
+    console.error('Error fetching existing category:', fetchError);
+    return redirect(`/register?error=${encodeURIComponent("Failed to check existing category")}`);
+  }
+
+  if (!existingCategory) {
+    const { error: insertError } = await supabase
+      .from('categorias')
+      .insert([{ usuario_id: userId, nombre: 'Base' }]);
+
+    if (insertError) {
+      console.error('Error creando categoría Base:', insertError);
+      return redirect(`/register?error=${encodeURIComponent("Failed to create initial category")}`);
+    }
+  }
 
   return redirect("/");
 };
