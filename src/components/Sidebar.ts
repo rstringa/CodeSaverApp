@@ -192,7 +192,8 @@ newCategoryModal?.addEventListener('click', function (e) {
 createModalNewCategory?.addEventListener('click', function (e) {
     e.preventDefault();
     const categoryName = newCategoryModal?.querySelector('._name');
-    if (!categoryName) {
+    if (!categoryName || !(categoryName as HTMLInputElement).value) {
+        messageModalNewCategory.textContent = "Asigne un nombre a la categoría.";
         console.error("No se encontró el input con el nombre de la categoría.");
         return;
     }

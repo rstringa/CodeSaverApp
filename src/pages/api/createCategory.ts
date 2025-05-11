@@ -12,13 +12,13 @@ export const POST: APIRoute = async ({ request }) => {
       JSON.stringify({ error: 'No se pudo obtener el usuario autenticado.' }),
       { status: 400 }
     );
-  } 
+  }
 
   // Crear categoría
   const { data, error } = await supabase.from('categorias').insert([
-    {   
+    {
       nombre: name,
-     // parent_id: body.parent_id,
+      // parent_id: body.parent_id,
     },
   ]);
 

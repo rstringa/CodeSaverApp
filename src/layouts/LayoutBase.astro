@@ -1,36 +1,34 @@
 ---
-import '@styles/highlight-js.css';
-import '@styles/highlight-theme.css';
-import '@styles/global.css';
-import Header from '@components/Header.astro';
-import { userLoggedIn, userData } from "@utils/userLoggedIn";
-const userLogged = await userLoggedIn();
+import '@styles/highlight-js.css'
+import '@styles/highlight-theme.css'
+import '@styles/global.css'
+import Header from '@components/Header.astro'
+import { userLoggedIn, userData } from '@utils/userLoggedIn'
+const userLogged = await userLoggedIn()
 ---
 
 <!doctype html>
 <html lang="es-ES">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-    <meta name="generator" content={Astro.generator} />
-    <title>CodeSaverApp</title>
-
-  </head>
-  <body class=`theme-atom-one-dark h-screen w-full bg-slate-900 text-slate-100
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+		/>
+		<meta name="generator" content={Astro.generator} />
+		<title>CodeSaverApp</title>
+	</head>
+	<body
+		class=`theme-atom-one-dark h-screen w-full bg-slate-900 text-slate-100
   ${userLogged ? 'logged-in' : 'logged-out'}
-  `>
-    <Header />
-    <slot/>
-   
+  `
+	>
+		<Header />
+		<slot />
 
-    <script
-  defer
-  src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
-  type="module"></script>
-
-  </body>
+		<script
+			defer
+			src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+			type="module"></script>
+	</body>
 </html>
-

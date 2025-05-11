@@ -21,7 +21,7 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
     path: "/",
     secure: true,
     httpOnly: true,
-    sameSite: "none", 
+    sameSite: "none",
   });
   cookies.set("sb-refresh-token", refresh_token, {
     path: "/",
@@ -52,7 +52,7 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
 
     if (insertError) {
       console.error('Error creando categoría Base:', insertError);
-     // return redirect(`/register?error=${encodeURIComponent("Failed to create initial category")}`);
+      // return redirect(`/register?error=${encodeURIComponent("Failed to create initial category")}`);
     }
   }
 

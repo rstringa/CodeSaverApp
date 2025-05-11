@@ -3,11 +3,11 @@ import type { APIRoute } from 'astro';
 
 
 export const POST: APIRoute = async ({ request }) => {
-  const { data: userSession } = await supabase.auth.getSession(); 
+  const { data: userSession } = await supabase.auth.getSession();
   const body = await request.formData();
   const titulo = body.get('titulo');
   const contenido = body.get('contenido');
- 
+
   const categoria_id = body.get('categoria');
   const usuario_id = userSession?.session?.user.id;
 
@@ -18,24 +18,24 @@ export const POST: APIRoute = async ({ request }) => {
     );
   }
 
-//   const { data: userExists, error: userError } = await supabase
-//     .from('usuarios')
-//     .select('id')
-//     .eq('id', usuario_id)
-//     .single();
+  //   const { data: userExists, error: userError } = await supabase
+  //     .from('usuarios')
+  //     .select('id')
+  //     .eq('id', usuario_id)
+  //     .single();
 
-//   if (!userExists) {
-//     const { error: insertUserError } = await supabase.from('usuarios').insert([
-//       { id: usuario_id, /* otros campos necesarios */ },
-//     ]);
+  //   if (!userExists) {
+  //     const { error: insertUserError } = await supabase.from('usuarios').insert([
+  //       { id: usuario_id, /* otros campos necesarios */ },
+  //     ]);
 
-//     if (insertUserError) {
-//       return new Response(
-//         JSON.stringify({ error: 'No se pudo crear el usuario.' }),
-//         { status: 500 }
-//       );
-//     }
-//   }
+  //     if (insertUserError) {
+  //       return new Response(
+  //         JSON.stringify({ error: 'No se pudo crear el usuario.' }),
+  //         { status: 500 }
+  //       );
+  //     }
+  //   }
 
   const { data, error } = await supabase.from('snippets').insert([
     {

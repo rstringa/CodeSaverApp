@@ -1,73 +1,76 @@
 ---
 import { Icon } from 'astro-icon/components'
-import LayoutBase from "@layouts/LayoutBase.astro";
-import Sidebar from "@components/Sidebar.astro";
-import ShowSnippets from "@components/code/ShowSnippets.astro";
-import { userLoggedIn, userData } from "@utils/userLoggedIn";
-import CreateSnippet from "@components/code/CreateSnippet.astro";
+import LayoutBase from '@layouts/LayoutBase.astro'
+import Sidebar from '@components/Sidebar.astro'
+import ShowSnippets from '@components/code/ShowSnippets.astro'
+//import { userLoggedIn, userData } from '@utils/userLoggedIn'
+import CreateSnippet from '@components/code/CreateSnippet.astro'
 
-const userLogged = await userLoggedIn();
+import { supabase } from '@lib/supabaseClient'
 
-// console.log("index.astro-" + userLogged);
+// Obtener la sesión de usuario
+let userLogged = false
+const {
+	data: { session }
+} = await supabase.auth.getSession()
+userLogged = Boolean(session?.user)
 ---
 
-<LayoutBase>
-  <main class=`relative 
-  grid-cols-[1fr] grid  
-  lg:grid-cols-[270px_1fr]  lg:h-full   
-  
-  ${userLogged ? 'logged-in' : 'logged-out'}
-  
-  `
+<>
+	<LayoutBase>
+		<main
+			class={`
+				relative grid-cols-[1fr] grid
+				lg:grid-cols-[270px_1fr] lg:h-full
+				${userLogged ? 'logged-in' : 'logged-out'}
+			  `}
+		>
+			<Sidebar />
 
-  >  
-    <Sidebar />
-    
-    <div class="_content h-full p-6 max-[100vw] overflow-x-hidden
-    ">
-      <div class="_top 
-      flex-row lg:flex-row
-      flex gap-4 justify-between items-center mb-4
-      ">
-       <div> 
-      { 
-        !userLogged ? (
-        <h1 class="
-        text-center lg:text-left text-2xl lg:text-xl p-8 px-2 text-balance lg:p-0 
-         relative z-10">  
-            Bienvenido a CodeSaverApp, por favor <a href="/register" class="text-green-600">regístrese</a> o <a href="/register" class="text-green-600">inicie sesión</a> a la app.  
-          </h1> 
-   
-        ):(
-        <h1 class="_category-name 
-        ml-0 lg:ml-6  text-md lg:text-2xl 
-       font-semibold text-green-600  flex items-center gap-2 leading-none
-        
-        ">
-          <Icon name="folderCode" class="w-8 h-8 lg:w-5 lg:h-5 self-end" /> 
-          <span class="_category-text">Todos los snippets</span></h1> 
-        
-        )
-      }
-      </div>
-      <div class="mb-3"> <a class=`_new_snippet _btn-featured font-semibold ${!userLogged ? "pointer-events-none opacity-50" : "" }` href="#">+ Crear Snippet    
-</a></div>    
-      </div>
-      <ShowSnippets />
+			<div class="_content max-[100vw] h-full overflow-x-hidden p-6">
+				<div class="_top mb-4 flex flex-row items-center justify-between gap-4 lg:flex-row">
+					<div>
+						{
+							!userLogged ? (
+								<h1 class="relative z-10 p-8 px-2 text-center text-2xl text-balance lg:p-0 lg:text-left lg:text-xl">
+									Bienvenido a CodeSaverApp, por favor{' '}
+									<a href="/register" class="text-green-600">
+										regístrese
+									</a>{' '}
+									o{' '}
+									<a href="/register" class="text-green-600">
+										inicie sesión
+									</a>{' '}
+									a la app.
+								</h1>
+							) : (
+								<h1 class="_category-name text-md ml-0 flex items-center gap-2 leading-none font-semibold text-green-600 lg:ml-6 lg:text-2xl">
+									<Icon name="folderCode" class="h-8 w-8 self-end lg:h-5 lg:w-5" />
+									<span class="_category-text">Todos los snippets</span>
+								</h1>
+							)
+						}
+					</div>
+					<div class="mb-3">
+						<a
+							class=`_new_snippet _btn-featured font-semibold ${!userLogged
+            ? "pointer-events-none opacity-50" : "" }`
+							href="#"
+							>+ Crear Snippet
+						</a>
+					</div>
+				</div>
+				<ShowSnippets />
 
-  <CreateSnippet />
-
-
-
-    </div>
-  </main>
-</LayoutBase>
-
+				<CreateSnippet />
+			</div>
+		</main>
+	</LayoutBase>
+</>
 <style>
-body.logged-out ._top {
-    @media(max-width: 1024px) {
-        flex-direction: column; 
-    } 
-}       
-
+	body.logged-out ._top {
+		@media (max-width: 1024px) {
+			flex-direction: column;
+		}
+	}
 </style>
