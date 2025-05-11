@@ -35,7 +35,15 @@ order-none lg:order-none
         class=`w-6 h-6 mr-2 text-green-400 fill-current
         ` /> Crear categoría
         </a>
-        <h4 class="uppercase text-sm text-slate-500 mb-2">Categorias</h4> 
+        <h4 class="uppercase text-sm text-slate-500 mb-2">Categorias</h4>
+        <div class=" 
+        h-[190px] md:h-auto relative 
+        overflow-y-hidden 
+        after:content-[''] after:block after:absolute after:z-10 after:bottom-0 after:left-0 
+        after:w-full after:h-[50px] after:bg-gradient-to-t after:to-transparent after:from-slate-900
+        lg:after:hidden  
+        ">
+        <div class="overflow-y-auto h-[190px] lg:h-auto pr-2 lg:pr-0 pb-8 lg:pb-0 relative scrollbar-custom scroll-smooth"> 
         <a
         title="Ver todos los snippets creados"
         class=`_category-item is-active _btn-normal justify-start! mb-3 px-3!
@@ -103,7 +111,8 @@ order-none lg:order-none
             )
         ))
         }
-
+    </div>
+    </div> 
      </div>  
      
      
