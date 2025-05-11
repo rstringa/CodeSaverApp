@@ -12,20 +12,40 @@ const userLogged = await userLoggedIn();
 ---
 
 <LayoutBase>
-  <main class=`relative grid grid-cols-[270px_1fr] h-full ${userLogged ? 'logged-in' : 'logged-out'}`>  
+  <main class=`relative 
+  grid-cols-[1fr] grid  
+  lg:grid-cols-[270px_1fr]  lg:h-full   
+  
+  ${userLogged ? 'logged-in' : 'logged-out'}
+  
+  `
+
+  >  
     <Sidebar />
     
-    <div class="content h-full p-6">
-      <div class="_top flex gap-4 justify-between items-center mb-4">
+    <div class="content h-full p-6
+
+    order-0 lg:order-2
+    ">
+      <div class="_top 
+      flex-col lg:flex-row
+      flex gap-4 justify-between items-center mb-4
+      ">
        <div> 
       { 
         !userLogged ? (
-        <h1 class="text-xl relative z-10">  
+        <h1 class="
+        text-center lg:text-left text-2xl lg:text-xl p-8 lg:p-0 
+         relative z-10">  
             Bienvenido a CodeSaverApp, por favor <a href="/register" class="text-green-600">regístrese</a> o <a href="/register" class="text-green-600">inicie sesión</a> a la app.  
           </h1> 
-          // <h1 class="text-2xl font-bold mb-6">Bienvenido, {userLogged.email}!</h1>
+   
         ):(
-        <h1 class="_category-name text-2xl font-semibold text-green-600 ml-6 flex items-center gap-2 leading-none">
+        <h1 class="_category-name 
+        ml-0 lg:ml-6
+        text-2xl font-semibold text-green-600  flex items-center gap-2 leading-none
+        
+        ">
           <Icon name="folderCode" class="w-5 h-5 self-end" />
           <span class="_category-text">Todos los snippets</span></h1> 
         

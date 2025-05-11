@@ -22,7 +22,10 @@ if (userSessionId) {
 
 }
 ---
-<aside class="_sidebar w-full h-full border-r-1 border-slate-700 p-6 pt-6">
+<aside class="_sidebar 
+w-full h-full border-r-1 border-slate-700 p-6 pt-6
+order-2 lg:order-none 
+"> 
     <div class="_content m-auto">
         <a 
         class=`_new_category _btn-normal mb-6
@@ -85,8 +88,8 @@ if (userSessionId) {
 
                             <Icon name="arrowRight" class="w-4 h-4 " />
 
-                            <Icon name="more" title='Editar o Eliminar categoría' class="_actions relative z-10 w-6 h-6 text-slate-400 hidden group-hover:block hover:text-slate-200 focus:bg-slate-500 transition-discrete duration-300" />
-
+                            <Icon name="more" title='Editar o Eliminar categoría' class="_actions relative z-10 w-6 h-6 text-slate-400 hidden group-hover:block group-focus:block  hover:text-slate-200 focus:bg-slate-500 transition-discrete duration-300" />
+ 
                         </span> 
                     </a>    
 

@@ -7,9 +7,15 @@ const url = new URL(Astro.url.pathname, Astro.url.origin);
 const urlPath = url.pathname;
 ---
 
-<header class="_header flex justify-between p-6 py-3 m-auto border-b-1 border-slate-700">
-  <div class="_container flex justify-between items-center w-full m-auto">
-    <div class="_logo">
+<header class="_header 
+flex justify-between p-6 py-3 m-auto border-b-1 border-slate-700
+
+">
+  <div class="_container 
+  flex flex-col justify-between items-center w-full m-auto
+  md:flex-row 
+  ">
+    <div class="_logo mb-2 lg:mb-0">
       <a href="/" class="flex items-center gap-2">
         <Icon name="home" class="w-7 h-7" />
         <span class="text-slate-400">Code<b>Saver</b>App</span>
@@ -19,7 +25,9 @@ const urlPath = url.pathname;
 
       
       {userLogged ? (
-        <p class="text-md font-regular mr-6 text-slate-400">Hola, {userLogged.email}!</p>
+        <p class="text-md font-regular mr-6 text-slate-400
+        w-full
+        ">Hola, {userLogged.email}!</p>
         <a
           href="#"
           id="btn_logout"

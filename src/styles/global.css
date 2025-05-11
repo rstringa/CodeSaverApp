@@ -1,40 +1,43 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @layer utilities {
-  a {
-    @apply text-green-600;
-  }
-  a:hover {
-    @apply text-green-400;
-  }
-    .scrollbar-custom {
-      /* ancho */
-      &::-webkit-scrollbar { @apply w-2 rounded }
-      /* thumb */
-      &::-webkit-scrollbar-thumb { @apply bg-slate-700 rounded; }
-      /* track */
-      &::-webkit-scrollbar-track { @apply bg-slate-800  rounded; }
-    }
-    ._btn-normal {
-      @apply border border-slate-700 text-slate-300 text-center px-6 py-2 rounded
-      flex  justify-center items-center cursor-pointer
-      ;
-    }
-    ._btn-normal:hover, 
-    ._btn-normal:focus {
-      @apply bg-blue-500/5  border-slate-600;
-    }
-    ._btn-normal:focus {
-      @apply outline-none border-green-700;
-    }
-    ._btn-normal:active {
-      @apply bg-blue-500/10 border-slate-700;
-    }
-    ._btn-featured {
-      @apply border border-green-700 text-green-400 text-center px-6 py-2 rounded  
-      flex  justify-center items-center cursor-pointer
-    }
-    ._btn-featured:hover {
-      @apply bg-green-500/5  border-green-600;
-    }
-  } 
+	a {
+		@apply text-green-600;
+	}
+	a:hover {
+		@apply text-green-400;
+	}
+	.scrollbar-custom {
+		/* ancho */
+		&::-webkit-scrollbar {
+			@apply w-2 rounded;
+		}
+		/* thumb */
+		&::-webkit-scrollbar-thumb {
+			@apply rounded bg-slate-700;
+		}
+		/* track */
+		&::-webkit-scrollbar-track {
+			@apply rounded bg-slate-800;
+		}
+	}
+	._btn-normal {
+		@apply flex cursor-pointer items-center justify-center rounded border border-slate-700 px-6 py-2 text-center whitespace-nowrap text-slate-300;
+	}
+	._btn-normal:hover,
+	._btn-normal:focus {
+		@apply border-slate-600 bg-blue-500/5;
+	}
+	._btn-normal:focus {
+		@apply border-green-700 outline-none;
+	}
+	._btn-normal:active {
+		@apply border-slate-700 bg-blue-500/10;
+	}
+	._btn-featured {
+		@apply flex cursor-pointer items-center justify-center rounded border border-green-700 px-6 py-2 text-center whitespace-nowrap text-green-400;
+	}
+	._btn-featured:hover {
+		@apply border-green-600 bg-green-500/5;
+	}
+}
