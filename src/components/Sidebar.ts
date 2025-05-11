@@ -50,11 +50,11 @@ function showSnippets(categoryId) {
     });
 }
 // SHOW CATEGORY NAME
-function showCategoryName(categoryNameText) {
+function showCategoryName(editedName) {
     const categoryName = document.querySelector('._top ._category-name ._category-text');
     if (categoryName) {
         categoryName.textContent = "";
-        categoryName.textContent = categoryNameText;
+        categoryName.textContent = editedName;
     }
 }
 
@@ -102,13 +102,20 @@ function editCategory(categoryId) {
     // Escuchar el evento de "blur" para guardar los cambios
     category_item?.addEventListener("blur", () => {
         category_item?.removeAttribute("contenteditable");
-        const editedName = category_item?.querySelector('._category-name')?.textContent;
-        if (editedName) {
+        let editedName = category_item?.querySelector('._category-name')?.textContent;
+        if (editedName && editedName.trim() !== "") {
+            editedName = editedName.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+            const categoryNameElement = category_item.querySelector('._category-name');
+            if (categoryNameElement) {
+                categoryNameElement.textContent = editedName;
+            }
+            //console.log(editedName);
             updateCategory(categoryId, editedName);
         }
     });
 }
 async function updateCategory(categoryId, editedName) {
+
     const response = await fetch("/api/editCategory", {
         method: "PUT",
         headers: {
@@ -120,6 +127,7 @@ async function updateCategory(categoryId, editedName) {
         }),
 
     });
+
     await showCategoryName(editedName);
 
     if (!response.ok) {
@@ -187,12 +195,15 @@ createModalNewCategory?.addEventListener('click', function (e) {
 });
 
 async function saveNewCategory(categoryName) {
+    // Sanitize snippet title from malicius code
+    const categoryNameValue = (categoryName as HTMLInputElement).value;
+    const sanitizedCategoryName = categoryNameValue.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
     const response = await fetch("/api/createCategory",
         {
             method: "POST",
             //headers: { "Content-Type": "application/json", },
             body: JSON.stringify({
-                name: (categoryName as HTMLInputElement).value,
+                name: sanitizedCategoryName,
             }),
         });
     if (!response.ok) {

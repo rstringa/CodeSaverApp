@@ -13,7 +13,7 @@ deleteSnippets.forEach((deleteSnippet) => {
 function confirmDeleteSnippet(snippetId) {
     const snippet = document.querySelector(`[data-snippet-id="${snippetId}"]`);
     const snippetConfirm = snippet?.querySelector("._snippet-confirm");
-    
+
 
     snippetConfirm?.classList.remove("hidden");
     const snippetConfirmDelete = snippetConfirm?.querySelector("._snippet-confirm-delete");

@@ -39,8 +39,8 @@ if (userSessionId) {
         ${(!userLogged || !categoriasLength) ? "pointer-events-none opacity-50" : "" }
         `
         href="#" data-category_id='0'>
-        <Icon name="folderCode" class="w-6 h-5 mr-2" /> 
-            <span class="_category-name">Todos los snippets</span>
+        <Icon name="folderCode" class="w-6 h-5 mr-2 " /> 
+            <span class="_category-name text-sm">Todos los snippets</span>
         </a>
         {!categoriasLength ?
         <div class="flex flex-col items-center justify-center">
@@ -56,8 +56,11 @@ if (userSessionId) {
                 <div>
                  
 
-                 <a class="group _category-item _btn-normal 
-                    relative px-3! mb-3 
+                 <a class="group _category-item _btn-normal
+                 
+                    relative px-3! mb-3
+                    transition-all duration-300
+                    
                      group-hover:inline 
                     "
                     href="#" 
@@ -74,11 +77,11 @@ if (userSessionId) {
                       
                         <Icon name="folderCode" class="flex flex-shrink-0 flex-grow-0 w-6 h-5 mr-2 text-slate-500 fill-current" /> 
 
-                        <span class="_category-name flex w-full max-[calc(100% - 40px)] overflow-hidden overflow-ellipsis text-left
+                        <span class="_category-name flex w-full pr-[20px] overflow-hidden whitespace-pre-wrap text-left text-sm leading-5  
                        
                         ">{categoria.nombre}</span>
 
-                        <span class="_category-item_icons flex items-center gap-0 flex-nowrap ">
+                        <span class="_category-item_icons absolute right-3 flex items-center gap-0 flex-nowrap ">
 
                             <Icon name="arrowRight" class="w-4 h-4 " />
 

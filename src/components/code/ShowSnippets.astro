@@ -19,22 +19,14 @@ let snippetsWithCategories: {
 }[] = [];
 
 if (userSessionId) {
-  // const snippetAuthorData = await supabase
-  //   .from("usuarios")
-  //   .select("*")
-  //   .eq("usuaario_id", userSessionId?.id);
-  // const userId = snippetAuthorData.data && snippetAuthorData.data[0]?.id;
-
   const { data, error } = await supabase
     .from("snippets")
-    .select(
-      `
+    .select(`
       id,
       titulo,
       contenido,
       categoria_id
-    `
-    )
+    `)
     .eq("usuario_id", userSessionId)
     .order('created_at', { ascending: false });
 
@@ -45,7 +37,6 @@ if (userSessionId) {
     snippetsWithCategories = data;
   }
 }
-
 ---
 
 {
@@ -55,131 +46,203 @@ if (userSessionId) {
         No tienes snippets aún.
       </p>
     </div>
-  ) : 
-(
-<div>
-  <ul class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-    {
-      snippetsWithCategories.map((snippet) => {
-        return (
-          <li
-            class="_snippet 
-            group
-      
-            flex flex-col gap-2 rounded bg-slate-600/10 p-6 text-sm transition-all transition-discrete duration-300"
-            data-category_id={snippet.categoria_id}
-            data-snippet-id={snippet.id}
-          >
-            <div class="flex justify-between items-center mb-2">
-              <h2 class="_snippet-title text-xl font-semibold ">{snippet.titulo}</h2>
+  ) : (
+    <div>
+      <ul class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {
+          snippetsWithCategories.map((snippet) => {
+            return (
+              <li
+                class="_snippet group flex flex-col gap-2 rounded bg-slate-600/10 p-6 text-sm transition-all transition-discrete duration-300"
+                data-category_id={snippet.categoria_id}
+                data-snippet-id={snippet.id}
+              >
+                <div class="flex justify-between items-center gap-2 mb-2">
+                  <h2 class="_snippet-title text-xl font-semibold">
+                    {snippet.titulo}
+                  </h2>
 
-              <!-- Editar / Eliminar -->
-              <div class="
-              opacity-45 group-hover:opacity-100 transition-opacity duration-300
-              flex gap-2 items-center">
-                <a
-                  href="#"
-                  class="_edit-snippet _btn-normal px-2! text-slate-400"
-                  data-id={snippet.id}
-                  title="Editar"
-                >
-                  <Icon name="edit" class="w-4 h-4 pointer-events-none " />
-                </a>
-                <a
-                  href="#"
-                  class="_delete-snippet _btn-normal px-2! text-slate-400 "
-                  data-id={snippet.id}
-                  title="Eliminar"
-                >
-                 <Icon name="delete" class="w-4 h-4 pointer-events-none " />
-                </a>
-              </div>
-            </div>
+                  <!-- Editar / Eliminar -->
+                  <div class="_snippet-top-actions transition-opacity duration-300 flex gap-2 items-center">
+                    <a
+                      href="#"
+                      class="_edit-snippet _btn-normal px-2! text-slate-400"
+                      data-id={snippet.id}
+                      title="Editar"
+                    >
+                      <Icon name="edit" class="w-4 h-4 pointer-events-none" />
+                    </a>
+                    <a
+                      href="#"
+                      class="_delete-snippet _btn-normal px-2! text-slate-400"
+                      data-id={snippet.id}
+                      title="Eliminar"
+                    >
+                      <Icon name="delete" class="w-4 h-4 pointer-events-none" />
+                    </a>
+                  </div>
+                </div>
 
-            <!-- CONFIRM DELETE SNIPPET -->
-            <div
-              class="_snippet-confirm 
-                  flex flex-col gap-2 items-center mb-3 hidden
-                  bg-slate-800/50 p-6 rounded-md
-                  "
-            >
-              <p class="flex flex-1 justify-between items-start text-md text-balance bg-amber-900/10 text-amber-600 mb-2 border border-amber-800 rounded p-2.5">
-               <Icon name="warning" class="w-8 h-8 mr-3 text-amber-600" />
-                Una vez eliminado, no podrás recuperar el snippet.
-              </p>
-              <div class="flex flex-wrap gap-3 items-center justify-between w-full">
-                <a
-                  href="#"
-                  class="_snippet-confirm-delete _btn-normal flex-1   [min-width:150px]"
-                  data-id={snippet.id}
-                  title="Editar"
+                <!-- CONFIRM DELETE SNIPPET -->
+                <div
+                  class="_snippet-confirm flex flex-col gap-2 items-center mb-3 hidden bg-slate-800/50 p-6 rounded-md"
                 >
-                  Sí, eliminar
-                </a>
-                <a
-                  href="#"
-                  class="_snippet-confirm-cancel _btn-normal  flex-1 [min-width:150px]"
-                  data-id={snippet.id}
-                  title="Eliminar"
-                >
-                  No, cancelar
-                </a>
-              </div>
-            </div>
-            <div
-              class="_snippet-content scrollbar-custom bg-slate-800 p-4 rounded flex flex-col max-h-90 overflow-y-auto 
-                scroll-smooth"
-            >
-              
-                <pre class="hljs m-0 p-0 whitespace-pre-line break-words ">
-                  <code set:html={hljs.highlightAuto(snippet.contenido).value} />
-                  
-                </pre>
-             
-            </div>
-          </li>
-        );
-      })
-    }
-  </ul>
-</div>
-)}
+                  <p class="flex flex-1 justify-between items-start text-md text-balance bg-amber-900/10 text-amber-600 mb-2 border border-amber-800 rounded p-2.5">
+                    <Icon name="warning" class="w-8 h-8 mr-3 text-amber-600" />
+                    Una vez eliminado, no podrás recuperar el snippet.
+                  </p>
+                  <div class="flex flex-wrap gap-3 items-center justify-between w-full">
+                    <a
+                      href="#"
+                      class="_snippet-confirm-delete _btn-normal flex-1 [min-width:150px]"
+                      data-id={snippet.id}
+                      title="Editar"
+                    >
+                      Sí, eliminar
+                    </a>
+                    <a
+                      href="#"
+                      class="_snippet-confirm-cancel _btn-normal flex-1 [min-width:150px]"
+                      data-id={snippet.id}
+                      title="Eliminar"
+                    >
+                      No, cancelar
+                    </a>
+                  </div>
+                </div>
+
+                <div
+                  class="_snippet-content relative scrollbar-custom bg-slate-800 p-4 rounded flex flex-col max-h-90 overflow-y-auto scroll-smooth">
+                  <pre class="hljs _snippet-content-formated m-0 p-0 whitespace-pre-line break-words">
+                    <code set:html={hljs.highlightAuto(snippet.contenido).value} />
+                  </pre>
+
+                  <pre class="hljs _snippet-content-unformated m-0 p-0 whitespace-pre-line break-words" contenteditable="true">
+                    <code>
+                      {snippet.contenido}
+                    </code>
+                  </pre>
+
+                </div>
+
+                <div class="_snippet-edit-actions flex flex-wrap gap-3 mt-1 items-center justify-between w-full">
+
+                  <a
+                    href="#"
+                    class="_save-changes _btn-featured flex-1 [min-width:150px] whitespace-nowrap"
+                    data-id={snippet.id}
+                    title="Editar"
+                  >
+                    Guardar cambios
+                  </a>
+                  <a
+                    href="#"
+                    class="_cancel-changes _btn-normal flex-1 [min-width:150px]  whitespace-nowrap"
+                    data-id={snippet.id}
+                    title="Eliminar"
+                  >
+                    Descartar cambios
+                  </a>
+
+                </div>
+
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  )
+}
 
 <style is:inline>
   ._snippet {
     outline: none;
-    border:1px dashed transparent;
+    border: 1px dashed transparent;
     transition: all 0.5s;
   }
+  ._snippet ._snippet-top-actions {
+    opacity: 0.4; 
+  }
+  ._snippet:hover ._snippet-top-actions {
+    opacity: 1;
+  }
+   ._snippet ._snippet-content pre div {
+    background: transparent !important;
+    white-space: pre-line !important;
+    outline: none;
+  }
   ._snippet.is-editing {
-    border:1px dashed var(--color-slate-600);
+    border: 1px dashed var(--color-slate-600);
   }
   ._snippet.is-editing ._snippet-content {
     background-color: var(--color-slate-900);
-    border:1px dashed var(--color-green-700);
+    border: 1px dashed var(--color-green-700);
   }
-    ._snippet.is-editing ._snippet-content:focus-visible {
+  ._snippet.is-editing ._snippet-content:focus-visible {
     outline: none;
-    border:1px dashed var(--color-green-600);
+    border: 1px dashed var(--color-green-600);
   }
-  ._snippet.is-editing ._snippet-content pre[contenteditable="true"]{
-    background: transparent!important;
-    white-space: pre-line!important;
-    outline: none; 
+  ._snippet.is-editing ._snippet-content pre[contenteditable="true"] {
+    background: transparent !important;
+    white-space: pre-line !important;
+    outline: none;
   }
-    ._snippet ._snippet-content pre  div {
-    background: transparent!important;
-    white-space: pre-line!important;
-    outline: none;  
-    }
-   ._snippet.is-editing ._snippet-title[contenteditable="true"] {
+  ._snippet.is-editing ._snippet-top-actions {
+    opacity: 0.25!important;
+        pointer-events: none;
+    user-select: none; 
+ }
+  ._snippet.is-editing ._edit-snippet,
+  ._snippet.is-editing ._delete-snippet {
+ 
+  }
+  ._snippet.is-editing ._snippet-title[contenteditable="true"] {
     padding: 5px 10px;
-    border:1px dashed var(--color-green-700);
+    border: 1px dashed var(--color-green-700);
     border-radius: 0.25rem;
   }
   ._snippet.is-editing ._snippet-title[contenteditable="true"]:focus-visible {
     outline: none;
-    border:1px dashed var(--color-green-600);
+    border: 1px dashed var(--color-green-600);
+  }
+  ._snippet ._snippet-content-formated {
+    position: relative;
+    z-index: 1;
+    display: block;
+  }
+  ._snippet ._snippet-content-unformated {
+    position: relative;
+    z-index: 0;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in;
+    transition-behavior: allow-discrete;
+  }
+  ._snippet.is-editing ._snippet-content-formated {
+    display: none;
+  }
+  ._snippet.is-editing ._snippet-content-unformated {
+    display: block;
+    opacity: 1;
+    @starting-style {
+      opacity:0;
+    }
+  }
+  ._snippet ._snippet-edit-actions  {
+    display: none;
+    opacity: 0;
+
+  }
+  ._snippet.is-editing ._snippet-edit-actions {
+    display: flex;
+    opacity: 1;
+    transition:opacity 0.3s ease-in,
+    display 0.5s ease-in;
+    transition-behavior: allow-discrete;
+    @starting-style {
+      opacity:0;
+    }
   }
 </style>
 
@@ -187,4 +250,3 @@ if (userSessionId) {
   import "./snippets.ts";
   import "./editSnippet.ts";
 </script>
-

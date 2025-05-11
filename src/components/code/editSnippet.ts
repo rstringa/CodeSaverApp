@@ -1,5 +1,6 @@
 const editSnippetLink = document.querySelectorAll('._edit-snippet');
 const deleteSnippetLink = document.querySelectorAll('._delete-snippet');
+
 let is_editing = false;
 
 editSnippetLink.forEach((link) => {
@@ -8,6 +9,10 @@ editSnippetLink.forEach((link) => {
 
         const snippetEditing = link.closest('._snippet');
         snippetEditing?.classList.toggle('is-editing');
+        const snippetEditingTitle = snippetEditing?.querySelector('._snippet-title');
+        snippetEditingTitle?.setAttribute('contenteditable', 'true');
+        snippetEditingTitle?.setAttribute('spellcheck', 'false');
+        const snippetEditingTitleInitial = snippetEditingTitle?.textContent;
         is_editing = !is_editing;
         // Si se esta editando un snippet,
         // Todos los ._edit-snippet que no sean el que se ha clicado, se desactivan
@@ -20,16 +25,66 @@ editSnippetLink.forEach((link) => {
             });
         }
 
-        editSnippet(snippetEditing);
+        editSnippet(snippetEditing, snippetEditingTitleInitial as string, snippetEditingTitle as Element);
     });
 });
-function editSnippet(snippetEditing: Element | null) {
+function editSnippet(snippetEditing: Element | null, snippetEditingTitleInitial: string, snippetEditingTitle: Element | null) {
     if (snippetEditing) {
-        //is_editing = !is_editing;
-        const snippetContent = snippetEditing?.querySelector('._snippet-content');
-        const snippetTitle = snippetEditing?.querySelector('._snippet-title');
-        const snippetContentCode = snippetContent?.querySelector('pre');
-        snippetContentCode?.setAttribute('contenteditable', String(is_editing));
-        snippetTitle?.setAttribute('contenteditable', String(is_editing));
+
+        const editingSaveLink = snippetEditing.querySelector('._save-changes');
+        const editingCancelLink = snippetEditing.querySelector('._cancel-changes');
+
+
+        editingSaveLink?.addEventListener('click', function (e) {
+            e.preventDefault();
+            const snippetEditingContent = snippetEditing?.querySelector('._snippet-content-unformated')?.textContent;
+            const snippetTitle = snippetEditing?.querySelector('._snippet-title')?.textContent;
+            const snippetId = (e.target as HTMLElement).dataset.id;
+            saveSnippet(snippetId as string, snippetTitle as string, snippetEditingContent as string);
+        });
+        editingCancelLink?.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (snippetEditingTitle) {
+                snippetEditingTitle?.setAttribute('contenteditable', 'false');
+                snippetEditingTitle?.setAttribute('spellcheck', 'true');
+                snippetEditingTitle.textContent = snippetEditingTitleInitial;
+            }
+            snippetEditing?.classList.remove('is-editing');
+        });
+    }
+}
+
+async function saveSnippet(snippetId: string, snippetTitle: string, snippetEditingContent: string) {
+    console.log("Guardando snippet con ID:", snippetId);
+    // Sanitize snippet title from malicius code
+    snippetTitle = snippetTitle.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+    try {
+        const res = await fetch("/api/editSnippet", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                id: snippetId,
+                titulo: snippetTitle,
+                contenido: snippetEditingContent,
+            })
+        });
+
+        if (!res.ok) {
+            console.error("Error al actualizar el snippet:", res.statusText);
+            return;
+        }
+
+        const contentType = res.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+            const result = await res.json();
+            console.log("Snippet actualizado correctamente:", snippetId);
+            window.location.href = "/";
+        } else {
+            console.error("La respuesta no es JSON válida.");
+        }
+    } catch (error) {
+        console.error("Error al realizar la solicitud:", error);
     }
 }
