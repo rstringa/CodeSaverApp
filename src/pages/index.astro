@@ -23,12 +23,10 @@ const userLogged = await userLoggedIn();
   >  
     <Sidebar />
     
-    <div class="content h-full p-6
-
-    order-0 lg:order-2
+    <div class="_content h-full p-6 max-[100vw] overflow-x-hidden
     ">
       <div class="_top 
-      flex-col lg:flex-row
+      flex-row lg:flex-row
       flex gap-4 justify-between items-center mb-4
       ">
        <div> 
@@ -42,11 +40,11 @@ const userLogged = await userLoggedIn();
    
         ):(
         <h1 class="_category-name 
-        ml-0 lg:ml-6
-        text-2xl font-semibold text-green-600  flex items-center gap-2 leading-none
+        ml-0 lg:ml-6  text-md lg:text-2xl 
+       font-semibold text-green-600  flex items-center gap-2 leading-none
         
         ">
-          <Icon name="folderCode" class="w-5 h-5 self-end" />
+          <Icon name="folderCode" class="w-8 h-8 lg:w-5 lg:h-5 self-end" /> 
           <span class="_category-text">Todos los snippets</span></h1> 
         
         )

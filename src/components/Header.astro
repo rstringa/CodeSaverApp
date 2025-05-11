@@ -21,20 +21,22 @@ flex justify-between p-6 py-3 m-auto border-b-1 border-slate-700
         <span class="text-slate-400">Code<b>Saver</b>App</span>
       </a>
     </div>
-    <nav class="_menu flex items-center justify-center">
+    <nav class="_menu w-full md:w-auto flex items-center justify-center">
 
       
       {userLogged ? (
-        <p class="text-md font-regular mr-6 text-slate-400
+        <p class="
+        text-sm! lg:text-md
+        font-regular mr-6 text-slate-400
         w-full
         ">Hola, {userLogged.email}!</p>
         <a
           href="#"
           id="btn_logout"
-          class="_logout _btn-normal"
+          class="_logout _btn-normal text-sm! lg:text-md"
           onclick="handleLogout()"
         >
-          Cerrar Sesión
+          Cerrar<span class="hidden lg:inline-block lg:ml-1">Sesión</span>
         </a>
       ) : (
         <a
