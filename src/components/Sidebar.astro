@@ -146,7 +146,12 @@ open:rounded-0 shadow-lg p-0 w-[600px] max-w-[90%] bg-transparent backdrop:bg-sl
 </dialog>
 
 <style is:inline>
-    
+body.logged-out ._sidebar {
+    @media(max-width: 1024px) {
+        display: none;
+    } 
+}
+   
 ._category-item > svg{
    flex:0 0 auto;
 }

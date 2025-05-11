@@ -33,7 +33,7 @@ const userLogged = await userLoggedIn();
       { 
         !userLogged ? (
         <h1 class="
-        text-center lg:text-left text-2xl lg:text-xl p-8 lg:p-0 
+        text-center lg:text-left text-2xl lg:text-xl p-8 px-2 text-balance lg:p-0 
          relative z-10">  
             Bienvenido a CodeSaverApp, por favor <a href="/register" class="text-green-600">regístrese</a> o <a href="/register" class="text-green-600">inicie sesión</a> a la app.  
           </h1> 
@@ -64,12 +64,10 @@ const userLogged = await userLoggedIn();
 </LayoutBase>
 
 <style>
- /* main.logged-out:after {
-  content: "";
-  position: absolute;
-  z-index: 5;
-  inset:0;
-  backdrop-filter: blur(2px);
-} */
+body.logged-out ._top {
+    @media(max-width: 1024px) {
+        flex-direction: column; 
+    } 
+}       
 
 </style>

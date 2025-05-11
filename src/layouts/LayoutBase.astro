@@ -3,6 +3,8 @@ import '@styles/highlight-js.css';
 import '@styles/highlight-theme.css';
 import '@styles/global.css';
 import Header from '@components/Header.astro';
+import { userLoggedIn, userData } from "@utils/userLoggedIn";
+const userLogged = await userLoggedIn();
 ---
 
 <!doctype html>
@@ -17,7 +19,9 @@ import Header from '@components/Header.astro';
     <title>CodeSaverApp</title>
 
   </head>
-  <body class="theme-atom-one-dark h-screen w-full bg-slate-900 text-slate-100">
+  <body class=`theme-atom-one-dark h-screen w-full bg-slate-900 text-slate-100
+  ${userLogged ? 'logged-in' : 'logged-out'}
+  `>
     <Header />
     <slot/>
    
