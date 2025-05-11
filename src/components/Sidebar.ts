@@ -86,9 +86,9 @@ editLinks.forEach(editLink => {
 function editCategory(categoryId) {
     const category_item = document.querySelector(`[data-category_id="${categoryId}"]`);
     const category_name = category_item?.querySelector('._category-name');
-
-    category_item?.setAttribute("contenteditable", "true");
-    category_item?.querySelector('._number')?.setAttribute("contenteditable", "false");
+    const category_name_initial = category_name?.textContent;
+    category_name?.setAttribute("contenteditable", "true");
+    //category_item?.querySelector('._number')?.setAttribute("contenteditable", "false");
     // Focus en el elemento editable
     if (category_name) {
         const range = document.createRange();
@@ -97,20 +97,25 @@ function editCategory(categoryId) {
         range.collapse(false); // Cursor al final
         selection?.removeAllRanges();
         selection?.addRange(range);
-        (category_item as HTMLElement).focus();
+        (category_name as HTMLElement).focus();
     }
     // Escuchar el evento de "blur" para guardar los cambios
-    category_item?.addEventListener("blur", () => {
-        category_item?.removeAttribute("contenteditable");
+    category_name?.addEventListener("blur", () => {
         let editedName = category_item?.querySelector('._category-name')?.textContent;
+
+        // Comporobar no quede vacia y no tenga solo espacios
+        // Comporbar no tenga caracteres maliciosos
         if (editedName && editedName.trim() !== "") {
             editedName = editedName.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-            const categoryNameElement = category_item.querySelector('._category-name');
+            const categoryNameElement = category_item?.querySelector('._category-name');
             if (categoryNameElement) {
                 categoryNameElement.textContent = editedName;
+                category_name?.removeAttribute("contenteditable");
+                updateCategory(categoryId, editedName);
             }
-            //console.log(editedName);
-            updateCategory(categoryId, editedName);
+
+        } else {
+            category_name.textContent = category_name_initial ?? '';
         }
     });
 }

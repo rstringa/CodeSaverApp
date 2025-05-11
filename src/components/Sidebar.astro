@@ -156,14 +156,17 @@ open:rounded-0 shadow-lg p-0 w-[600px] max-w-[90%] bg-transparent backdrop:bg-sl
 ._category-item.is-active:hover ._actions:hover {  
     color: var(--color-green-600);
 }
-._category-item[contenteditable="true"] {
+._category-item:has(*[contenteditable="true"]) {
     background-color: var(--color-slate-900);
-    border-style: dashed;    
+    border-style: dashed;
+    border-color: var(--color-green-700); 
 }
-._category-item[contenteditable="true"] ._category-name {
+._category-item:has(*[contenteditable="true"]) ._category-name {
     color: var(--color-slate-300); 
+    outline: none;
+    focus-visible: none;
 }
-._category-item[contenteditable="true"] ._number {
+._category-item:has(*[contenteditable="true"]) ._number {
     background-color: var(--color-slate-900);
 }  
 {/* ._category-item._actions-enabled ._category-item-actions {
