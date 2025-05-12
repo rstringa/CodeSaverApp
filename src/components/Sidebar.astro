@@ -29,7 +29,7 @@ order-none lg:order-none
     <div class="_content m-auto">
         <a 
         class=`_new_category _btn-normal mb-6
-         ${ !userLogged ? "pointer-events-none opacity-50" : "" }
+         ${ !userLogged ? "pointer-events-none opacity-40" : "" }
         ` 
         href="#" data-category_id=`0`><Icon name="folderPlus" 
         class=`w-6 h-6 mr-2 text-green-400 fill-current
@@ -47,13 +47,13 @@ order-none lg:order-none
         <a
         title="Ver todos los snippets creados"
         class=`_category-item is-active _btn-normal justify-start! mb-3 px-3! lg:py-3!
-        ${(!userLogged || !categoriasLength) ? "pointer-events-none opacity-50" : "" }
+        ${(!userLogged || !categoriasLength) ? "pointer-events-none opacity-40" : "" }
         `
         href="#" data-category_id='0'>
         <Icon name="folderCode" class="w-6 h-5 mr-2 " /> 
             <span class="_category-name text-sm">Todos los snippets</span>
         </a>
-        {!categoriasLength ?
+        {!categoriasLength && userLogged ?
         <div class="flex flex-col items-center justify-center">
        
         <p class="text-center text-slate-400 mt-3 tracking-wide">No tienes categorías aún.</p> 

@@ -42,3 +42,6 @@
 		@apply border-green-600 bg-green-500/5;
 	}
 }
+@view-transition {
+	navigation: auto;
+}
