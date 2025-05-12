@@ -134,14 +134,15 @@ if (userSessionId) {
                 <div class="_copy-snippet-actions relative z-5">
                   <a href="#" class="_copy-snippet _btn-normal 
                   absolute bottom-5 right-3  
-                  px-2! text-slate-400" data-id="e522f4cd-7c01-4c1e-bec9-02e83c74fcdb" 
+                  px-2! text-slate-400" 
                   data-snippet-id={snippet.id}
                   title="Copiar código">
                     <Icon name="copy" class="w-4 h-4 pointer-events-none" />
                   </a>
                   <div class="_copy-snippet-message
                   absolute bottom-5 right-3 _btn-normal bg-green-800 border-0! opacity-0 pointer-events-none
-                  
+                  //[&.is-visible]:opacity-100
+         
                   ">Snippet copiado al portapapeles
                   </div> 
                 </div>
@@ -268,7 +269,7 @@ if (userSessionId) {
   /* Copy Snippet */
   ._snippet ._copy-snippet-message.is-visible {
     opacity: 100;
-    right: 55px;
+    right: 55px; 
     padding-block: 0.45rem;
     transition: right 0.75s ease-in, opacity 0.25s ease-in 0.3s;
     transition-behavior: allow-discrete; 

@@ -54,7 +54,7 @@ copySnippets.forEach((copySnippet) => {
     copySnippet.addEventListener("click", function (e) {
         e.preventDefault();
 
-        const snippetId = (e.target as HTMLElement).dataset.id;
+        const snippetId = (e.target as HTMLElement).closest("._snippet")?.getAttribute("data-snippet-id");
         const snippetContent = document.querySelector(`[data-snippet-id="${snippetId}"] ._snippet-content-unformated code`)?.textContent;
         const snippet = (e.target as HTMLElement).closest("._snippet");
 
