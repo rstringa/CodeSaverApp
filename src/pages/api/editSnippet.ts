@@ -1,15 +1,16 @@
 import { supabase } from '@lib/supabaseClient';
 import type { APIRoute } from 'astro';
+import beautify from 'js-beautify'
 
 export const PUT: APIRoute = async ({ request }) => {
     const { data: userSession } = await supabase.auth.getSession();
 
     const body = await request.json();
     const id = body.id;
-    const content = body.contenido;
+    const content = beautify(body.contenido);
     const title = body.titulo;
     const usuario_id = userSession?.session?.user.id;
-    console.log(content);
+
 
     if (!usuario_id) {
         return new Response(
