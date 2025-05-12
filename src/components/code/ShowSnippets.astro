@@ -4,7 +4,7 @@ import { supabase } from "@lib/supabaseClient";
 // import IntroAnimation from "@components/IntroAnimation.astro";
 
 // Import highlight.js
-import hljs from 'highlight.js'; 
+import hljs from 'highlight.js';
 let code = hljs.highlightAuto("").value;
 
 const { data: userSession } = await supabase.auth.getSession();
@@ -117,15 +117,33 @@ if (userSessionId) {
                 <div
                   class="_snippet-content relative scrollbar-custom bg-slate-800 p-4 rounded flex flex-col max-h-40 lg:max-h-90 overflow-y-auto scroll-smooth">
                   <pre class="hljs _snippet-content-formated m-0 p-0 whitespace-pre-line break-words">
-                    <code set:html={hljs.highlightAuto(snippet.contenido).value} />
+                    
+                    { <code set:html={hljs.highlightAuto(snippet.contenido).value} /> }
+              
+                  
                   </pre>
 
                   <pre class="hljs _snippet-content-unformated m-0 p-0 whitespace-pre-line break-words" contenteditable="true">
                     <code>
-                      {snippet.contenido}
+                     { snippet.contenido } ? 
                     </code>
                   </pre>
-
+                  
+                </div>
+                
+                <div class="_copy-snippet-actions relative z-5">
+                  <a href="#" class="_copy-snippet _btn-normal 
+                  absolute bottom-5 right-3  
+                  px-2! text-slate-400" data-id="e522f4cd-7c01-4c1e-bec9-02e83c74fcdb" 
+                  data-snippet-id={snippet.id}
+                  title="Copiar código">
+                    <Icon name="copy" class="w-4 h-4 pointer-events-none" />
+                  </a>
+                  <div class="_copy-snippet-message
+                  absolute bottom-5 right-3 _btn-normal bg-green-800 border-0! opacity-0 pointer-events-none
+                  
+                  ">Snippet copiado al portapapeles
+                  </div> 
                 </div>
 
                 <div class="_snippet-edit-actions flex flex-wrap gap-3 mt-1 items-center justify-between w-full">
@@ -148,7 +166,7 @@ if (userSessionId) {
                   </a>
 
                 </div>
-
+           
               </li>
             );
           })
@@ -247,6 +265,14 @@ if (userSessionId) {
       opacity:0;
     }
   }
+  /* Copy Snippet */
+  ._snippet ._copy-snippet-message.is-visible {
+    opacity: 100;
+    right: 55px;
+    padding-block: 0.45rem;
+    transition: right 0.75s ease-in, opacity 0.25s ease-in 0.3s;
+    transition-behavior: allow-discrete; 
+  }  
 </style>
 
 <script>

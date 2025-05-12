@@ -1,5 +1,6 @@
 const editSnippets = document.querySelectorAll("._snippet ._edit-snippet");
 const deleteSnippets = document.querySelectorAll("._snippet ._delete-snippet");
+const copySnippets = document.querySelectorAll("._snippet ._copy-snippet");
 
 // DELETE SNIPPET
 deleteSnippets.forEach((deleteSnippet) => {
@@ -47,3 +48,29 @@ async function handleDeleteSnippet(snippetId) {
         console.log("Snippet eliminado correctamente:", snippetId);
     }
 }
+
+// COPY SNIPPET
+copySnippets.forEach((copySnippet) => {
+    copySnippet.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const snippetId = (e.target as HTMLElement).dataset.id;
+        const snippetContent = document.querySelector(`[data-snippet-id="${snippetId}"] ._snippet-content-unformated code`)?.textContent;
+        const snippet = (e.target as HTMLElement).closest("._snippet");
+
+        if (snippetContent) {
+            navigator.clipboard.writeText(snippetContent)
+                .then(() => {
+                    const message = snippet?.querySelector("._copy-snippet-message");
+                    console.log(message);
+                    message?.classList.add("is-visible");
+                    setTimeout(() => {
+                        message?.classList.remove("is-visible");
+                    }, 3000);
+                })
+                .catch((err) => {
+                    console.error("Error al copiar el snippet:", err);
+                });
+        }
+    });
+});
