@@ -21,7 +21,7 @@ userLogged = Boolean(session?.user)
 		<main
 			class={`
 				relative grid-cols-[1fr] grid
-				lg:grid-cols-[270px_1fr] lg:h-full
+				lg:grid-cols-[270px_1fr] lg:min-h-full
 				${userLogged ? 'logged-in' : 'logged-out'}
 			  `}
 		>

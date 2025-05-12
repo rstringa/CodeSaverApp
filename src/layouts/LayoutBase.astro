@@ -3,6 +3,7 @@ import '@styles/highlight-js.css'
 import '@styles/highlight-theme.css'
 import '@styles/global.css'
 import Header from '@components/Header.astro'
+import Footer from '@components/Footer.astro'
 import { userLoggedIn, userData } from '@utils/userLoggedIn'
 const userLogged = await userLoggedIn()
 ---
@@ -25,7 +26,7 @@ const userLogged = await userLoggedIn()
 	>
 		<Header />
 		<slot />
-
+		<Footer />
 		<script
 			defer
 			src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"

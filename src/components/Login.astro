@@ -6,7 +6,7 @@ const error = Astro.url.searchParams.get('error')
 const loginMessage = Astro.url.searchParams.get('message')
 ---
 
-<main class="flex flex-col items-center justify-center p-4 py-8">
+<main class="flex flex-col items-center justify-center p-4 py-8 lg:min-h-[calc(100dvh-100px)]">
 	<section class="flex w-full max-w-md flex-col gap-4 rounded-md border border-slate-700 p-6 pb-8">
 		<h1 class="mb-0 w-full text-2xl leading-normal font-semibold text-slate-100">
 			{title}

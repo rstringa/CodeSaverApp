@@ -40,14 +40,14 @@ if (userSessionId) {
 ---
 <!-- <IntroAnimation /> -->
 {
-  totalSnippets == 0 ? (
-    <div class="
-     
+  totalSnippets == 0 && userSessionId? (
+    <div class="  
     hidden lg:flex
     flex-col items-center justify-center border border-slate-800 rounded p-6">
       <p class="text-xl text-slate-400 tracking-wide">
-        No tienes snippets aún.
-      </p> 
+        No tienes snippets aún.<br>
+      </p>
+      <p class="text-md text-slate-400 tracking-wide">Crea tu primer snippet haciendo click en el botón Crear Snippet.</p>  
     </div>
   ) : (
     <div>

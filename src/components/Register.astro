@@ -1,100 +1,64 @@
 ---
-import LayoutBase from "@layouts/LayoutBase.astro";
-const title = "Registrarse en la app";
+import LayoutBase from '@layouts/LayoutBase.astro'
+const title = 'Registrarse en la app'
 
 // Get the error message from the query parameter
-const error = Astro.url.searchParams.get("error");
+const error = Astro.url.searchParams.get('error')
 ---
 
+<main class="flex flex-col items-center justify-center p-4 py-8 lg:min-h-[calc(100dvh-100px)]">
+	<section class="flex w-full max-w-md flex-col gap-4 rounded-md border border-slate-700 p-6 pb-8">
+		<h1 class="mb-0 w-full text-2xl leading-normal font-semibold text-slate-100">
+			{title}
+		</h1>
+		<p class="-mt-1 mb-2 w-full text-sm text-zinc-500 dark:text-zinc-400">
+			¿Ya eres usuario? <a href="/login" class="text-green-600">Ingresar a tu cuenta</a>
+		</p>
 
-<main class="flex flex-col items-center justify-center p-4 py-8"> 
-  <section class="w-full max-w-md flex flex-col gap-4 p-6 pb-8 border border-slate-700 rounded-md">
-    <h1
-      class="font-semibold text-2xl leading-normal text-slate-100 w-full mb-0"
-    >
-      {title}
-    </h1>
-    <p class="text-zinc-500 dark:text-zinc-400 text-sm -mt-1 mb-2 w-full">
-      ¿Ya eres usuario? <a
-        href="/login"
-        class="text-green-600"
-        >Ingresar a tu cuenta</a
-      >
-    </p>
+		<!-- Display the error message if it exists -->
+		{error && <div class="mb-4 rounded-md bg-red-100 p-3 text-red-700">{error}</div>}
 
-      <!-- Display the error message if it exists -->
-      {error && (
-        <div class="bg-red-100 text-red-700 p-3 rounded-md mb-4">
-          {error}
-        </div>
-      )}
+		<form
+			action="/api/auth/register"
+			method="post"
+			enctype="application/x-www-form-urlencoded"
+			class="grid w-full grid-cols-1 gap-1"
+		>
+			<div class="mb-2 grid grid-cols-1 gap-2">
+				<label for="email" class="font-regular text-md text-slate-300">Email</label>
+				<input
+					id="email"
+					type="email"
+					name="email"
+					required
+					class="bg-trasnparent mb-4 rounded border border-slate-600 p-3 text-white focus:ring-2 focus:ring-green-800 focus:outline-none"
+				/>
+			</div>
+			<div class="mb-3 grid grid-cols-1 gap-2">
+				<label for="password" class="font-regular text-md text-slate-300">Password</label>
+				<input
+					id="password"
+					type="password"
+					name="password"
+					required
+					class="bg-trasnparent mb-4 rounded border border-slate-600 p-3 text-white focus:ring-2 focus:ring-green-800 focus:outline-none"
+				/>
+			</div>
+			<button
+				type="submit"
+				class="_btn-featured bg-green-600/50! p-3! text-green-100! disabled:cursor-not-allowed"
+				>Registrarme</button
+			>
+		</form>
+		<hr class="mt-6 h-0 border-t border-slate-700" />
 
-      <form
-        action="/api/auth/register"
-        method="post"
-        enctype="application/x-www-form-urlencoded"
-        class="grid grid-cols-1 gap-1 w-full"
-      >
-      <div class="grid grid-cols-1 gap-2 mb-2">
-        <label
-          for="email"
-          class="font-regular text-slate-300 text-md"
-          >Email</label
-        >
-        <input
-          id="email"
-          type="email"
-          name="email"
-          required
-          class="rounded bg-trasnparent p-3 mb-4 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-green-800
-          "
-        />
-      </div>
-      <div class="grid grid-cols-1 gap-2 mb-3">
-      <label
-        for="password"
-        class="font-regular text-slate-300 text-md"
-        >Password</label
-      >
-      <input
-        id="password"
-        type="password"
-        name="password"
-        required
-        class="rounded bg-trasnparent p-3 mb-4 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-green-800
-        "
-      />
-      </div>
-      <button
-        type="submit"
-        class="
-        _btn-featured bg-green-600/50! p-3! text-green-100!
-        disabled:cursor-not-allowed"
-        >Registrarme</button
-      >
-      </form>
-      <hr class="h-0 border-t  border-slate-700 mt-6" />  
-
-      <div class="flex justify-center mt-6">
-        <form 
-          action="/api/auth/google" 
-          method="POST" 
-          class="w-full"
-        >
-          <button
-            type="submit"
-            class="_btn-normal w-full py-3!"
-          >
-            <img
-              src="/google-icon.svg"
-              alt="Google Icon"
-              class="w-5 h-5 mr-2"
-            />
-            <span>Registrarse Google</span>
-          </button>
-        </form>
-      </div>
-      
-    </section>
-  </main>
-
+		<div class="mt-6 flex justify-center">
+			<form action="/api/auth/google" method="POST" class="w-full">
+				<button type="submit" class="_btn-normal w-full py-3!">
+					<img src="/google-icon.svg" alt="Google Icon" class="mr-2 h-5 w-5" />
+					<span>Registrarse Google</span>
+				</button>
+			</form>
+		</div>
+	</section>
+</main>
