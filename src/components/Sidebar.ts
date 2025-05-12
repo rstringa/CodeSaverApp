@@ -86,7 +86,7 @@ editLinks.forEach(editLink => {
 function editCategory(categoryId) {
     const category_item = document.querySelector(`[data-category_id="${categoryId}"]`);
     const category_name = category_item?.querySelector('._category-name');
-    const category_name_initial = category_name?.textContent;
+    let category_name_initial = category_name?.textContent;
     category_name?.setAttribute("contenteditable", "true");
     //category_item?.querySelector('._number')?.setAttribute("contenteditable", "false");
     // Focus en el elemento editable
@@ -112,6 +112,7 @@ function editCategory(categoryId) {
                 categoryNameElement.textContent = editedName;
                 category_name?.removeAttribute("contenteditable");
                 updateCategory(categoryId, editedName);
+                category_name_initial = editedName;
             }
 
         } else {
