@@ -53,8 +53,10 @@ function showSnippets(categoryId) {
 function showCategoryName(editedName) {
     const categoryName = document.querySelector('._top ._category-name ._category-text');
     if (categoryName) {
+
         categoryName.textContent = "";
         categoryName.textContent = editedName;
+
     }
 }
 

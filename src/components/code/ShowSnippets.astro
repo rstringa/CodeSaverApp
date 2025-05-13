@@ -118,11 +118,38 @@ if (userSessionId) {
 
                 <div
                   class="_snippet-content relative scrollbar-custom bg-slate-800 p-4 rounded flex flex-col max-h-40 lg:max-h-90 overflow-y-auto scroll-smooth">
-                  <pre class="hljs _snippet-content-formated m-0 p-0 whitespace-pre-line break-words">
-                    
-                    { <code set:html={hljs.highlightAuto(snippet.contenido).value} /> }
-              
-                  
+                  <pre class="hljs _snippet-content-formated m-0 p-0 whitespace-pre-wrap break-words">
+                    { 
+                      (() => {
+                        const formattedCode = beautify(snippet.contenido,
+                          {
+                            indent_size: 2,
+                            space_in_empty_paren: true,
+                            unformatted: ["a", "sub", "sup", "b", "i", "u"],
+                            e4x: true,
+                            preserve_newlines: false,
+                            max_preserve_newlines: 2,
+                            html: {
+                              indent_inner_html: true,
+                              indent_scripts: "normal",
+                              brace_style: "expand",
+                              space_after_anon_function: true,
+                              space_before_conditional: true,
+                              space_before_function_paren: true
+                            },
+                            js: {
+                              braces: true,
+                              unescape_strings: true,
+                              space_after_anon_function: true,
+                              space_after_named_function: true,
+                              space_before_conditional: true,
+                              space_before_function_paren: true
+                            }
+                          }
+                        );
+                        return <code set:html={hljs.highlightAuto(formattedCode).value} />;
+                      })()
+                    }
                   </pre>
 
                   <pre class="hljs _snippet-content-unformated m-0 p-0 whitespace-pre-line break-words" contenteditable="true">
@@ -183,7 +210,11 @@ if (userSessionId) {
   ._snippet {
     outline: none;
     border: 1px dashed transparent;
-    transition: all 0.5s;
+    transition: all 0.25s;
+    transition-behavior: allow-discrete;
+    // @starting-style {
+    //   opacity: 0;  
+    // }
   }
   ._snippet ._snippet-top-actions {
     opacity: 0.4; 

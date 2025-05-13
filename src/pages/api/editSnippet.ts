@@ -7,7 +7,7 @@ export const PUT: APIRoute = async ({ request }) => {
 
     const body = await request.json();
     const id = body.id;
-    const content = beautify(body.contenido);
+    const content = body.contenido;
     const title = body.titulo;
     const usuario_id = userSession?.session?.user.id;
 
