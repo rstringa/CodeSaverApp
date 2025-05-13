@@ -4,6 +4,7 @@ const title = 'Registrarse en la app'
 
 // Get the error message from the query parameter
 const error = Astro.url.searchParams.get('error')
+const confirmEmail = Astro.url.searchParams.get('confirmEmail')
 ---
 
 <main class="flex flex-col items-center justify-center p-4 py-8 lg:min-h-[calc(100dvh-100px)]">
@@ -17,7 +18,13 @@ const error = Astro.url.searchParams.get('error')
 
 		<!-- Display the error message if it exists -->
 		{error && <div class="mb-4 rounded-md bg-red-100 p-3 text-red-700">{error}</div>}
-
+		{
+			confirmEmail && (
+				<div class="mb-4 rounded-md border border-green-900 bg-green-600/10 p-3 text-green-400">
+					{confirmEmail}
+				</div>
+			)
+		}
 		<form
 			action="/api/auth/register"
 			method="post"

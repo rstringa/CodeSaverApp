@@ -25,11 +25,10 @@ export const POST: APIRoute = async ({ request, redirect }) => {
     const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) throw new Error(error.message);
 
-    
     // CREATE BASE CATEGORY IF IS EMAIL PROVIDER
     const userId = data.user?.id;
     if (!userId) throw new Error("Error al obtener el ID del usuario");
-    
+
     const { data: existingCategory, error: fetchError } = await supabase
       .from("categorias")
       .select("*")
@@ -37,21 +36,24 @@ export const POST: APIRoute = async ({ request, redirect }) => {
       .eq("nombre", "Base")
       .single();
 
-      if (!existingCategory) {
-        const { error: insertError } = await supabase
-          .from('categorias')
-          .insert([{ usuario_id: userId, nombre: 'Base' }]);
-    
-        if (insertError) {
-          console.error('Error creando categoría Base:', insertError);
-         // return redirect(`/register?error=${encodeURIComponent("Failed to create initial category")}`);
-        }
+    if (!existingCategory) {
+      const { error: insertError } = await supabase
+        .from("categorias")
+        .insert([{ usuario_id: userId, nombre: "Base" }]);
+
+      if (insertError) {
+        console.error("Error creando categoría Base:", insertError);
       }
-      return redirect('/');
-     //return redirect(`/login?message=${encodeURIComponent("Registro exitoso. Ahora puedes ingresar a tu cuenta.")}`);
+    }
+
+    return redirect(
+      `/register?confirmEmail=${encodeURIComponent(
+        "¡Bienvenido! Verifica el enlace en tu correo para confirmar tu cuenta."
+      )}`
+    );
+
   } catch (err) {
-    console.error("register.ts-",err.message);
+    console.error("register.ts-", err.message);
     return redirect(`/register?error=${encodeURIComponent("Error: " + err.message)}`);
   }
- // return redirect("/login");
 };
