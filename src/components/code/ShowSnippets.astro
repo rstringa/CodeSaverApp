@@ -30,7 +30,7 @@ if (userSessionId) {
       categoria_id
     `)
     .eq("usuario_id", userSessionId)
-    .order('created_at', { ascending: false });
+    .order('edited_at', { ascending: false });
 
   if (error) {
     console.error("Error fetching snippets:", error);
