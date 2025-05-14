@@ -1,10 +1,13 @@
 ---
 import { Icon } from 'astro-icon/components'
-import { userLoggedIn } from "@utils/userLoggedIn";
-const userLogged = await userLoggedIn();
+import { supabase } from '@lib/supabaseClient';
+const { data: userSession } = await supabase.auth.getSession()
+const userSessionId = userSession?.session?.user.id
+
 // Get page url
 const url = new URL(Astro.url.pathname, Astro.url.origin);
 const urlPath = url.pathname;
+
 ---
 
 <header class="_header 
@@ -24,12 +27,12 @@ flex justify-between p-6 py-3 m-auto border-b-1 border-slate-700
     <nav class="_menu w-full md:w-auto flex items-center justify-center">
 
       
-      {userLogged ? (
+      {userSessionId ? (
         <p class="
         text-sm! lg:text-md
         font-regular mr-6 text-slate-400
         w-full
-        ">Hola, {userLogged.email}!</p>
+        ">Hola, {userSession?.session?.user?.email}!</p>
         <a
           href="#"
           id="btn_logout"

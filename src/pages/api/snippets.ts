@@ -1,6 +1,6 @@
 import { supabase } from '@lib/supabaseClient';
 import type { APIRoute } from 'astro';
-import beautify from 'js-beautify'
+
 
 export const POST: APIRoute = async ({ request }) => {
   const { data: userSession } = await supabase.auth.getSession();
@@ -17,24 +17,7 @@ export const POST: APIRoute = async ({ request }) => {
     );
   }
 
-  //   const { data: userExists, error: userError } = await supabase
-  //     .from('usuarios')
-  //     .select('id')
-  //     .eq('id', usuario_id)
-  //     .single();
-
-  //   if (!userExists) {
-  //     const { error: insertUserError } = await supabase.from('usuarios').insert([
-  //       { id: usuario_id, /* otros campos necesarios */ },
-  //     ]);
-
-  //     if (insertUserError) {
-  //       return new Response(
-  //         JSON.stringify({ error: 'No se pudo crear el usuario.' }),
-  //         { status: 500 }
-  //       );
-  //     }
-  //   }
+  console.log(categoria_id, 'categoria_id');
 
   const { data, error } = await supabase.from('snippets').insert([
     {
@@ -47,6 +30,7 @@ export const POST: APIRoute = async ({ request }) => {
   ]);
 
   if (error) {
+    console.error('Error al insertar el snippet:', error);
     return new Response(JSON.stringify({ error }), { status: 500 });
   }
 

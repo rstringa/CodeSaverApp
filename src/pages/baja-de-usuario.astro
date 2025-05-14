@@ -1,0 +1,29 @@
+---
+export const prerender = false;
+import LayoutMinimal from '@layouts/LayoutBase.astro';
+import { supabase } from '@lib/supabaseClient';
+const { data: userSession } = await supabase.auth.getSession()
+const userSessionId = userSession?.session?.user.id
+
+---
+<LayoutMinimal>
+{ userSessionId && (
+        <div class="flex-col items-center justify-center lg:flex h-[calc(100vh-65px)]">
+           <div class="flex-col justify-center -mt-28 items-center text-center p-6 py-12  rounded border border-slate-800 w-full max-w-2xl">
+            <p class="mb-2 text-2xl tracking-wide text-slate-300">
+                ¿Estás seguro de que deseas eliminar tu cuenta?
+                <br />
+            </p>
+            <p class="text-md tracking-wide text-slate-400">
+                Esta acción no se puede deshacer. Una vez que elimines tu cuenta, no podrás recuperar tus snippets.
+            </p>
+            <form action="/api/auth/deleteAcount" method="POST" class="mt-4">
+                <button type="submit" class="inline-block rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600 hover:text-slate-900">
+                    Eliminar cuenta
+                </button>
+            </form>
+            </div>
+        </div>
+    )
+}
+</LayoutMinimal>
