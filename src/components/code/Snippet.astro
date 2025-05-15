@@ -3,7 +3,18 @@ import { Icon } from 'astro-icon/components';
 const { snippetsWithCategories } = Astro.props;
 import beautify from 'js-beautify';
 import hljs from 'highlight.js';
+import { supabase } from "@lib/supabaseClient";
 
+let categorias:any = [];
+const { data: userSession } = await supabase.auth.getSession();
+const userSessionId = userSession?.session?.user.id;
+const { data, error } = await supabase
+    .from("categorias")
+    .select("*")
+    .eq("usuario_id", userSessionId);
+
+if (error) console.error(error);
+categorias = data;
 ---
 
 <ul class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -105,16 +116,40 @@ import hljs from 'highlight.js';
                 }
               </pre>
 
-              <pre class="hljs _snippet-content-unformated m-0 p-0 whitespace-pre-line break-words" contenteditable="true">
+              <div class="_snippet-content-unformated">
+              <pre class="hljs m-0 p-0 whitespace-pre-line break-words" contenteditable="true">
                 <code>
                  { snippet.contenido }
                 </code>
               </pre>
-              
+
+              </div>
+
+
             </div>
+
+            
+            <!-- CATEGORIES -->
+              <div class="_snippet-categories hidden group-[.is-editing]:flex flex-wrap gap-2 items-center justify-between w-full mt-1"> 
+                <select class="_snippet-category-select bg-trasnparent w-full mb-4 rounded border border-slate-600 p-3 text-slate-200 focus:ring-2 focus:ring-green-800 focus:outline-none" data-snippet-id={snippet.id}>
+                  {/* <option value="0">Todas las categorías</option> */}
+                  {
+                    categorias.map((category) => {
+                      const nombre = category.nombre === "Base" ? "Sin categoría" : category.nombre;
+                      return (
+                        <option
+                        class="bg-slate-900 text-slate-400"
+                        selected={snippet.categoria_id === category.id}
+                        value={category.id}>{nombre}
+                        </option>
+                      );
+                    })
+                  } 
+                </select>
+              </div>
             
             <div class="_copy-snippet-actions relative z-5">
-              <a href="#" class="_copy-snippet _btn-normal 
+              <a href="#" class="_copy-snippet group-[.is-editing]:hidden _btn-normal 
               absolute bottom-5 right-3  
               px-2! text-slate-400" 
               data-snippet-id={snippet.id}

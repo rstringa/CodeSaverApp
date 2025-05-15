@@ -1,6 +1,5 @@
 ---
 import Snippet from '@components/code/Snippet.astro'
-import SnippetSkeleton from '@components/SnippetSkeleton.astro'
 import { supabase } from '@lib/supabaseClient'
 
 const { data: userSession } = await supabase.auth.getSession()

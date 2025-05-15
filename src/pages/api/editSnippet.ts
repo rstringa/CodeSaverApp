@@ -9,6 +9,7 @@ export const PUT: APIRoute = async ({ request }) => {
     const id = body.id;
     const content = body.contenido;
     const title = body.titulo;
+    const categoria_id = body.categoria;
     const usuario_id = userSession?.session?.user.id;
 
 
@@ -24,7 +25,7 @@ export const PUT: APIRoute = async ({ request }) => {
 
     const { data, error } = await supabase
         .from('snippets')
-        .update({ contenido: content, titulo: title, edited_at: new Date() })
+        .update({ contenido: content, categoria_id: categoria_id, titulo: title, edited_at: new Date() })
         .eq('id', id);
 
     if (error) {

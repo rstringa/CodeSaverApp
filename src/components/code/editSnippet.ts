@@ -39,8 +39,11 @@ function editSnippet(snippetEditing: Element | null, snippetEditingTitleInitial:
             e.preventDefault();
             const snippetEditingContent = snippetEditing?.querySelector('._snippet-content-unformated')?.textContent;
             const snippetTitle = snippetEditing?.querySelector('._snippet-title')?.textContent;
+            const snippetEditingCategoria = (snippetEditing?.querySelector('._snippet-categories select') as HTMLSelectElement)?.value;
+            console.log("Categoria seleccionada:", snippetEditingCategoria);
+
             const snippetId = (e.target as HTMLElement).dataset.id;
-            saveSnippet(snippetId as string, snippetTitle as string, snippetEditingContent as string);
+            saveSnippet(snippetId as string, snippetTitle as string, snippetEditingContent as string, snippetEditingCategoria as string);
         });
         editingCancelLink?.addEventListener('click', function (e) {
             e.preventDefault();
@@ -54,7 +57,12 @@ function editSnippet(snippetEditing: Element | null, snippetEditingTitleInitial:
     }
 }
 
-async function saveSnippet(snippetId: string, snippetTitle: string, snippetEditingContent: string) {
+async function saveSnippet(
+    snippetId: string,
+    snippetTitle: string,
+    snippetEditingContent: string,
+    snippetEditingCategoria: string
+) {
     console.log("Guardando snippet con ID:", snippetId);
     // Sanitize snippet title from malicius code
     snippetTitle = snippetTitle.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
@@ -67,6 +75,7 @@ async function saveSnippet(snippetId: string, snippetTitle: string, snippetEditi
             body: JSON.stringify({
                 id: snippetId,
                 titulo: snippetTitle,
+                categoria: snippetEditingCategoria,
                 contenido: snippetEditingContent,
             })
         });
