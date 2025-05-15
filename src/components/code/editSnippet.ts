@@ -1,3 +1,11 @@
+// Este código permite editar snippets de código en una interfaz web. 
+// Cuando se hace clic en un enlace de edición, el snippet correspondiente se vuelve editable.
+// El título del snippet se puede modificar y se pueden guardar los cambios o cancelarlos.
+// Cuando se guarda un snippet, se actualiza el contenido y el título en la base de datos.
+// También se permite eliminar un snippet y confirmar la eliminación antes de proceder.
+//// Se utiliza la API Fetch para realizar solicitudes al servidor y manejar la respuesta.
+
+
 const editSnippetLink = document.querySelectorAll('._edit-snippet');
 const deleteSnippetLink = document.querySelectorAll('._delete-snippet');
 

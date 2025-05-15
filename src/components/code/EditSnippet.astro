@@ -1,21 +1,21 @@
 ---
-import { supabase } from "@lib/supabaseClient";
-const { data: userSession } = await supabase.auth.getSession();
-const userSessionId = userSession?.session?.user.id;
+// import { supabase } from "@lib/supabaseClient";
+// const { data: userSession } = await supabase.auth.getSession();
+// const userSessionId = userSession?.session?.user.id;
 
-let categorias:any = [];
-if (userSessionId) {
-  const { data, error } = await supabase
-    .from("categorias")
-    .select("*")
-    .eq("usuario_id", userSessionId);
+// let categorias:any = [];
+// if (userSessionId) {
+//   const { data, error } = await supabase
+//     .from("categorias")
+//     .select("*")
+//     .eq("usuario_id", userSessionId);
 
-  if (error) console.error(error);
-  categorias = data;
-}
+//   if (error) console.error(error);
+//   categorias = data;
+// }
 ---
 
-<dialog id="edit-snippet-modal" 
+<!-- <dialog id="edit-snippet-modal" 
 class="open:flex open:items-center open:justify-center open:m-auto 
 open:rounded-0 shadow-lg p-0 w-[600px] max-w-[90%] bg-transparent backdrop:bg-slate-900/50 backdrop:backdrop-blur-[2px]">
   
@@ -75,11 +75,11 @@ open:rounded-0 shadow-lg p-0 w-[600px] max-w-[90%] bg-transparent backdrop:bg-sl
 </form>
   </div>
   </div>
-  </dialog>
+  </dialog> -->
 
-<script>
+<!-- <script>
 const form = document.querySelector("._edit-snippet-form");
 const newSnippetLink = document.querySelectorAll('._edit_snippet');
 const newSnippetModal = document.getElementById('edit-snippet-modal');
 
-</script>
+</script> -->

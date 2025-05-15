@@ -1,3 +1,9 @@
+// Este archivo contiene una función que permite crear un snippet de código en la base de datos.
+// La función recibe un objeto JSON con los datos necesarios para crear el snippet.
+// La función utiliza la API Fetch para realizar solicitudes al servidor y manejar la respuesta.
+// La función devuelve un objeto JSON con el resultado de la operación. 
+
+
 import { supabase } from '@lib/supabaseClient';
 import type { APIRoute } from 'astro';
 

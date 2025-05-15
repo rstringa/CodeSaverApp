@@ -1,6 +1,11 @@
+// Edit Snippet
+// Este archivo contiene una función que permite editar un snippet de código en la base de datos.
+// La función recibe un objeto JSON con los datos necesarios para actualizar el snippet.
+// La función utiliza la API Fetch para realizar solicitudes al servidor y manejar la respuesta.
+// La función devuelve un objeto JSON con el resultado de la operación.
+
 import { supabase } from '@lib/supabaseClient';
 import type { APIRoute } from 'astro';
-import beautify from 'js-beautify'
 
 export const PUT: APIRoute = async ({ request }) => {
     const { data: userSession } = await supabase.auth.getSession();
