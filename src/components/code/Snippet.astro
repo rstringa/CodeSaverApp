@@ -1,7 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components';
 const { snippetsWithCategories } = Astro.props;
-import beautify from 'js-beautify';
+import { useFormattedCode } from '@utils/formatCode';
 import hljs from 'highlight.js';
 import { supabase } from "@lib/supabaseClient";
 
@@ -15,6 +15,7 @@ const { data, error } = await supabase
 
 if (error) console.error(error);
 categorias = data;
+
 ---
 
 <ul class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -82,47 +83,27 @@ categorias = data;
 
             <div
               class="_snippet-content relative scrollbar-custom bg-slate-800 p-4 rounded flex flex-col max-h-40 lg:max-h-90 overflow-y-auto scroll-smooth">
-              <pre class="hljs _snippet-content-formated m-0 p-0 whitespace-pre-wrap break-words">
-                { 
+              <pre class="hljs _snippet-content-formated m-0 p-0 whitespace-pre-line break-words">
+              
+                {
                   (() => {
-                    const formattedCode = beautify(snippet.contenido,
-                      {
-                        indent_size: 2,
-                        space_in_empty_paren: true,
-                        unformatted: ["a", "sub", "sup", "b", "i", "u"],
-                        e4x: true,
-                        preserve_newlines: false,
-                        max_preserve_newlines: 2,
-                        html: {
-                          indent_inner_html: true,
-                          indent_scripts: "normal",
-                          brace_style: "expand",
-                          space_after_anon_function: true,
-                          space_before_conditional: true,
-                          space_before_function_paren: true
-                        },
-                        js: {
-                          braces: true,
-                          unescape_strings: true,
-                          space_after_anon_function: true,
-                          space_after_named_function: true,
-                          space_before_conditional: true,
-                          space_before_function_paren: true
-                        }
-                      }
-                    );
-                    return <code set:html={hljs.highlightAuto(formattedCode).value} />;
+                    const formattedCode = useFormattedCode({ contenido: snippet.contenido });
+
+                    return <code set:html={ hljs.highlightAuto(formattedCode).value } /> 
                   })()
                 }
+
+                  
+               
               </pre>
 
-              <div class="_snippet-content-unformated">
-              <pre class="hljs m-0 p-0 whitespace-pre-line break-words" contenteditable="true">
+              <div class="_snippet-content-unformated overflow-hidden">
+              {/* <pre class="hljs m-0 p-0 whitespace-pre-line break-words" contenteditable="true">
                 <code>
                  { snippet.contenido }
                 </code>
-              </pre>
-
+              </pre> */}
+               <textarea class="w-full h-full min-h-72 text-slate-100 outline-0 scrollbar-custom" value={snippet.contenido}>{snippet.contenido}</textarea>
               </div>
 
 

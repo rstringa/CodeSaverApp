@@ -1,6 +1,6 @@
 // En este archivo se encuentran las funciones que permiten la interacción con los snippets de código.
 // Cuenta con una serie de funciones que interactúan con los snippets de código.
-// Estas funciones se encargan de realizar acciones como la edición, eliminación y copia de snippets.
+// Estas funciones se encargan de realizar acciones la eliminación y copia de snippets.
 // Se utilizan las funciones de la API Fetch para realizar solicitudes al servidor y manejar la respuesta.  
 
 
@@ -61,7 +61,7 @@ copySnippets.forEach((copySnippet) => {
         e.preventDefault();
 
         const snippetId = (e.target as HTMLElement).closest("._snippet")?.getAttribute("data-snippet-id");
-        const snippetContent = document.querySelector(`[data-snippet-id="${snippetId}"] ._snippet-content-unformated code`)?.textContent;
+        const snippetContent = (document.querySelector(`[data-snippet-id="${snippetId}"] ._snippet-content-unformated textarea`) as HTMLTextAreaElement)?.value;
         const snippet = (e.target as HTMLElement).closest("._snippet");
 
         if (snippetContent) {

@@ -39,6 +39,6 @@ export const POST: APIRoute = async ({ request }) => {
     console.error('Error al insertar el snippet:', error);
     return new Response(JSON.stringify({ error }), { status: 500 });
   }
-
+  console.log('data', data);
   return new Response(JSON.stringify({ success: true, data }), { status: 200 });
 };

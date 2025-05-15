@@ -5,7 +5,8 @@
 // También se permite eliminar un snippet y confirmar la eliminación antes de proceder.
 //// Se utiliza la API Fetch para realizar solicitudes al servidor y manejar la respuesta.
 
-
+import beautify from 'js-beautify';
+import hljs from 'highlight.js';
 const editSnippetLink = document.querySelectorAll('._edit-snippet');
 const deleteSnippetLink = document.querySelectorAll('._delete-snippet');
 
@@ -45,10 +46,11 @@ function editSnippet(snippetEditing: Element | null, snippetEditingTitleInitial:
 
         editingSaveLink?.addEventListener('click', function (e) {
             e.preventDefault();
-            const snippetEditingContent = snippetEditing?.querySelector('._snippet-content-unformated')?.textContent;
+            const snippetEditingContent = (snippetEditing?.querySelector('._snippet-content-unformated textarea') as HTMLTextAreaElement)?.value;
             const snippetTitle = snippetEditing?.querySelector('._snippet-title')?.textContent;
             const snippetEditingCategoria = (snippetEditing?.querySelector('._snippet-categories select') as HTMLSelectElement)?.value;
-            console.log("Categoria seleccionada:", snippetEditingCategoria);
+            console.log("Contenido del snippet:", snippetEditingContent);
+
 
             const snippetId = (e.target as HTMLElement).dataset.id;
             saveSnippet(snippetId as string, snippetTitle as string, snippetEditingContent as string, snippetEditingCategoria as string);
