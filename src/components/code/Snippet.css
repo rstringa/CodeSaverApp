@@ -43,12 +43,12 @@
   ._snippet.is-editing ._delete-snippet {
  
   }
-  ._snippet.is-editing ._snippet-title[contenteditable="true"] {
+  ._snippet.is-editing ._snippet-title  a[contenteditable="true"]{
     padding: 5px 10px;
     border: 1px dashed var(--color-green-700);
-    border-radius: 0.25rem;
+    border-radius: 0.25rem; 
   }
-  ._snippet.is-editing ._snippet-title[contenteditable="true"]:focus-visible {
+  ._snippet.is-editing ._snippet-title a[contenteditable="true"]:focus-visible {
     outline: none;
     border: 1px dashed var(--color-green-600);
   }
@@ -56,6 +56,7 @@
     position: relative;
     z-index: 1;
     display: block;
+  
   }
   ._snippet ._snippet-content-unformated {
     position: relative;

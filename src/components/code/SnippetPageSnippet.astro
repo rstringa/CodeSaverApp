@@ -56,9 +56,10 @@ categorias = data;
     class="_snippet group flex flex-col gap-3 mb-12  rounded bg-slate-600/10 p-6 text-sm transition-all transition-discrete duration-300"
     data-category_id={snippet?.categoria_id}
     data-snippet-id={snippet?.id}
+    transition:name=`animacion-${snippet?.id}`
   >
     <div class="flex justify-between items-center gap-2 mb-2">
-      <h2 class="_snippet-title text-xl p-2 lg:text-3xl text-green-600 font-semibold">
+      <h2 class="_snippet-title text-xl p-2 lg:text-3xl text-green-600 font-semibold" >
         {snippet?.titulo} 
       </h2>
 

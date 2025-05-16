@@ -17,7 +17,7 @@ editSnippetLink.forEach((link) => {
 
         const snippetEditing = link.closest('._snippet');
         snippetEditing?.classList.toggle('is-editing');
-        const snippetEditingTitle = snippetEditing?.querySelector('._snippet-title');
+        const snippetEditingTitle = snippetEditing?.querySelector('._snippet-title a');
         snippetEditingTitle?.setAttribute('contenteditable', 'true');
         snippetEditingTitle?.setAttribute('spellcheck', 'false');
         const snippetEditingTitleInitial = snippetEditingTitle?.textContent;
