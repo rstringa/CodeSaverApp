@@ -1,0 +1,39 @@
+---
+import {Icon} from 'astro-icon/components';
+import LayoutPageSnippet from '@layouts/LayoutPageSnippet.astro';
+import SidebarPageSnippet from '@components/SidebarPageSnippet.astro';
+import SnippetPageSnippet from '@components/code/SnippetPageSnippet.astro';
+const { id: snippetId } = Astro.params;
+import { supabase } from '@lib/supabaseClient'
+
+// Obtener la sesión de usuario
+const { data: userSession } = await supabase.auth.getSession()
+const userSessionId = userSession?.session?.user.id
+
+---
+<LayoutPageSnippet>
+    <main
+    class={`
+        relative grid-cols-[1fr] grid
+        lg:grid-cols-[270px_1fr]
+        min-h-[calc(100dvh-100px)]
+        ${userSessionId ? 'logged-in' : 'logged-out'}
+      `}
+>
+    <SidebarPageSnippet />
+    <div class="relative w-full">
+      <!-- <a href="/" class="_btn-normal text-slate-400! justify-between! px-4! 
+      hover:text-green-600!
+      absolute top-6 left-6">    
+        <Icon name="arrowBack" class="w-5 h-5 mr-2 text-slate-400" />
+        Inicio
+      </a> -->
+ 
+    <div class="_content relative w-full max-w-[100vw] lg:max-w-6xl m-auto h-full p-6"> 
+      
+    <SnippetPageSnippet snippetId={snippetId} /> 
+    
+    </div>
+    </div>
+  </main>
+</LayoutPageSnippet>

@@ -11,11 +11,8 @@ import CreateSnippet from '@components/code/CreateSnippet.astro'
 import { supabase } from '@lib/supabaseClient'
 
 // Obtener la sesión de usuario
-let userLogged = false
-const {
-	data: { session }
-} = await supabase.auth.getSession()
-userLogged = Boolean(session?.user)
+const { data: userSession } = await supabase.auth.getSession()
+const userSessionId = userSession?.session?.user.id
 ---
 
 <>
@@ -25,16 +22,16 @@ userLogged = Boolean(session?.user)
 				relative grid-cols-[1fr] grid
 				lg:grid-cols-[270px_1fr]
 				min-h-[calc(100dvh-100px)]
-				${userLogged ? 'logged-in' : 'logged-out'}
+				${userSessionId ? 'logged-in' : 'logged-out'}
 			  `}
 		>
 			<Sidebar />
 
-			<div class="_content max-[100vw] h-full p-6">
+			<div class="_content max-[100vw] h-full p-6 pb-12">
 				<div class="_top mb-4 flex flex-row items-center justify-between gap-4 lg:flex-row">
 					<div>
 						{
-							!userLogged ? (
+							!userSessionId ? (
 								<div />
 							) : (
 								<h1 class="_category-name text-md ml-0 flex items-center gap-2 leading-none font-semibold text-green-600 lg:ml-6 lg:text-2xl">
@@ -46,7 +43,7 @@ userLogged = Boolean(session?.user)
 					</div>
 					<div class="mb-3">
 						<a
-							class=`_new_snippet _btn-featured font-semibold ${!userLogged
+							class=`_new_snippet _btn-featured font-semibold ${!userSessionId
             ? "pointer-events-none opacity-50" : "" }`
 							href="#"
 							>+ Crear Snippet
@@ -54,7 +51,7 @@ userLogged = Boolean(session?.user)
 					</div>
 				</div>
 
-				{!userLogged ? 
+				{!userSessionId ? 
 					<Welcome />  
 					:
 					<ShowSnippets />

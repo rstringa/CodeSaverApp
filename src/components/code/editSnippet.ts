@@ -5,10 +5,9 @@
 // También se permite eliminar un snippet y confirmar la eliminación antes de proceder.
 //// Se utiliza la API Fetch para realizar solicitudes al servidor y manejar la respuesta.
 
-import beautify from 'js-beautify';
-import hljs from 'highlight.js';
 const editSnippetLink = document.querySelectorAll('._edit-snippet');
 const deleteSnippetLink = document.querySelectorAll('._delete-snippet');
+const actualUrl = window.location.href;
 
 let is_editing = false;
 
@@ -99,7 +98,7 @@ async function saveSnippet(
         if (contentType && contentType.includes("application/json")) {
             const result = await res.json();
             console.log("Snippet actualizado correctamente:", snippetId);
-            window.location.href = "/";
+            window.location.href = actualUrl;
         } else {
             console.error("La respuesta no es JSON válida.");
         }

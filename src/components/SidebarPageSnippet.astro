@@ -1,0 +1,63 @@
+---
+import { supabase } from "@lib/supabaseClient";
+import {Icon} from 'astro-icon/components';
+
+interface Snippet {
+  id: string
+  titulo: string
+  contenido: string
+  categoria_id: string
+  created_at: string
+}
+
+const { data: session } = await supabase.auth.getSession()
+const userId = session?.session?.user.id
+if (!userId) throw new Error('Usuario no autenticado')
+
+let lastSnippets:any = [];
+const { data, error } = await supabase
+.from('snippets')
+  .select('*')
+  .eq('usuario_id', userId)
+  .order('created_at', { ascending: false })
+  .limit(10)
+
+if (error) console.error(error);
+lastSnippets = data;
+
+---
+<aside class="_sidebar 
+relative w-full h-full border-r-1 border-slate-700 p-6 pt-6
+order-none lg:order-none 
+"> 
+<div class="_content m-auto">
+
+    <a href="/" class="_btn-normal group text-slate-400! bg-slate-900  justify-between! w-fit px-4! 
+    hover:text-green-500! hover:bg-slate-900! mb-10 relative lg:left-[160px]
+    ">
+      <Icon name="arrowBack" class="w-5 h-5 mr-2 text-slate-400 group-hover:text-green-300!" />
+      Inicio
+    </a>
+
+    <h4 class="uppercase text-sm text-slate-500 mb-3">últimos snippets</h4>
+<ul>
+    {       lastSnippets?.length === 0 && (
+            <li class="border-b-1 border-slate-700">
+                <p class="text-slate-400 text-md py-2 pb-3 leading-5">
+                    No tienes más snippets.
+                </p>
+            </li>
+        )
+    }
+    {lastSnippets?.map((snippet: Snippet) => (
+        <li class="border-b-1 border-slate-700">
+        <a 
+          class="flex text-slate-400 text-md py-2 pb-3 leading-5"
+          
+          href={`/snippet/${snippet.id}`}>{snippet.titulo}
+          </a>
+        </li>
+    ))}
+</ul>
+</div> 
+</aside>

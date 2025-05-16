@@ -12,6 +12,7 @@
 		&::-webkit-scrollbar {
 			@apply w-2 rounded;
 			scrollbar-gutter: stable both-edges;
+			height: 10px;
 		}
 		/* thumb */
 		&::-webkit-scrollbar-thumb {
