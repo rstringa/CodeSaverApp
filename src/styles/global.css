@@ -1,5 +1,18 @@
 @import 'tailwindcss';
-
+@layer theme {
+	/* :root {
+		--color-base: #def226;
+		--color-green-100: color-mix(in oklch, white 90%, var(--color-base));
+		--color-green-200: color-mix(in oklch, white 75%, var(--color-base));
+		--color-green-300: color-mix(in oklch, white 60%, var(--color-base));
+		--color-green-400: color-mix(in oklch, white 45%, var(--color-base));
+		--color-green-500: var(--color-base);
+		--color-green-600: color-mix(in oklch, black 15%, var(--color-base));
+		--color-green-700: color-mix(in oklch, black 30%, var(--color-base));
+		--color-green-800: color-mix(in oklch, black 45%, var(--color-base));
+		--color-green-900: color-mix(in oklch, black 60%, var(--color-base));
+	} */
+}
 @layer utilities {
 	a {
 		@apply text-green-600;
