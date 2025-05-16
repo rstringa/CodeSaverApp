@@ -82,14 +82,14 @@ categorias = data;
             </div>
 
             <div
-              class="_snippet-content relative scrollbar-custom bg-slate-800 p-4 rounded flex flex-col max-h-40 lg:max-h-90 overflow-y-auto scroll-smooth">
-              <pre class="hljs _snippet-content-formated m-0 p-0 whitespace-pre-line break-words">
+              class="_snippet-content overflow-x-hidden relative scrollbar-custom bg-slate-800 p-4 rounded flex flex-col max-h-40 lg:max-h-90 overflow-y-auto scroll-smooth">
+              <pre class="hljs _snippet-content-formated m-0 p-0 whitespace-pre break-words">
               
                 {
                   (() => {
                     const formattedCode = useFormattedCode({ contenido: snippet.contenido });
 
-                    return <code set:html={ hljs.highlightAuto(formattedCode).value } /> 
+                    return <div set:html={ hljs.highlightAuto(formattedCode).value } /> 
                   })()
                 }
 
@@ -191,9 +191,9 @@ categorias = data;
     }
      ._snippet ._snippet-content pre div {
       background: transparent !important;
-      white-space: pre-line !important;
+      /* white-space: pre-line !important; */
       outline: none;
-    }
+    } 
     ._snippet.is-editing {
       border: 1px dashed var(--color-slate-600);
     }
