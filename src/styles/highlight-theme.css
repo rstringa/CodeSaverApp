@@ -57,3 +57,7 @@
 .theme-atom-one-dark .hljs-link {
     text-decoration: underline
 }
+.theme-atom-one-dark .hljs-punctuation, 
+.theme-atom-one-dark .hljs-tag {
+    color: #44604c;
+}

@@ -3,10 +3,10 @@
 // Estas funciones se encargan de realizar acciones la eliminación y copia de snippets.
 // Se utilizan las funciones de la API Fetch para realizar solicitudes al servidor y manejar la respuesta.  
 
-
 const editSnippets = document.querySelectorAll("._snippet ._edit-snippet");
 const deleteSnippets = document.querySelectorAll("._snippet ._delete-snippet");
 const copySnippets = document.querySelectorAll("._snippet ._copy-snippet");
+const expandSnippets = document.querySelectorAll("._snippet ._expand-snippet");
 
 // DELETE SNIPPET
 deleteSnippets.forEach((deleteSnippet) => {
@@ -80,3 +80,27 @@ copySnippets.forEach((copySnippet) => {
         }
     });
 });
+
+// EXPAND SNIPPET
+expandSnippets.forEach((expandSnippet) => {
+    expandSnippet.addEventListener("click", function (e) {
+        e.preventDefault();
+        const snippetId = (e.target as HTMLElement).dataset.id;
+        handleExpandSnippet(snippetId);
+    });
+});
+async function handleExpandSnippet(snippetId) {
+    const snippet = document.querySelector(`[data-snippet-id="${snippetId}"]`);
+    const snippetContent = snippet?.querySelector("._snippet-content");
+    const snippetCloseExpanded = snippet?.querySelector("._snippet-close-expanded");
+    const titleText = snippet?.querySelector("._snippet-title a")?.textContent;
+    document.body.classList.add("snippet-is-expanded");
+    snippet?.classList.add("is-expanded");
+
+    snippetCloseExpanded?.addEventListener("click", function (e) {
+        e.preventDefault();
+        document.body.classList.remove("snippet-is-expanded");
+        snippet?.classList.remove("is-expanded");
+    });
+
+}

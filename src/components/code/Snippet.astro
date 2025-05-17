@@ -19,7 +19,7 @@ categorias = data;
 
 ---
 
-<ul class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+<ul class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
     {
       snippetsWithCategories.map((snippet) => {
         return (
@@ -32,11 +32,19 @@ categorias = data;
             <div class="flex justify-between items-center gap-2 mb-1.5 ml-2">
               <h2 class="_snippet-title flex text-xl items-center font-semibold">
                 <a href={`/snippet/${snippet.id}`} >{snippet.titulo}</a>
-                <Icon name="arrowRight" class="w-4 h-4 ml-1 text-green-400 translate-y-0.75 scale-110" />    
+                <Icon name="arrowRight" class="w-4 h-4 ml-1 text-slate-300 translate-y-0.75 scale-110" />    
               </h2>
 
               <!-- Editar / Eliminar -->
               <div class="_snippet-top-actions transition-opacity duration-300 flex gap-2 items-center">
+                <a
+                  href="#"
+                  class="_expand-snippet _btn-normal px-2! text-slate-400"
+                  data-id={snippet.id}
+                  title="Expandir"
+                >
+                  <Icon name="expand" class="w-4 h-4 pointer-events-none" />
+                </a> 
                 <a
                   href="#"
                   class="_edit-snippet _btn-normal px-2! text-slate-400"
@@ -83,9 +91,10 @@ categorias = data;
                 </a>
               </div>
             </div>
-
+            <div class="_snippet-close-expanded hidden text-slate-400 hover:text-green-500"><Icon name="close" class="w-8 h-8" /></div>
             <div
-              class="_snippet-content overflow-x-hidden relative scrollbar-custom bg-slate-800 p-4 rounded flex flex-col max-h-40 lg:max-h-90 overflow-y-auto scroll-smooth">
+              class="_snippet-content will-change-auto overflow-x-hidden relative scrollbar-custom bg-slate-800 p-4 rounded flex flex-col max-h-40 lg:max-h-90 overflow-y-auto scroll-smooth">
+             
               <pre class="hljs _snippet-content-formated m-0 p-0 whitespace-pre break-words">
               
                 {
@@ -135,7 +144,7 @@ categorias = data;
             <div class="_copy-snippet-actions relative z-5">
               <a href="#" class="_copy-snippet group-[.is-editing]:hidden _btn-normal 
               absolute bottom-5 right-3  
-              px-2! text-slate-400" 
+              px-2! text-slate-400 bg-slate-800" 
               data-snippet-id={snippet.id}
               title="Copiar código">
                 <Icon name="copy" class="w-4 h-4 pointer-events-none" />
@@ -175,7 +184,79 @@ categorias = data;
     }
   </ul>
 
+<style>
+._snippet.is-expanded {
+  position: relative;
+  z-index: 50;
+  box-shadow: 0 0 100vw rgba(0, 0, 0, 0.55);
+} 
+._snippet.is-expanded ._snippet-content {
+  transition: all 0.5s ease-in-out;
+  width: 90vw;
+  overflow: auto;
+  height: 90vh; 
+  max-height: 90vh;
+  padding: 40px 5%;
+  position: fixed;
+  top:5vh;
+  left: 5vw;
+  border-radius: 8px;
+}
+._snippet.is-expanded ._snippet-title {
+  position: fixed;
+    z-index: 50;
+    top: calc(5vh);
+    left: calc(5vw);
+    padding: 12px 5% 12px 5%; 
+    background-color: var(--color-slate-800);
+    pointer-events: none;
+    font-size: var(--text-2xl);
+    width: calc(100% - 10%);
+    border-bottom: 1px solid var(--color-slate-700);
+    border-radius: 8px 8px 0 0 ;
+  & a {
+    color:var(--color-slate-400)!important;
+  }
+  & svg {
+    display: none;
+  }
+}
+._snippet.is-expanded ._snippet-close-expanded {
+  display: flex;
+  position: fixed;
+  z-index: 55;
+  top: calc(5vh + 16px);
+  right: calc(5vw + 20px);
+  cursor: pointer;
+}
+._snippet.is-expanded ._copy-snippet{
+  position: fixed;
+  z-index: 51;
+  bottom: calc(5vh + 20px);
+  right: calc(5vw + 20px);
+}
+._snippet.is-expanded  ._copy-snippet-message {
+  position: fixed;
+  z-index: 52;
+  bottom: calc(5vh + 20px);
+  right: calc(5vw + 60px);
+}
+body.snippet-is-expanded {
+  overflow: hidden;
+}
+body.snippet-is-expanded:after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 5;
+  backdrop-filter: blur(10px);
+}
 
+</style>  
 
   <script>
       import "./snippets.ts";
