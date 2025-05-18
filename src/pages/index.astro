@@ -36,7 +36,7 @@ const userSessionId = userSession?.session?.user.id
 							) : null
 						}
 					</div>
-					<div class="mb-3 hidden lg:flex">
+					<div class=`mb-3 ${!userSessionId ? "hidden lg:flex" : ""} `>
 						<a 
 							class=`_new_snippet _btn-featured font-semibold ${!userSessionId
             ? "pointer-events-none opacity-50" : "" }`
