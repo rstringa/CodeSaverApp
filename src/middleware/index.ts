@@ -7,7 +7,7 @@ const protectedRoutes = [
   "/dashboard",
   "/dashboard/**",
   "/baja-de-usuario",
-  "/api/snippets",
+  "/api/createSnippet",
   "/api/editSnippet",
   "/api/deleteSnippet",
   "/api/createCategory",

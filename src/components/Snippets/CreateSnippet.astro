@@ -26,7 +26,7 @@ if (userSessionId) {
 		<h2 class="mb-6 text-2xl text-slate-100">Crear nuevo snippet</h2>
 
 		<form
-			action="/api/snippets"
+			action="/api/createSnippet"
 			method="POST"
 			class="_create-snippet-form flex flex-col gap-2 rounded transition-all transition-discrete duration-300"
 		>
@@ -105,7 +105,7 @@ if (userSessionId) {
 		e.preventDefault()
 		const formData = new FormData(form)
 		
-		const res = await fetch('/api/snippets', {
+		const res = await fetch('/api/createSnippet', {
 			method: 'POST',
 			
 			body: formData
