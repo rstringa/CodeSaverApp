@@ -10,7 +10,7 @@ const urlPath = url.pathname;
 
 ---
 
-<header class="_header 
+<header class="_header  relative
 flex justify-between p-6 py-3 m-auto border-b-1 border-slate-700
 
 ">
@@ -61,6 +61,7 @@ flex justify-between p-6 py-3 m-auto border-b-1 border-slate-700
 
     </nav>
   </div>
+  <div class="_loading-line"></div>
 </header>
 
 <script>
@@ -86,3 +87,35 @@ flex justify-between p-6 py-3 m-auto border-b-1 border-slate-700
     }
   };
 </script>
+<style>
+._loading-line {
+  --time: 3s;
+  --width:50px;
+  position: absolute;
+  width: var(--width);
+  height: 2px;
+  background-color: var(--color-green-800);
+  left: 0;
+  bottom: -2px;
+  filter: blur(1px);
+  will-change: left, width;
+  transform: translateX(-100%);
+}
+body.is-loading ._loading-line { 
+	animation: is-loading var(--time, 2s) ease-out;
+}
+@keyframes is-loading {
+	0% {
+		left: 0;
+	}
+  50% {
+    --width:100px;
+  }
+	100% {
+    --width:40px;
+		left: 100%;
+	}
+}
+
+
+</style>
