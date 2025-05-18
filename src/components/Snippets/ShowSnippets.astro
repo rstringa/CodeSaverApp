@@ -1,6 +1,7 @@
 ---
-import Snippet from '@components/code/Snippet.astro'
+import Snippet from '@components/Snippets/Snippet.astro'
 import { supabase } from '@lib/supabaseClient'
+import { Icon } from 'astro-icon/components'
 
 const { data: userSession } = await supabase.auth.getSession()
 const userSessionId = userSession?.session?.user.id
@@ -54,6 +55,11 @@ if (userSessionId) {
 		</div>
 	) : (
 		<div>
+			
+			<h1 class="_category-name text-md mb-6 flex items-center gap-2 leading-none font-semibold text-slate-300  lg:text-xl">
+									<Icon name="folderCode" class="h-8 w-8 self-end lg:h-5 lg:w-5" />
+									<span class="_category-text">Todos mis snippets</span>
+			</h1>
 			<Snippet snippetsWithCategories={snippetsWithCategories} />
 		</div>
 	)

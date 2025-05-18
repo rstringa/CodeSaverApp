@@ -1,5 +1,5 @@
 ---
-import '@components/code/Snippet.css'
+import '@components/Snippets/Snippet.css'
 import {Icon} from 'astro-icon/components';
 const { snippetId } = Astro.props;
 import { useFormattedCode } from '@utils/formatCode';
@@ -11,7 +11,7 @@ let snippet: {
 	contenido: any 
 	categoria_id: any
 } | null = null;
-let categorias:any = [];
+
 // Obtener la sesión de usuario
 const { data: userSession } = await supabase.auth.getSession()
 const userSessionId = userSession?.session?.user.id
@@ -39,13 +39,8 @@ if (userSessionId) {
 	}
 }
 
-const { data, error } = await supabase
-    .from("categorias")
-    .select("*")
-    .eq("usuario_id", userSessionId);
-
-if (error) console.error(error);
-categorias = data;
+import {listCategoriesFromUser} from '@utils/listCategoriesFromUser';  
+const categorias = await listCategoriesFromUser();
 
 ---
 

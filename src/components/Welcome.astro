@@ -5,16 +5,17 @@ import { Icon } from 'astro-icon/components'
 <div class="flex h-[calc(100vh-400px)] flex-col items-center justify-center">
 	<Icon name="home" class="hidden h-64 w-64 text-green-600 opacity-80 lg:block lg:h-48 lg:w-48" />
 	<h1
-		class="relative z-10 mb-0 p-0 px-2 text-center text-2xl text-balance lg:mb-2 lg:p-0 lg:text-2xl"
+		class="relative z-10 mb-3 p-0 px-2 text-center text-2xl text-balance lg:mb-6 lg:p-0 lg:text-5xl text-slate-100"
 	>
-		Bienvenido a CodeSaverApp, por favor{' '}
-		<a href="/register" class="text-green-600"> regístrese </a>{' '}
-		o{' '}
-		<a href="/register" class="text-green-600"> inicie sesión </a>{' '}
-		a la app.
+	¡Guarda tus <strong class="text-green-600">snippets de código</strong><br> 
+	y tenlos siempre a mano!
+		
 	</h1>
 	<p class="lg:text-md text-md relative z-10 p-8 px-2 text-center text-slate-400 lg:p-0">
-		¡Guarda tus snippets de código y tenlos siempre a mano!
-
+		Bienvenido a CodeSaverApp, por favor
+		<a href="/register" class="text-green-600"> regístrese </a>
+		o{' '}
+		<a href="/login" class="text-green-600"> inicie sesión </a>
+		a la app.
 	</p>
 </div>

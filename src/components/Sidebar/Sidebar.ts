@@ -51,7 +51,7 @@ function showSnippets(categoryId) {
 }
 // SHOW CATEGORY NAME
 function showCategoryName(editedName) {
-    const categoryName = document.querySelector('._top ._category-name ._category-text');
+    const categoryName = document.querySelector('._content ._category-name ._category-text');
     if (categoryName) {
 
         categoryName.textContent = "";

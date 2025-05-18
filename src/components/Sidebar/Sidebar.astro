@@ -1,0 +1,87 @@
+---
+import { Icon } from 'astro-icon/components'
+import { userLoggedIn } from "@utils/userLoggedIn";
+import DialogCreateCategory from '@components/Sidebar/DialogCreateCategory.astro';
+import ListCategories from '@components/Sidebar/ListCategories.astro';
+import { listCategoriesFromUser } from '@utils/listCategoriesFromUser';
+const userLogged = await userLoggedIn();
+const categorias = await listCategoriesFromUser();
+
+---
+<aside class="_sidebar 
+relative w-full h-full border-r-1 border-slate-700 p-6 pt-6
+order-none lg:order-none 
+"> 
+    <div class="_content m-auto">
+  
+       
+       <ListCategories 
+       categorias={categorias}
+       userLogged={userLogged}
+       />
+    </div>
+    </div> 
+     </div>  
+  
+     
+     { userLogged && (
+    /* BAJA DE CUENTA */
+ <div class="hidden lg:flex absolute bottom-0 left-0 w-full items-center justify-between border-t-1 border-slate-700">
+    <a href="/baja-de-usuario" class="w-full text-slate-500 text-sm text-center p-3 ">Dar de baja mi cuenta</a>
+ </div>
+)}
+
+</aside>
+
+<DialogCreateCategory />
+
+<style is:inline>
+body.logged-out ._sidebar {
+    @media(max-width: 1024px) {
+        display: none;
+    } 
+}
+   
+._category-item > svg{
+   flex:0 0 auto;
+}
+._category-item span {
+    color:var(--color-slate-400);
+    }       
+._category-item.is-active span {  
+     color:var(--color-green-500)!important;
+}    
+._category-item.is-active svg {
+    color: var(--color-green-600);  
+} 
+._category-item ._number  {
+    color:var(--color-slate-400);  
+}
+._category-item.is-active ._number {  
+     color:var(--color-green-400)!important;
+}
+._category-item.is-active:hover ._actions:hover {  
+    color: var(--color-green-600);
+}
+._category-item:has(*[contenteditable="true"]) {
+    background-color: var(--color-slate-900);
+    border-style: dashed;
+    border-color: var(--color-green-700); 
+}
+._category-item:has(*[contenteditable="true"]) ._category-name {
+    color: var(--color-slate-300); 
+    outline: none;
+    focus-visible: none;
+}
+._category-item:has(*[contenteditable="true"]) ._number {
+    background-color: var(--color-slate-900);
+}  
+{/* ._category-item._actions-enabled ._category-item-actions {
+    display: flex;
+}  */}
+</style>  
+ 
+
+<script> 
+    import "./Sidebar.ts";
+</script>

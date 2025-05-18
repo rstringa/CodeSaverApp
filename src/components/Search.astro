@@ -1,0 +1,27 @@
+---
+---
+
+<div class="flex items-center justify-center w-[100%] m-auto mb-4 lg:mb-0">
+    <!-- SEARCH SNIPPETS -->
+    <input type="text" placeholder="Buscar snippets..." class="_search-snippets p-2 px-4 border border-slate-700 w-[100%] lg:w-2xl focus:outline-none focus:ring-2 focus:ring-green-800
+    rounded-full
+    " />  
+</div>
+
+<script>
+ const input = document.querySelector('._search-snippets');
+ const snippets = document.querySelectorAll('._snippet');
+ input?.addEventListener('input', (e) => {
+   if (!e.target) return;
+   const searchText = (e.target as HTMLInputElement).value.toLowerCase();
+   snippets.forEach(snippet => {
+   // Check if the snippet contains the search text
+   const snippetTitle = snippet.querySelector('._snippet-title a');
+   if (snippetTitle?.textContent?.toLowerCase().includes(searchText)) {
+     snippet.classList.remove('hidden');
+   } else {
+     snippet.classList.add('hidden');
+   }
+    });
+ });
+</script>

@@ -1,12 +1,11 @@
 ---
-import { fade } from 'astro:transitions'
-import { Icon } from 'astro-icon/components'
 import LayoutBase from '@layouts/LayoutBase.astro'
-import Sidebar from '@components/Sidebar.astro'
+import Sidebar from '@components/Sidebar/Sidebar.astro'
 import Welcome from '@components/Welcome.astro'
-import ShowSnippets from '@components/code/ShowSnippets.astro'
+import ShowSnippets from '@components/Snippets/ShowSnippets.astro'
+import Search from '@components/Search.astro'
 //import { userLoggedIn, userData } from '@utils/userLoggedIn'
-import CreateSnippet from '@components/code/CreateSnippet.astro'
+import CreateSnippet from '@components/Snippets/CreateSnippet.astro'
 
 import { supabase } from '@lib/supabaseClient'
 
@@ -28,17 +27,13 @@ const userSessionId = userSession?.session?.user.id
 			<Sidebar />
 
 			<div class="_content max-[100vw] h-full p-6 pb-12">
-				<div class="_top mb-4 flex flex-row items-center justify-between gap-4 lg:flex-row">
-					<div>
+				<div class="_top mb-4 flex flex-row items-start justify-between gap-4 lg:flex-row">
+					<div class="flex gap-2 justify-between items-center w-full">
 						{
-							!userSessionId ? (
-								<div />
-							) : (
-								<h1 class="_category-name text-md ml-0 flex items-center gap-2 leading-none font-semibold text-slate-300 lg:ml-6 lg:text-xl">
-									<Icon name="folderCode" class="h-8 w-8 self-end lg:h-5 lg:w-5" />
-									<span class="_category-text">Todos mis snippets</span>
-								</h1>
-							)
+							userSessionId ? (
+						
+								<Search />
+							) : null
 						}
 					</div>
 					<div class="mb-3 hidden lg:flex">
