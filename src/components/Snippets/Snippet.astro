@@ -22,7 +22,7 @@ const categorias = await listCategoriesFromUser();
             <div class="flex justify-between items-center gap-2 mb-1.5 ml-2">
               <h2 class="_snippet-title flex text-xl items-center font-semibold">
                 <a href={`/snippet/${snippet.id}`} >{snippet.titulo}</a>
-                <Icon name="arrowRight" class="w-4 h-4 ml-1 text-slate-300 translate-y-0.75 scale-110" />    
+                <Icon name="arrowRight" class="w-4 h-4 ml-1 text-slate-300 translate-y-0.75 scale-110 shrink-0" />    
               </h2>
 
               <!-- Editar / Eliminar -->
@@ -83,7 +83,10 @@ const categorias = await listCategoriesFromUser();
             </div>
             <div class="_snippet-close-expanded hidden text-slate-400 hover:text-green-500"><Icon name="close" class="w-8 h-8" /></div>
             <div
-              class="_snippet-content will-change-auto overflow-x-hidden relative scrollbar-custom bg-slate-800 p-4 rounded flex flex-col max-h-40 lg:max-h-90 overflow-y-auto scroll-smooth">
+              class="_snippet-content 
+              will-change-auto overflow-x-hidden relative scrollbar-custom bg-slate-800 p-4 rounded flex flex-col max-h-40 lg:max-h-90 overflow-y-auto scroll-smooth
+              
+              ">
              
               <pre class="hljs _snippet-content-formated m-0 p-0 whitespace-pre break-words">
               

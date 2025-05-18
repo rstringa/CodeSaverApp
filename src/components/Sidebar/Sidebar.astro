@@ -10,8 +10,8 @@ const categorias = await listCategoriesFromUser();
 ---
 <aside class="_sidebar 
 relative w-full h-full border-r-1 border-slate-700 p-6 pt-6
-order-none lg:order-none 
-"> 
+order-none lg:order-none mb-6 lg:mb-8
+">  
     <div class="_content m-auto">
   
        
@@ -26,7 +26,7 @@ order-none lg:order-none
      
      { userLogged && (
     /* BAJA DE CUENTA */
- <div class="hidden lg:flex absolute bottom-0 left-0 w-full items-center justify-between border-t-1 border-slate-700">
+ <div class="hidden lg:flex absolute bottom-0 left-0 w-full items-center justify-between border-t-1 border-slate-700 opacity-25 pointer-events-none">
     <a href="/baja-de-usuario" class="w-full text-slate-500 text-sm text-center p-3 ">Dar de baja mi cuenta</a>
  </div>
 )}
