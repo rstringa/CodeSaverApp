@@ -14,19 +14,19 @@ const categorias = await listCategoriesFromUser();
       snippetsWithCategories.map((snippet) => {
         return (
           <li
-            class="_snippet group flex flex-col gap-2 rounded bg-slate-600/10 p-6 text-sm transition-all transition-discrete duration-300"
+            class="_snippet group flex flex-col gap-2 rounded bg-slate-600/10 p-4 lg:p-6 text-sm transition-all transition-discrete duration-300"
             data-category_id={snippet.categoria_id}
             data-snippet-id={snippet.id}
             transition:name=`animacion-${snippet.id}`
           >
-            <div class="flex justify-between items-center gap-2 mb-1.5 ml-2">
-              <h2 class="_snippet-title flex text-xl items-center font-semibold">
+            <div class="flex flex-wrap justify-between items-center gap-2 mb-1.5 ml-2">
+              <h2 class="_snippet-title flex text-xl items-center font-semibold w-full lg:max-w-80 order-2 lg:order-0 ">
                 <a href={`/snippet/${snippet.id}`} >{snippet.titulo}</a>
                 <Icon name="arrowRight" class="w-4 h-4 ml-1 text-slate-300 translate-y-0.75 scale-110 shrink-0" />    
               </h2>
 
               <!-- Editar / Eliminar -->
-              <div class="_snippet-top-actions transition-opacity duration-300 flex gap-2 items-center">
+              <div class="_snippet-top-actions transition-opacity duration-300 flex gap-2 items-center ml-auto">
                 <a
                   href="#"
                   class="_expand-snippet _btn-normal px-2! text-slate-400"
@@ -84,7 +84,7 @@ const categorias = await listCategoriesFromUser();
             <div class="_snippet-close-expanded hidden text-slate-400 hover:text-green-500"><Icon name="close" class="w-8 h-8" /></div>
             <div
               class="_snippet-content 
-              will-change-auto overflow-x-hidden relative scrollbar-custom bg-slate-800 p-4 rounded flex flex-col max-h-40 lg:max-h-90 overflow-y-auto scroll-smooth
+              will-change-auto overflow-x-hidden relative scrollbar-custom bg-slate-800 p-2 lg:p-4 rounded flex flex-col max-h-60 lg:max-h-90 overflow-y-auto scroll-smooth
               
               ">
              
@@ -97,10 +97,11 @@ const categorias = await listCategoriesFromUser();
                     return <div set:html={ hljs.highlightAuto(formattedCode).value } /> 
                   })()
                 }
-
+ 
                   
                
               </pre>
+    
 
               <div class="_snippet-content-unformated overflow-hidden">
 
@@ -178,29 +179,48 @@ const categorias = await listCategoriesFromUser();
   box-shadow: 0 0 100vw rgba(0, 0, 0, 0.55);
 } 
 ._snippet.is-expanded ._snippet-content {
-  transition: all 0.5s ease-in-out;
+  transition: all 1s ease-in-out;
   width: 90vw;
   overflow: auto;
   height: 90vh; 
   max-height: 90vh;
-  padding: 40px 5%;
+  padding: 60px 5%;
   position: fixed;
-  top:5vh;
+  top:7vh;
   left: 5vw;
   border-radius: 8px;
+  opacity: 1;
+  @starting-style{
+   top:0;
+   opacity: 0;
+  }
+}
+._snippet.is-expanded ._snippet-content pre{
+  white-space:break-spaces; 
 }
 ._snippet.is-expanded ._snippet-title {
   position: fixed;
     z-index: 50;
-    top: calc(5vh);
+    top: calc(2vh);
     left: calc(5vw);
-    padding: 12px 5% 12px 5%; 
+    height: -moz-fit-content;
+    height: fit-content;
+    max-height: 120px;
+    padding: 12px 5% 12px 5%;
     background-color: var(--color-slate-800);
     pointer-events: none;
-    font-size: var(--text-2xl);
+    font-size: var(--text-xl);
     width: calc(100% - 10%);
+    max-width: none;
     border-bottom: 1px solid var(--color-slate-700);
-    border-radius: 8px 8px 0 0 ;
+    border-radius: 8px 8px 0 0;
+    padding-right: 60px;
+
+    /* display: -webkit-box; */
+    /* -webkit-line-clamp: 1; */
+    /* -webkit-box-orient: vertical; */
+    /* overflow: hidden; */
+    /* text-overflow: ellipsis;*/
   & a {
     color:var(--color-slate-400)!important;
   }
@@ -212,7 +232,7 @@ const categorias = await listCategoriesFromUser();
   display: flex;
   position: fixed;
   z-index: 55;
-  top: calc(5vh + 16px);
+  top: calc(2vh + 12px);
   right: calc(5vw + 20px);
   cursor: pointer;
 }
@@ -221,6 +241,10 @@ const categorias = await listCategoriesFromUser();
   z-index: 51;
   bottom: calc(5vh + 20px);
   right: calc(5vw + 20px);
+}
+._snippet.is-expanded ._snippet-content-inner {
+  overflow: auto;
+  margin-right: 0px;
 }
 ._snippet.is-expanded  ._copy-snippet-message {
   position: fixed;

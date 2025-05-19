@@ -40,27 +40,30 @@ if (userSessionId) {
 {
 	totalSnippets == 0 && userSessionId ? (
 		<div class="flex-col items-center justify-center rounded border border-slate-800 p-6 py-12 lg:flex">
+			<p class="mb-2 text-2xl tracking-wide text-slate-300">
+				No tienes snippets aún.
+				<br />
+			</p>
 
-     
-          <p class="mb-2 text-2xl tracking-wide text-slate-300">
-            No tienes snippets aún.
-            <br />
-          </p> 
-		  
-          <p class="text-md tracking-wide text-slate-400">
-            Crea tu primer snippet haciendo click en el botón Crear Snippet.
-          </p>
-    
-
+			<p class="text-md tracking-wide text-slate-400">
+				Crea tu primer snippet haciendo click en el botón Crear Snippet.
+			</p>
 		</div>
 	) : (
 		<div>
-			
-			<h1 class="_category-name text-md mb-6 flex items-center gap-2 leading-none font-semibold text-slate-300  lg:text-xl">
-									<Icon name="folderCode" class="h-8 w-8 self-end lg:h-5 lg:w-5" />
-									<span class="_category-text">Todos mis snippets</span>
+			<h1 class="_category-name text-md mb-6 flex items-center gap-2 leading-none font-semibold text-slate-300 lg:text-xl">
+				<Icon name="folderCode" class="h-8 w-8 self-end lg:h-5 lg:w-5" />
+				<span class="_category-text">Todos mis snippets</span>
 			</h1>
 			<Snippet snippetsWithCategories={snippetsWithCategories} />
 		</div>
 	)
 }
+<div
+	class="_no-snippets-in-category hidden flex-col items-center justify-center rounded border border-slate-800 p-6 py-12"
+>
+	<p class="mb-2 text-2xl tracking-wide text-slate-300">
+		No tienes snippets aún en ésta categoría.
+		<br />
+	</p>
+</div>
