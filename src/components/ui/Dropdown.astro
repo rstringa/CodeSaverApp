@@ -1,0 +1,67 @@
+---
+import { Icon } from 'astro-icon/components'
+const { name, icon } = Astro.props
+
+interface Props {
+	name: string
+	icon?: string
+}
+//
+// USE
+//
+// <Dropdown icon="more"name="menu">
+//         <ul class="flex flex-col gap-2">
+//             <li>
+//                 <a href="#" class="_btn-normal">Editar</a>
+//             </li>
+//             <li>
+//                 <a href="#" class="_btn-normal">Eliminar</a>
+//             </li>
+//           </ul>
+// </Dropdown>
+---
+
+<div class="dropdown" data-name={name}>
+	<div class="dropdown-btn">
+		<Icon name={icon ? icon : 'more'} class="h-6 w-6" />
+		<div class="dropdown-content">
+			<slot />
+		</div>
+	</div>
+</div>
+<style>
+	.dropdown-btn {
+		width: fit-content;
+		position: relative;
+		cursor: pointer;
+	}
+	.dropdown-content {
+		display: none;
+		position: absolute;
+		opacity: 0;
+		transition-property: opacity, display;
+		transition-duration: 0.25s;
+		transition-behavior: allow-discrete;
+	}
+	.dropdown.is-open .dropdown-content {
+		display: block;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		width: fit-content;
+		opacity: 1;
+	}
+</style>
+<script define:vars={{ name }}>
+	const dropdown = document.querySelector(`.dropdown[data-name="${name}"]`)
+	const dropdownBtn = dropdown.querySelector('.dropdown-btn')
+	dropdownBtn?.addEventListener('click', (e) => {
+		dropdown?.classList.toggle('is-open')
+	})
+	// Close dropdown when clicking outside
+	window.addEventListener('click', (e) => {
+		if (!dropdown?.contains(e.target)) {
+			dropdown?.classList.remove('is-open')
+		}
+	})
+</script>

@@ -83,6 +83,7 @@ const categorias = await listCategoriesFromUser();
             </div>
             <div class="_snippet-close-expanded hidden text-slate-400 hover:text-green-500"><Icon name="close" class="w-8 h-8" /></div>
             <div
+              tabindex="0"
               class="_snippet-content 
               will-change-auto overflow-x-hidden relative scrollbar-custom bg-slate-800 p-2 lg:p-4 rounded flex flex-col max-h-60 lg:max-h-90 overflow-y-auto scroll-smooth
               
@@ -252,6 +253,21 @@ const categorias = await listCategoriesFromUser();
   bottom: calc(5vh + 20px);
   right: calc(5vw + 60px);
 }
+/* ._snippet ._snippet-content:focus {
+  position:relative;
+}
+._snippet ._snippet-content:focus {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 650px;
+}
+._snippet:nth-child(3n) ._snippet-content:focus{
+  top:0;
+  right: 0;
+  left: -180px;
+ 
+} */
 body.snippet-is-expanded {
   overflow: hidden;
 }
