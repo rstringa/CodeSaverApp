@@ -3,7 +3,7 @@ import { Icon } from 'astro-icon/components'
 import { supabase } from '@lib/supabaseClient';
 const { data: userSession } = await supabase.auth.getSession()
 const userSessionId = userSession?.session?.user.id
-
+console.log(userSession?.session?.user?.user_metadata?.display_name)
 // Get page url
 const url = new URL(Astro.url.pathname, Astro.url.origin);
 const urlPath = url.pathname;
@@ -32,7 +32,9 @@ flex justify-between p-6 py-3 m-auto border-b-1 border-slate-700
         text-sm! lg:text-md
         font-regular mr-6 text-slate-400
         w-full
-        ">Hola, {userSession?.session?.user?.email}!</p>
+        ">Hola, {userSession?.session?.user?.user_metadata?.full_name
+          ? userSession?.session?.user?.user_metadata?.full_name
+          :  userSession?.session?.user?.email}!</p>
         <a
           href="#"
           id="btn_logout"
