@@ -98,6 +98,7 @@ async function saveSnippet(
         if (contentType && contentType.includes("application/json")) {
             const result = await res.json();
             console.log("Snippet actualizado correctamente:", snippetId);
+            localStorage.setItem("edited-snippet", snippetId);
             window.location.href = actualUrl;
         } else {
             console.error("La respuesta no es JSON válida.");

@@ -63,3 +63,23 @@ const userSessionId = userSession?.session?.user.id
 		}
 	}
 </style>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const editedSnippet = localStorage.getItem('edited-snippet');
+	if(editedSnippet) {
+		const snippetId = editedSnippet;
+		const snippetElement = document.querySelector(`._snippet[data-snippet-id="${snippetId}"]`);
+		if (snippetElement) {
+			snippetElement.classList.add('is-edited');
+			snippetElement.scrollIntoView({ behavior: 'smooth' });
+			
+			localStorage.removeItem('edited-snippet');
+			setTimeout(() => {
+				snippetElement.classList.remove('is-edited');
+			}, 5000);
+		}
+	}
+	});
+
+</script>
