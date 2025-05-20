@@ -1,16 +1,16 @@
 ---
 import '@components/Snippets/Snippet.css'
-import {Icon} from 'astro-icon/components';
-const { snippetId } = Astro.props;
-import { useFormattedCode } from '@utils/formatCode';
-import hljs from 'highlight.js';
+import { Icon } from 'astro-icon/components'
+const { snippetId } = Astro.props
+import { useFormattedCode } from '@utils/formatCode'
+import hljs from 'highlight.js'
 import { supabase } from '@lib/supabaseClient'
 let snippet: {
 	id: any
 	titulo: any
-	contenido: any 
+	contenido: any
 	categoria_id: any
-} | null = null;
+} | null = null
 
 // Obtener la sesión de usuario
 const { data: userSession } = await supabase.auth.getSession()
@@ -28,175 +28,178 @@ if (userSessionId) {
     `
 		)
 		.eq('usuario_id', userSessionId)
-        .eq('id', snippetId)
-		
+		.eq('id', snippetId)
 
 	if (error) {
 		console.error('Error fetching snippets:', error)
 	} else {
-        // console.log('data', data[0])
+		// console.log('data', data[0])
 		snippet = data[0]
 	}
 }
 
-import {listCategoriesFromUser} from '@utils/listCategoriesFromUser';  
-const categorias = await listCategoriesFromUser();
-
+import { listCategoriesFromUser } from '@utils/listCategoriesFromUser'
+const categorias = await listCategoriesFromUser()
 ---
 
+<div
+	class="_snippet group mb-12 flex flex-col gap-3 rounded bg-slate-600/10 p-6 text-sm transition-all transition-discrete duration-300"
+	data-category_id={snippet?.categoria_id}
+	data-snippet-id={snippet?.id}
+	transition:name=`animacion-${snippet?.id}`
+>
+	<div class="mb-2 flex items-center justify-between gap-2">
+		<h2 class="_snippet-title p-2 text-xl font-semibold text-green-600 lg:text-3xl">
+			{snippet?.titulo}
+		</h2>
 
-    
+		<!-- Editar / Eliminar -->
+		<div class="_snippet-top-actions flex items-center gap-2 transition-opacity duration-300">
+			<a
+				href="#"
+				class="_edit-snippet _btn-normal px-2! text-slate-400"
+				data-id={snippet?.id}
+				title="Editar"
+			>
+				<Icon name="edit" class="pointer-events-none h-4 w-4" />
+			</a>
+			<a
+				href="#"
+				class="_delete-snippet _btn-normal px-2! text-slate-400"
+				data-id={snippet?.id}
+				title="Eliminar"
+			>
+				<Icon name="delete" class="pointer-events-none h-4 w-4" />
+			</a>
+		</div>
+	</div>
 
-    <div
-    class="_snippet group flex flex-col gap-3 mb-12  rounded bg-slate-600/10 p-6 text-sm transition-all transition-discrete duration-300"
-    data-category_id={snippet?.categoria_id}
-    data-snippet-id={snippet?.id}
-    transition:name=`animacion-${snippet?.id}`
-  >
-    <div class="flex justify-between items-center gap-2 mb-2">
-      <h2 class="_snippet-title text-xl p-2 lg:text-3xl text-green-600 font-semibold" >
-        {snippet?.titulo} 
-      </h2>
+	<!-- CONFIRM DELETE SNIPPET -->
+	<div
+		class="_snippet-confirm mb-3 flex hidden flex-col items-center gap-2 rounded-md bg-slate-800/50 p-6"
+	>
+		<p
+			class="text-md mb-2 flex w-full flex-1 items-center justify-center rounded border border-amber-800 bg-amber-900/10 p-2.5 text-balance text-amber-600"
+		>
+			<Icon name="warning" class="mr-3 h-8 w-8 text-amber-600" />
+			Una vez eliminado, no podrás recuperar el snippet.
+		</p>
+		<div class="flex w-full flex-wrap items-center justify-between gap-3">
+			<a
+				href="#"
+				class="_snippet-confirm-delete _btn-normal [min-width:150px] flex-1"
+				data-id={snippet?.id}
+				title="Editar"
+			>
+				Sí, eliminar
+			</a>
+			<a
+				href="#"
+				class="_snippet-confirm-cancel _btn-normal [min-width:150px] flex-1"
+				data-id={snippet?.id}
+				title="Eliminar"
+			>
+				No, cancelar
+			</a>
+		</div>
+	</div>
 
-      <!-- Editar / Eliminar -->
-      <div class="_snippet-top-actions transition-opacity duration-300 flex gap-2 items-center">
-        <a
-          href="#"
-          class="_edit-snippet _btn-normal px-2! text-slate-400"
-          data-id={snippet?.id}
-          title="Editar"
-        >
-          <Icon name="edit" class="w-4 h-4 pointer-events-none" />
-        </a>
-        <a
-          href="#"
-          class="_delete-snippet _btn-normal px-2! text-slate-400"
-          data-id={snippet?.id}
-          title="Eliminar"
-        >
-          <Icon name="delete" class="w-4 h-4 pointer-events-none" />
-        </a>
-      </div>
-    </div>
-
-    <!-- CONFIRM DELETE SNIPPET -->
-    <div
-      class="_snippet-confirm flex flex-col gap-2 items-center mb-3 hidden bg-slate-800/50 p-6 rounded-md"
-    >
-      <p class="flex flex-1 w-full justify-center items-center text-md text-balance bg-amber-900/10 text-amber-600 mb-2 border border-amber-800 rounded p-2.5">
-        <Icon name="warning" class="w-8 h-8 mr-3 text-amber-600" />
-        Una vez eliminado, no podrás recuperar el snippet.
-      </p>
-      <div class="flex flex-wrap gap-3 items-center justify-between w-full">
-        <a
-          href="#"
-          class="_snippet-confirm-delete _btn-normal flex-1 [min-width:150px]"
-          data-id={snippet?.id}
-          title="Editar"
-        >
-          Sí, eliminar
-        </a>
-        <a
-          href="#"
-          class="_snippet-confirm-cancel _btn-normal flex-1 [min-width:150px]"
-          data-id={snippet?.id}
-          title="Eliminar"
-        >
-          No, cancelar
-        </a>
-      </div>
-    </div>
-
-    <div
-      class="_snippet-content overflow-auto relative scrollbar-custom bg-slate-800 p-4 px-3 lg:p-4 lg:px-6 rounded flex flex-col max-h-[100vh] lg:max-h-[150vh] overflow-y-auto scroll-smooth">
-      <pre class="hljs _snippet-content-formated m-0 p-0 whitespace-pre break-words">
-      
+	<div
+		class="_snippet-content scrollbar-custom relative flex max-h-[100vh] flex-col overflow-auto overflow-y-auto scroll-smooth rounded bg-slate-800 p-4 px-3 lg:max-h-[150vh] lg:p-4 lg:px-6"
+	>
+		<pre
+			class="hljs _snippet-content-formated m-0 p-0 break-words whitespace-pre">
+      <code>
         {
           (() => {
-            const formattedCode = useFormattedCode({ contenido: snippet?.contenido });
+            // const formattedCode = useFormattedCode({ contenido: snippet?.contenido });
 
-            return <div set:html={ hljs.highlightAuto(formattedCode).value } /> 
+            return <div set:html={ hljs.highlightAuto(snippet?.contenido).value } /> 
           })()
         }
-
+        </code>
           
        
       </pre>
 
-      <div class="_snippet-content-unformated overflow-hidden">
-      {/* <pre class="hljs m-0 p-0 whitespace-pre-line break-words" contenteditable="true">
+		<div class="_snippet-content-unformated overflow-hidden">
+			{
+				/* <pre class="hljs m-0 p-0 whitespace-pre-line break-words" contenteditable="true">
         <code>
          { snippet.contenido }
         </code>
-      </pre> */}
-       <textarea class="w-full h-full min-h-72 text-slate-100 outline-0 scrollbar-custom" value={snippet?.contenido}>{snippet?.contenido}</textarea>
-      </div>
+      </pre> */
+			}
+			<textarea
+				class="scrollbar-custom h-full min-h-72 w-full text-slate-100 outline-0"
+				value={snippet?.contenido}>{snippet?.contenido}</textarea
+			>
+		</div>
+	</div>
 
+	<!-- CATEGORIES -->
+	<div
+		class="_snippet-categories mt-1 hidden w-full flex-wrap items-center justify-between gap-2 group-[.is-editing]:flex"
+	>
+		<select
+			class="_snippet-category-select bg-trasnparent mb-4 w-full rounded border border-slate-600 p-3 text-slate-200 focus:ring-2 focus:ring-green-800 focus:outline-none"
+			data-snippet-id={snippet?.id}
+		>
+			{/* <option value="0">Todas las categorías</option> */}
+			{
+				categorias.map((category) => {
+					const nombre = category.nombre === 'Base' ? 'Sin categoría' : category.nombre
+					return (
+						<option
+							class="bg-slate-900 text-slate-400"
+							selected={snippet?.categoria_id === category.id}
+							value={category.id}
+						>
+							{nombre}
+						</option>
+					)
+				})
+			}
+		</select>
+	</div>
 
-    </div>
+	<div class="_copy-snippet-actions relative z-5">
+		<a
+			href="#"
+			class="_copy-snippet _btn-normal absolute right-3 bottom-6 px-2! text-slate-400 group-[.is-editing]:hidden"
+			data-snippet-id={snippet?.id}
+			title="Copiar código"
+		>
+			<Icon name="copy" class="pointer-events-none h-6 w-6" />
+		</a>
+		<div
+			class="_copy-snippet-message _btn-normal //[&.is-visible]:opacity-100 pointer-events-none absolute right-6 bottom-7 border-0! bg-green-800 opacity-0"
+		>
+			Snippet copiado al portapapeles
+		</div>
+	</div>
 
-    
-    <!-- CATEGORIES -->
-      <div class="_snippet-categories hidden group-[.is-editing]:flex flex-wrap gap-2 items-center justify-between w-full mt-1"> 
-        <select class="_snippet-category-select bg-trasnparent w-full mb-4 rounded border border-slate-600 p-3 text-slate-200 focus:ring-2 focus:ring-green-800 focus:outline-none" data-snippet-id={snippet?.id}>
-          {/* <option value="0">Todas las categorías</option> */}
-          {
-            categorias.map((category) => {
-              const nombre = category.nombre === "Base" ? "Sin categoría" : category.nombre;
-              return (
-                <option
-                class="bg-slate-900 text-slate-400"
-                selected={snippet?.categoria_id === category.id}
-                value={category.id}>{nombre}
-                </option>
-              );
-            })
-          } 
-        </select>
-      </div>
-    
-    <div class="_copy-snippet-actions relative z-5">
-      <a href="#" class="_copy-snippet group-[.is-editing]:hidden _btn-normal 
-      absolute bottom-6 right-3  
-      px-2! text-slate-400" 
-      data-snippet-id={snippet?.id}
-      title="Copiar código">
-        <Icon name="copy" class="w-6 h-6 pointer-events-none" /> 
-      </a>
-      <div class="_copy-snippet-message
-      absolute bottom-7 right-6 _btn-normal bg-green-800 border-0! opacity-0 pointer-events-none
-      //[&.is-visible]:opacity-100
-
-      ">Snippet copiado al portapapeles
-      </div> 
-    </div>
-
-    <div class="_snippet-edit-actions flex flex-wrap gap-3 mt-1 items-center justify-between w-full">
-
-      <a
-        href="#"
-        class="_save-changes _btn-featured flex-1 [min-width:150px] whitespace-nowrap"
-        data-id={snippet?.id}
-        title="Editar"
-      >
-        Guardar cambios
-      </a>
-      <a
-        href="#"
-        class="_cancel-changes _btn-normal flex-1 [min-width:150px]  whitespace-nowrap"
-        data-id={snippet?.id}
-        title="Eliminar"
-      >
-        Descartar cambios
-      </a>
-
-    </div>
-
-  </div>
-        
+	<div class="_snippet-edit-actions mt-1 flex w-full flex-wrap items-center justify-between gap-3">
+		<a
+			href="#"
+			class="_save-changes _btn-featured [min-width:150px] flex-1 whitespace-nowrap"
+			data-id={snippet?.id}
+			title="Editar"
+		>
+			Guardar cambios
+		</a>
+		<a
+			href="#"
+			class="_cancel-changes _btn-normal [min-width:150px] flex-1 whitespace-nowrap"
+			data-id={snippet?.id}
+			title="Eliminar"
+		>
+			Descartar cambios
+		</a>
+	</div>
 </div>
 
 <script>
-    import "./snippets.ts";
-    import "./editSnippet.ts";
+	import './snippets.ts'
+	import './editSnippet.ts'
 </script>
