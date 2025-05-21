@@ -1,5 +1,4 @@
 ---
-import { Icon } from 'astro-icon/components'
 import { userLoggedIn } from "@utils/userLoggedIn";
 import DialogCreateCategory from '@components/Sidebar/DialogCreateCategory.astro';
 import ListCategories from '@components/Sidebar/ListCategories.astro';
@@ -82,6 +81,9 @@ body.logged-out ._sidebar {
 </style>  
  
 
-<script> 
-    import "./Sidebar.ts";
+<script type="module">
+    // docment loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      import("./src/components/Sidebar/Sidebar.ts");
+    })
 </script>
