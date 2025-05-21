@@ -183,7 +183,7 @@ const categorias = await listCategoriesFromUser();
 
 <style>
 ._snippet {
-  /* content-visibility: auto; */
+  content-visibility: auto;
 }
 ._snippet.is-expanded {
   position: relative;
@@ -301,11 +301,8 @@ body.snippet-is-expanded:after {
 
 </style>  
 
-  <script type="module">
-    // docment loaded
-    document.addEventListener('DOMContentLoaded', () => {
-      import("./src/components/Snippets/snippets.ts");
-      import("./src/components/Snippets/editSnippet.ts");
-    })
-  </script>
+<script>
+  import "./snippets.ts";
+  import "./editSnippet.ts";
+</script>
   
