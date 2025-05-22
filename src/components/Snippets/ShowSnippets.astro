@@ -2,39 +2,47 @@
 import Snippet from '@components/Snippets/Snippet.astro'
 import { supabase } from '@lib/supabaseClient'
 import { Icon } from 'astro-icon/components'
+import type { Snippet } from '@types/snippet'
 
 const { data: userSession } = await supabase.auth.getSession()
 const userSessionId = userSession?.session?.user.id
 let totalSnippets = 0
 
-let snippetsWithCategories: {
-	id: any
-	titulo: any
-	contenido: any
-	categoria_id: any
-}[] = []
+// Define el tipo correcto para snippetsWithCategories
+let snippetsWithCategories: Snippet[] = []
 
 if (userSessionId) {
 	const { data, error } = await supabase
 		.from('snippets')
 		.select(
 			`
-      id,
-      titulo,
-      contenido,
-      categoria_id
-    `
+            id,
+            titulo,
+            contenido,
+            categoria_id
+        `
 		)
 		.eq('usuario_id', userSessionId)
 		.order('created_at', { ascending: false })
+		.range(0, 8) // Initial 9 snippets (0-8)
 
 	if (error) {
 		console.error('Error fetching snippets:', error)
 	} else {
-		totalSnippets = data.length
-		snippetsWithCategories = data
+		// Asigna los datos tipados
+		snippetsWithCategories = data as Snippet[]
+
+		// Get total count for checking if there are more snippets
+		const { count } = await supabase
+			.from('snippets')
+			.select('id', { count: 'exact' })
+			.eq('usuario_id', userSessionId)
+
+		totalSnippets = count || 0
 	}
 }
+
+const hasMoreSnippets = totalSnippets > snippetsWithCategories.length
 ---
 
 {
@@ -44,7 +52,6 @@ if (userSessionId) {
 				No tienes snippets aún.
 				<br />
 			</p>
-
 			<p class="text-md tracking-wide text-slate-400">
 				Crea tu primer snippet haciendo click en el botón Crear Snippet.
 			</p>
@@ -55,10 +62,21 @@ if (userSessionId) {
 				<Icon name="folderCode" class="h-8 w-8 self-end lg:h-5 lg:w-5" />
 				<span class="_category-text">Todos mis snippets</span>
 			</h1>
-			<Snippet snippetsWithCategories={snippetsWithCategories} />
+			<div class="_snippets-container grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				<Snippet snippetsWithCategories={snippetsWithCategories} />
+			</div>
+			{hasMoreSnippets && (
+				<>
+					<div class="_snippets-sentinel h-10" />
+					<div class="_loading-indicator mt-4 hidden text-center">
+						<div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-green-500 border-r-transparent align-[-0.125em]" />
+					</div>
+				</>
+			)}
 		</div>
 	)
 }
+
 <div
 	class="_no-snippets-in-category hidden flex-col items-center justify-center rounded border border-slate-800 p-6 py-12"
 >
@@ -67,3 +85,21 @@ if (userSessionId) {
 		<br />
 	</p>
 </div>
+
+<script>
+	import { initializePagination } from './snippetPagination'
+	document.addEventListener('DOMContentLoaded', initializePagination)
+</script>
+
+<style>
+	._loading-indicator {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 1rem;
+	}
+
+	._loading-indicator.hidden {
+		display: none;
+	}
+</style>
