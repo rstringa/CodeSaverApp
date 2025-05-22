@@ -2,7 +2,6 @@
 import '@components/Snippets/Snippet.css'
 import { Icon } from 'astro-icon/components';
 const { snippetsWithCategories } = Astro.props;
-import { useFormattedCode } from '@utils/formatCode';
 import hljs from 'highlight.js';
 import {listCategoriesFromUser} from '@utils/listCategoriesFromUser';  
 const categorias = await listCategoriesFromUser();
@@ -22,7 +21,7 @@ const categorias = await listCategoriesFromUser();
       snippetsWithCategories.map((snippet) => {
         return (
           <li
-            class="_snippet group content-visi flex flex-col gap-2 rounded bg-slate-600/10 p-4 lg:p-6 text-sm transition-all transition-discrete duration-300"
+            class="_snippet group flex flex-col gap-2 rounded bg-slate-600/10 p-4 lg:p-6 text-sm transition-all transition-discrete duration-300"
             data-category_id={snippet.categoria_id}
             data-snippet-id={snippet.id}
             transition:name=`animacion-${snippet.id}`
@@ -184,6 +183,7 @@ const categorias = await listCategoriesFromUser();
 <style>
 ._snippet {
   content-visibility: auto;
+  
 }
 ._snippet.is-expanded {
   position: relative;
