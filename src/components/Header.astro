@@ -3,7 +3,7 @@ import { Icon } from 'astro-icon/components'
 import { supabase } from '@lib/supabaseClient';
 const { data: userSession } = await supabase.auth.getSession()
 const userSessionId = userSession?.session?.user.id
-console.log(userSession?.session?.user?.user_metadata?.display_name)
+
 // Get page url
 const url = new URL(Astro.url.pathname, Astro.url.origin);
 const urlPath = url.pathname;
