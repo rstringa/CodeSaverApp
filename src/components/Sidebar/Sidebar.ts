@@ -45,7 +45,10 @@ function showSnippets(categoryId) {
 
     snippets.forEach(snippet => {
         const isVisible = categoryId === "0" || (snippet as HTMLElement).dataset.category_id === categoryId;
-        snippet.classList.toggle('hidden', !isVisible);
+        setTimeout(() => {
+            snippet.classList.toggle('hidden', !isVisible);
+        }, 250); // Allow the browser to render before toggling classes
+       
         if (isVisible) hasVisibleSnippets = true;
     });
 
@@ -58,7 +61,12 @@ function showSnippets(categoryId) {
 /* Update the displayed category name */
 function updateCategoryName(name) {
     const categoryName = document.querySelector('._content ._category-name ._category-text');
-    if (categoryName) categoryName.textContent = name || '';
+    if (categoryName) {
+        setTimeout(() => {
+        categoryName.textContent = name || ''
+        }
+        , 250); // Allow the browser to render before updating the text
+    }
 }
 
 /* SHOW ACTIONS (EDIT, DELETE) */
