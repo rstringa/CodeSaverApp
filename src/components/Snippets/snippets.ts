@@ -1,106 +1,149 @@
-// En este archivo se encuentran las funciones que permiten la interacción con los snippets de código.
-// Cuenta con una serie de funciones que interactúan con los snippets de código.
-// Estas funciones se encargan de realizar acciones la eliminación y copia de snippets.
-// Se utilizan las funciones de la API Fetch para realizar solicitudes al servidor y manejar la respuesta.  
+// Este archivo contiene las funciones principales para interactuar con los snippets de código.
+// Incluye funcionalidades para eliminar, copiar y expandir snippets, utilizando eventos y solicitudes a la API.
 
+// Selección de elementos clave
 const editSnippets = document.querySelectorAll("._snippet ._edit-snippet");
 const deleteSnippets = document.querySelectorAll("._snippet ._delete-snippet");
 const copySnippets = document.querySelectorAll("._snippet ._copy-snippet");
 const expandSnippets = document.querySelectorAll("._snippet ._expand-snippet");
 
-// DELETE SNIPPET
+// =====================
+// ELIMINAR SNIPPET
+// =====================
+
+/**
+ * Agrega eventos a los botones de eliminar snippet.
+ */
 deleteSnippets.forEach((deleteSnippet) => {
-    deleteSnippet.addEventListener("click", function (e) {
+    deleteSnippet.addEventListener("click", (e) => {
         e.preventDefault();
         const snippetId = (e.target as HTMLElement).dataset.id;
-        //handleDeleteSnippet(snippetId);
-        confirmDeleteSnippet(snippetId);
+        if (snippetId) confirmDeleteSnippet(snippetId);
     });
 });
-function confirmDeleteSnippet(snippetId) {
+
+/**
+ * Muestra la confirmación para eliminar un snippet.
+ * @param snippetId - ID del snippet a eliminar.
+ */
+function confirmDeleteSnippet(snippetId: string) {
     const snippet = document.querySelector(`[data-snippet-id="${snippetId}"]`);
     const snippetConfirm = snippet?.querySelector("._snippet-confirm");
 
+    if (!snippetConfirm) return;
 
-    snippetConfirm?.classList.remove("hidden");
-    const snippetConfirmDelete = snippetConfirm?.querySelector("._snippet-confirm-delete");
-    const snippetCancelDelete = snippetConfirm?.querySelector("._snippet-confirm-cancel");
+    snippetConfirm.classList.remove("hidden");
 
-    snippetConfirmDelete?.addEventListener("click", function (e) {
+    const confirmDeleteButton = snippetConfirm.querySelector("._snippet-confirm-delete");
+    const cancelDeleteButton = snippetConfirm.querySelector("._snippet-confirm-cancel");
+
+    // Confirmar eliminación
+    confirmDeleteButton?.addEventListener("click", (e) => {
         e.preventDefault();
-        const snippetId = (e.target as HTMLElement).dataset.id;
         handleDeleteSnippet(snippetId);
     });
 
-    snippetCancelDelete?.addEventListener("click", function (e) {
+    // Cancelar eliminación
+    cancelDeleteButton?.addEventListener("click", (e) => {
         e.preventDefault();
-        const snippetId = (e.target as HTMLElement).dataset.id;
-        snippetConfirm?.classList.add("hidden");
+        snippetConfirm.classList.add("hidden");
     });
-
 }
-async function handleDeleteSnippet(snippetId) {
-    const response = await fetch("/api/deleteSnippet", {
-        method: "DELETE",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id: snippetId }),
-    });
-    if (!response.ok) {
-        console.error("Error al eliminar el snippet:", response.statusText);
-    } else {
-        window.location.href = "/";
+
+/**
+ * Maneja la eliminación de un snippet enviando una solicitud al servidor.
+ * @param snippetId - ID del snippet a eliminar.
+ */
+async function handleDeleteSnippet(snippetId: string) {
+    try {
+        const response = await fetch("/api/deleteSnippet", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: snippetId }),
+        });
+
+        if (!response.ok) {
+            console.error("Error al eliminar el snippet:", response.statusText);
+            return;
+        }
+
         console.log("Snippet eliminado correctamente:", snippetId);
+        window.location.href = "/"; // Recargar la página
+    } catch (error) {
+        console.error("Error al eliminar el snippet:", error);
     }
 }
 
-// COPY SNIPPET
+// =====================
+// COPIAR SNIPPET
+// =====================
+
+/**
+ * Agrega eventos a los botones de copiar snippet.
+ */
 copySnippets.forEach((copySnippet) => {
-    copySnippet.addEventListener("click", function (e) {
+    copySnippet.addEventListener("click", (e) => {
         e.preventDefault();
 
-        const snippetId = (e.target as HTMLElement).closest("._snippet")?.getAttribute("data-snippet-id");
-        const snippetContent = (document.querySelector(`[data-snippet-id="${snippetId}"] ._snippet-content-unformated textarea`) as HTMLTextAreaElement)?.value;
         const snippet = (e.target as HTMLElement).closest("._snippet");
+        const snippetId = snippet?.getAttribute("data-snippet-id");
+        const snippetContent = snippet?.querySelector("._snippet-content-unformated textarea") as HTMLTextAreaElement;
 
-        if (snippetContent) {
-            navigator.clipboard.writeText(snippetContent)
-                .then(() => {
-                    const message = snippet?.querySelector("._copy-snippet-message");
-                    console.log(message);
-                    message?.classList.add("is-visible");
-                    setTimeout(() => {
-                        message?.classList.remove("is-visible");
-                    }, 3000);
-                })
-                .catch((err) => {
-                    console.error("Error al copiar el snippet:", err);
-                });
-        }
+        if (snippetContent) copySnippetToClipboard(snippetContent.value, snippet);
     });
 });
 
-// EXPAND SNIPPET
+/**
+ * Copia el contenido de un snippet al portapapeles.
+ * @param content - Contenido del snippet.
+ * @param snippet - Elemento del snippet.
+ */
+function copySnippetToClipboard(content: string, snippet: Element | null) {
+    navigator.clipboard.writeText(content)
+        .then(() => {
+            console.log("Snippet copiado al portapapeles.");
+            const message = snippet?.querySelector("._copy-snippet-message");
+            message?.classList.add("is-visible");
+            setTimeout(() => message?.classList.remove("is-visible"), 3000);
+        })
+        .catch((err) => {
+            console.error("Error al copiar el snippet:", err);
+        });
+}
+
+// =====================
+// EXPANDIR SNIPPET
+// =====================
+
+/**
+ * Agrega eventos a los botones de expandir snippet.
+ */
 expandSnippets.forEach((expandSnippet) => {
-    expandSnippet.addEventListener("click", function (e) {
+    expandSnippet.addEventListener("click", (e) => {
         e.preventDefault();
         const snippetId = (e.target as HTMLElement).dataset.id;
-        handleExpandSnippet(snippetId);
+        if (snippetId) expandSnippetContent(snippetId);
     });
 });
-async function handleExpandSnippet(snippetId) {
+
+/**
+ * Expande el contenido de un snippet.
+ * @param snippetId - ID del snippet a expandir.
+ */
+function expandSnippetContent(snippetId: string) {
     const snippet = document.querySelector(`[data-snippet-id="${snippetId}"]`);
     const snippetContent = snippet?.querySelector("._snippet-content");
-    const snippetCloseExpanded = snippet?.querySelector("._snippet-close-expanded");
-    const titleText = snippet?.querySelector("._snippet-title a")?.textContent;
-    document.body.classList.add("snippet-is-expanded");
-    snippet?.classList.add("is-expanded");
+    const closeButton = snippet?.querySelector("._snippet-close-expanded");
 
-    snippetCloseExpanded?.addEventListener("click", function (e) {
+    if (!snippet || !snippetContent || !closeButton) return;
+
+    document.body.classList.add("snippet-is-expanded");
+    snippet.classList.add("is-expanded");
+
+    // Evento para cerrar el snippet expandido
+    closeButton.addEventListener("click", (e) => {
         e.preventDefault();
         document.body.classList.remove("snippet-is-expanded");
-        snippet?.classList.remove("is-expanded");
+        snippet.classList.remove("is-expanded");
     });
-
 }
