@@ -4,35 +4,32 @@ const sidebar = document.querySelector('._sidebar');
 const snippetsNumber = document.querySelectorAll('_sidebar ._category-item ._number');
 
 
-/* NUMBER OF SNIPPETS PER CATEGORY*/
+/* Update the number of snippets for each category*/
 catLink.forEach(link => {
     const categoryId = (link as HTMLElement).dataset.category_id;
     const linkNumber = link.querySelector('._number');
-    const categorySnippets = Array.from(snippets).filter(snippet => (snippet as HTMLAnchorElement)?.dataset.category_id == categoryId);
-    const totalSnippets = categorySnippets.length;
-    if (linkNumber) {
-        linkNumber.textContent = totalSnippets.toString();
-    }
-})
+    const totalSnippets = Array.from(snippets).filter(snippet => 
+        (snippet as HTMLElement).dataset.category_id === categoryId
+    ).length;
+    if (linkNumber) linkNumber.textContent = totalSnippets.toString();
+});
 
-/* SHOW HIDE SNIPPETS */
+/* Handle category selection and snippet visibility */
 catLink.forEach(link => {
-
-    link.addEventListener('click', function (e) {
+    link.addEventListener('click', (e) => {
         e.preventDefault();
-        e.stopPropagation();
         catLink.forEach(link => link.classList.remove('is-active'));
         link.classList.add('is-active');
         const categoryId = (link as HTMLElement).dataset.category_id;
         const categoryNameText = link.querySelector('._category-name')?.textContent;
         showSnippets(categoryId);
-        showCategoryName(categoryNameText);
-        console.log(categoryNameText);
+        updateCategoryName(categoryNameText);
     });
 });
+
 // CLOSE ITEMS ACTIONS ON CLICK OUTSIDE
 window?.addEventListener('click', function (e) {
-    console.log('clickoutside');
+    //console.log('clickoutside');
     catLink.forEach(link => {
 
         let nextElement = link.nextElementSibling;
@@ -42,36 +39,39 @@ window?.addEventListener('click', function (e) {
     }
     );
 });
+/* Show or hide snippets based on the selected category */
 function showSnippets(categoryId) {
+    let hasVisibleSnippets = false;
+
     snippets.forEach(snippet => {
-
-        const isVisible = categoryId == 0 || (snippet as HTMLElement).dataset.category_id == categoryId;
+        const isVisible = categoryId === "0" || (snippet as HTMLElement).dataset.category_id === categoryId;
         snippet.classList.toggle('hidden', !isVisible);
+        if (isVisible) hasVisibleSnippets = true;
     });
-}
-// SHOW CATEGORY NAME
-function showCategoryName(editedName) {
-    const categoryName = document.querySelector('._content ._category-name ._category-text');
-    if (categoryName) {
 
-        categoryName.textContent = "";
-        categoryName.textContent = editedName;
-
+    const noSnippetsMessage = document.querySelector('._no-snippets-in-category');
+    if (noSnippetsMessage) {
+        noSnippetsMessage.classList.toggle('hidden', hasVisibleSnippets);
     }
 }
 
+/* Update the displayed category name */
+function updateCategoryName(name) {
+    const categoryName = document.querySelector('._content ._category-name ._category-text');
+    if (categoryName) categoryName.textContent = name || '';
+}
 
-// SHOW ACTIONS (EDIT, DELETE)
+/* SHOW ACTIONS (EDIT, DELETE) */
 const actions = document.querySelectorAll('._actions');
 actions.forEach(action => {
     action.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
         //action.classList.remove('hidden');
-        (action?.parentElement?.parentElement?.nextElementSibling as HTMLElement)?.classList.remove('hidden');
+        (action?.closest('._category-item') as HTMLElement).click();
+        (action?.closest('._category-item')?.nextElementSibling as HTMLElement)?.classList.remove('hidden');
     });
 });
-
 
 /* EDIT CATEGORY */
 const editLinks = document.querySelectorAll('._category-item-actions ._edit-category');
@@ -81,67 +81,44 @@ editLinks.forEach(editLink => {
 
         e.preventDefault();
         const categoryId = (e.target as HTMLElement).dataset.category_id;
-        editCategory(categoryId);
+        enableCategoryEditing(categoryId);
     });
 });
 
-function editCategory(categoryId) {
-    const category_item = document.querySelector(`[data-category_id="${categoryId}"]`);
-    const category_name = category_item?.querySelector('._category-name');
-    let category_name_initial = category_name?.textContent;
-    category_name?.setAttribute("contenteditable", "true");
-    //category_item?.querySelector('._number')?.setAttribute("contenteditable", "false");
-    // Focus en el elemento editable
-    if (category_name) {
-        const range = document.createRange();
-        const selection = window.getSelection();
-        range.selectNodeContents(category_name);
-        range.collapse(false); // Cursor al final
-        selection?.removeAllRanges();
-        selection?.addRange(range);
-        (category_name as HTMLElement).focus();
-    }
-    // Escuchar el evento de "blur" para guardar los cambios
-    category_name?.addEventListener("blur", () => {
-        let editedName = category_item?.querySelector('._category-name')?.textContent;
+function enableCategoryEditing(categoryId) {
+    const categoryItem = document.querySelector(`[data-category_id="${categoryId}"]`);
+    const categoryName = categoryItem?.querySelector('._category-name');
+    const initialName = categoryName?.textContent;
 
-        // Comporobar no quede vacia y no tenga solo espacios
-        // Comporbar no tenga caracteres maliciosos
-        if (editedName && editedName.trim() !== "") {
-            editedName = editedName.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-            const categoryNameElement = category_item?.querySelector('._category-name');
-            if (categoryNameElement) {
-                categoryNameElement.textContent = editedName;
-                category_name?.removeAttribute("contenteditable");
+    if (categoryName) {
+        categoryName.setAttribute("contenteditable", "true");
+        (categoryName as HTMLElement).focus();
+
+        categoryName.addEventListener("blur", () => {
+            const editedName = categoryName.textContent?.trim();
+            if (editedName) {
+                categoryName.textContent = sanitizeInput(editedName);
+                categoryName.removeAttribute("contenteditable");
                 updateCategory(categoryId, editedName);
-                category_name_initial = editedName;
+            } else {
+                categoryName.textContent = initialName || '';
             }
-
-        } else {
-            category_name.textContent = category_name_initial ?? '';
-        }
-    });
+        });
+    }
 }
-async function updateCategory(categoryId, editedName) {
 
+/* Update a category name in the backend */
+async function updateCategory(categoryId, name) {
     const response = await fetch("/api/editCategory", {
         method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            id: categoryId,
-            name: editedName,
-        }),
-
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: categoryId, name }),
     });
 
-    await showCategoryName(editedName);
-
     if (!response.ok) {
-        console.error("Error al actualizar la categoría:", response.statusText);
+        console.error("Error updating category:", response.statusText);
     } else {
-        console.log("Categoría actualizada correctamente:", categoryId, editedName);
+        console.log("Category updated:", categoryId, name);
     }
 }
 
@@ -157,73 +134,71 @@ deleteLinks.forEach(deleteLink => {
 });
 
 async function deleteCategory(categoryId) {
-    const response = await fetch("/api/deleteCategory",
-        {
-            method: "DELETE",
-            //  headers: { "Content-Type": "application/json", },
-            body: JSON.stringify({ id: categoryId, }),
-        });
+    const response = await fetch("/api/deleteCategory", {
+        method: "DELETE",
+        body: JSON.stringify({ id: categoryId }),
+    });
+
     if (!response.ok) {
-        console.error("Error al eliminar la categoría:", response.statusText);
+        console.error("Error deleting category:", response.statusText);
     } else {
-        window.location.href = "/";
-        console.log("Categoría eliminada correctamente:", categoryId);
+        console.log("Category deleted:", categoryId);
+        window.location.reload();
     }
 }
 
 /* NEW CATEGORY */
-const newCategoryLink = document.querySelector('._new_category');
 const newCategoryModal = document.getElementById('new-category-modal');
-const closeModalNewCategory = newCategoryModal?.querySelector('._close');
-const createModalNewCategory = newCategoryModal?.querySelector('._create');
-const messageModalNewCategory = newCategoryModal?.querySelector('._message');
+const newCategoryLink = document.querySelector('._new_category');
+const closeModal = newCategoryModal?.querySelector('._close');
+const createCategoryButton = newCategoryModal?.querySelector('._create');
+const messageModal = newCategoryModal?.querySelector('._message');
 
-newCategoryLink?.addEventListener('click', function (e) {
+newCategoryLink?.addEventListener('click', (e) => {
     e.preventDefault();
     (newCategoryModal as HTMLDialogElement).showModal();
 });
 
-closeModalNewCategory?.addEventListener('click', function (e) {
+closeModal?.addEventListener('click', (e) => {
     e.preventDefault();
     (newCategoryModal as HTMLDialogElement).close();
 });
-newCategoryModal?.addEventListener('click', function (e) {
+
+newCategoryModal?.addEventListener('click', (e) => {
     if (e.target === newCategoryModal) {
         (newCategoryModal as HTMLDialogElement).close();
     }
 });
-createModalNewCategory?.addEventListener('click', function (e) {
+
+createCategoryButton?.addEventListener('click', (e) => {
     e.preventDefault();
-    const categoryName = newCategoryModal?.querySelector('._name');
-    if (!categoryName || !(categoryName as HTMLInputElement).value) {
-        messageModalNewCategory ? messageModalNewCategory.textContent = "Asigne un nombre a la categoría." : "";
-        console.error("No se encontró el input con el nombre de la categoría.");
+    const categoryNameInput = newCategoryModal?.querySelector('._name') as HTMLInputElement;
+    if (!categoryNameInput?.value.trim()) {
+        if (messageModal) messageModal.textContent = "Please provide a category name.";
         return;
     }
-    saveNewCategory(categoryName);
+    createCategory(categoryNameInput.value.trim());
 });
 
-async function saveNewCategory(categoryName) {
-    // Sanitize snippet title from malicius code
-    const categoryNameValue = (categoryName as HTMLInputElement).value;
-    const sanitizedCategoryName = categoryNameValue.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-    const response = await fetch("/api/createCategory",
-        {
-            method: "POST",
-            //headers: { "Content-Type": "application/json", },
-            body: JSON.stringify({
-                name: sanitizedCategoryName,
-            }),
-        });
+async function createCategory(name) {
+    const sanitizedName = sanitizeInput(name);
+    const response = await fetch("/api/createCategory", {
+        method: "POST",
+        body: JSON.stringify({ name: sanitizedName }),
+    });
+
     if (!response.ok) {
-        console.error("Error al crear la categoría:", response.statusText);
-        if (messageModalNewCategory) {
-            messageModalNewCategory.textContent = "Error al crear la categoría.";
-        }
+        console.error("Error creating category:", response.statusText);
+        if (messageModal) messageModal.textContent = "Error creating category.";
     } else {
-        console.log("Categoría creada correctamente:");
-        window.location.href = "/";
+        console.log("Category created:", sanitizedName);
+        window.location.reload();
     }
+}
+
+/* Utility function to sanitize input */
+function sanitizeInput(input) {
+    return input.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
 
