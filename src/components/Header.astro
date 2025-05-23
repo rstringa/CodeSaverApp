@@ -28,21 +28,28 @@ flex justify-between p-6 py-3 m-auto border-b-1 border-slate-700
 
       
       {userSessionId ? (
-        <p class="
-        text-sm! lg:text-md
-        font-regular mr-6 text-slate-400
-        w-full
-        ">Hola, {userSession?.session?.user?.user_metadata?.full_name
-          ? userSession?.session?.user?.user_metadata?.full_name
-          :  userSession?.session?.user?.email}!</p>
-        <a
-          href="#"
-          id="btn_logout"
-          class="_logout _btn-normal text-sm! lg:text-md"
-          onclick="handleLogout()"
-        >
-          Cerrar<span class="hidden lg:inline-block lg:ml-1">Sesión</span>
-        </a>
+        <div class="flex items-center">
+          <p class="
+          text-sm! lg:text-md
+          font-regular mr-6 text-slate-400
+          w-full
+          ">Hola, {userSession?.session?.user?.user_metadata?.full_name
+            ? userSession?.session?.user?.user_metadata?.full_name
+            :  userSession?.session?.user?.email}!</p>
+          <img
+            src={userSession?.session?.user?.user_metadata?.avatar_url || './default-avatar.webp'}
+            alt="User Avatar"
+            class="w-8 h-8 rounded-full mr-4"
+          />
+          <a
+            href="#"
+            id="btn_logout"
+            class="_logout _btn-normal text-sm! lg:text-md"
+            onclick="handleLogout()"
+          >
+            Cerrar<span class="hidden lg:inline-block lg:ml-1">Sesión</span>
+          </a>
+        </div>
       ) : (
         <a
           href="/login"
