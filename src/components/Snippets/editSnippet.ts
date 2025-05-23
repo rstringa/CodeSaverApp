@@ -87,7 +87,10 @@ function saveSnippetChanges(snippetElement: Element, snippetTitleElement: Elemen
 
     console.log("Guardando snippet:", { snippetId, snippetTitle, snippetContent, snippetCategory });
 
-    saveSnippet(snippetId, snippetTitle, snippetContent, snippetCategory);
+    // Mostrar spinner loader
+    showSpinner(snippetElement);
+
+    saveSnippet(snippetId, snippetTitle, snippetContent, snippetCategory, snippetElement);
 }
 
 /**
@@ -111,8 +114,9 @@ function cancelSnippetChanges(snippetElement: Element, initialTitle: string, sni
  * @param snippetTitle - El título del snippet.
  * @param snippetContent - El contenido del snippet.
  * @param snippetCategory - La categoría del snippet.
+ * @param snippetElement - El elemento del snippet que se está editando.
  */
-async function saveSnippet(snippetId: string, snippetTitle: string, snippetContent: string, snippetCategory: string) {
+async function saveSnippet(snippetId: string, snippetTitle: string, snippetContent: string, snippetCategory: string, snippetElement: Element) {
     console.log("Enviando cambios al servidor para el snippet:", snippetId);
 
     // Sanitizar el título para evitar inyección de código
@@ -140,10 +144,44 @@ async function saveSnippet(snippetId: string, snippetTitle: string, snippetConte
         const result = await response.json();
         console.log("Snippet guardado correctamente:", result);
 
+        // Ocultar spinner loader
+        hideSpinner(snippetElement);
+
         // Actualizar la página para reflejar los cambios
         localStorage.setItem("edited-snippet", snippetId);
         window.location.href = currentUrl;
     } catch (error) {
         console.error("Error al guardar el snippet:", error);
+        hideSpinner(snippetElement);
     }
+}
+
+/**
+ * Muestra un spinner loader en el centro del snippet.
+ * @param snippetElement - El elemento del snippet.
+ */
+function showSpinner(snippetElement: Element) {
+    const spinner = document.createElement('div');
+    spinner.className = 'spinner-loader';
+    spinner.style.position = 'absolute';
+    spinner.style.top = '50%';
+    spinner.style.left = '50%';
+    spinner.style.transform = 'translate(-50%, -50%)';
+    spinner.style.width = '40px';
+    spinner.style.height = '40px';
+    spinner.style.border = '4px solid #4caf50';
+    spinner.style.borderTop = '4px solid transparent';
+    spinner.style.borderRadius = '50%';
+    spinner.style.animation = 'spin 1s linear infinite';
+
+    snippetElement.appendChild(spinner);
+}
+
+/**
+ * Oculta el spinner loader del snippet.
+ * @param snippetElement - El elemento del snippet.
+ */
+function hideSpinner(snippetElement: Element) {
+    const spinner = snippetElement.querySelector('.spinner-loader');
+    spinner?.remove();
 }

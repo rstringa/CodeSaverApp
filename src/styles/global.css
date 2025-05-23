@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+
 @layer theme {
 	/* :root {
 		--color-base: #def226;
@@ -13,62 +14,88 @@
 		--color-green-900: color-mix(in oklch, black 60%, var(--color-base));
 	} */
 }
+
 @layer utilities {
 	a {
 		@apply text-green-600;
 	}
+
 	a:hover {
 		@apply text-green-400;
 	}
+
 	.scrollbar-custom {
+
 		/* ancho */
 		&::-webkit-scrollbar {
 			@apply w-2 rounded;
 			scrollbar-gutter: stable both-edges;
 			height: 10px;
 		}
+
 		/* thumb */
 		&::-webkit-scrollbar-thumb {
 			@apply rounded bg-slate-700;
 		}
+
 		/* track */
 		&::-webkit-scrollbar-track {
 			@apply rounded bg-slate-800;
 		}
 	}
+
 	._btn-normal {
 		@apply flex cursor-pointer items-center justify-center rounded border border-slate-700 px-6 py-2 text-center whitespace-nowrap text-slate-300;
 	}
+
 	._btn-normal:hover,
 	._btn-normal:focus {
 		@apply border-slate-600 bg-blue-500/5;
 	}
+
 	._btn-normal:focus {
 		@apply border-green-700 outline-none;
 	}
+
 	._btn-normal:active {
 		@apply border-slate-700 bg-blue-500/10;
 	}
+
 	._btn-featured {
 		@apply flex cursor-pointer items-center justify-center rounded border border-green-700 px-6 py-2 text-center whitespace-nowrap text-green-400;
 	}
+
 	._btn-featured:hover {
 		@apply border-green-600 bg-green-500/5;
 	}
 }
+
 @view-transition {
 	navigation: auto;
 }
+
 dialog {
 	display: none;
 	opacity: 0;
 	transition: opacity 0.5s ease-in-out;
 	transition-behavior: allow-discrete;
 }
+
 dialog[open] {
 	display: flex;
 	opacity: 1;
+
 	@starting-style {
 		opacity: 0;
+	}
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
 	}
 }
