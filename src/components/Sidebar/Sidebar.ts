@@ -4,11 +4,26 @@ const sidebar = document.querySelector('._sidebar');
 const snippetsNumber = document.querySelectorAll('_sidebar ._category-item ._number');
 
 
+/**
+ * Sets the current category state in the sidebar based on the value stored in localStorage.
+*/
+// (function setCategoryState() {
+//     const selectedCategoryId = localStorage.getItem('selectedCategory');
+//     const selectedCategoryItem = document.querySelector(`._category-item[data-category_id="${selectedCategoryId}"]`);
+//     const selectedCategoryName = selectedCategoryItem?.querySelector('._category-name')?.textContent;
+//     if (selectedCategoryId && selectedCategoryId !== "0") {
+//         showSnippets(selectedCategoryId);
+//         catLink.forEach(link => link.classList.remove('is-active'));
+//         selectedCategoryItem?.classList.add('is-active');
+//         updateCategoryName(selectedCategoryName);
+//     }
+// })();
+
 /* Update the number of snippets for each category*/
 catLink.forEach(link => {
     const categoryId = (link as HTMLElement).dataset.category_id;
     const linkNumber = link.querySelector('._number');
-    const totalSnippets = Array.from(snippets).filter(snippet => 
+    const totalSnippets = Array.from(snippets).filter(snippet =>
         (snippet as HTMLElement).dataset.category_id === categoryId
     ).length;
     if (linkNumber) linkNumber.textContent = totalSnippets.toString();
@@ -23,6 +38,8 @@ catLink.forEach(link => {
         const categoryId = (link as HTMLElement).dataset.category_id;
         const categoryNameText = link.querySelector('._category-name')?.textContent;
         showSnippets(categoryId);
+        localStorage.setItem('selectedCategory', categoryId || '');
+        localStorage.setItem('selectedCategoryName', categoryNameText || '');
         updateCategoryName(categoryNameText);
     });
 });
@@ -42,12 +59,12 @@ window?.addEventListener('click', function (e) {
 /* Show or hide snippets based on the selected category */
 function showSnippets(categoryId) {
     let hasVisibleSnippets = false;
-   
+
     snippets.forEach(snippet => {
 
         const isVisible = categoryId === "0" || (snippet as HTMLElement).dataset.category_id === categoryId;
         snippet.classList.toggle('hidden', !isVisible);
-    
+
         // Check if any snippet is visible
         if (isVisible) hasVisibleSnippets = true;
     });
@@ -63,9 +80,9 @@ function updateCategoryName(name) {
     const categoryName = document.querySelector('._content ._category-name ._category-text');
     if (categoryName) {
         setTimeout(() => {
-        categoryName.textContent = name || ''
+            categoryName.textContent = name || ''
         }
-        , 50); // Allow the browser to render before updating the text
+            , 50); // Allow the browser to render before updating the text
     }
 }
 
