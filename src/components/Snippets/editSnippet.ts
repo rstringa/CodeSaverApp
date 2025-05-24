@@ -31,10 +31,13 @@ function toggleEditingState(snippetElement: Element, clickedLink: Element) {
     snippetElement.classList.toggle('is-editing');
     const snippetTitleElement = snippetElement.querySelector('._snippet-title a');
     const initialTitle = snippetTitleElement?.textContent || '';
-
+    const categoryElement = snippetElement.querySelector('._snippet-categories') as HTMLSelectElement; 
     // Habilitar edición del título
     snippetTitleElement?.setAttribute('contenteditable', 'true');
     snippetTitleElement?.setAttribute('spellcheck', 'false');
+
+    // Habilitar edición de la categoría
+    categoryElement?.classList.remove('hidden');
 
     isEditing = !isEditing;
 
@@ -48,7 +51,7 @@ function toggleEditingState(snippetElement: Element, clickedLink: Element) {
     }
 
     // Configurar eventos para guardar o cancelar cambios
-    setupEditEvents(snippetElement, initialTitle, snippetTitleElement);
+    setupEditEvents(snippetElement, initialTitle, snippetTitleElement, categoryElement);
 }
 
 /**
@@ -57,19 +60,23 @@ function toggleEditingState(snippetElement: Element, clickedLink: Element) {
  * @param initialTitle - El título original del snippet antes de la edición.
  * @param snippetTitleElement - El elemento del título del snippet.
  */
-function setupEditEvents(snippetElement: Element, initialTitle: string, snippetTitleElement: Element | null) {
+function setupEditEvents(snippetElement: Element, initialTitle: string, snippetTitleElement: Element | null, categoryElement: Element | null) {
     const saveButton = snippetElement.querySelector('._save-changes');
     const cancelButton = snippetElement.querySelector('._cancel-changes');
 
     // Evento para guardar cambios
     saveButton?.addEventListener('click', (e) => {
         e.preventDefault();
+        categoryElement?.classList.add('hidden');
+        snippetElement.classList.remove('is-editing');
         saveSnippetChanges(snippetElement, snippetTitleElement);
     });
 
     // Evento para cancelar cambios
     cancelButton?.addEventListener('click', (e) => {
         e.preventDefault();
+        snippetElement.classList.remove('is-editing');
+        categoryElement?.classList.add('hidden');
         cancelSnippetChanges(snippetElement, initialTitle, snippetTitleElement);
     });
 }

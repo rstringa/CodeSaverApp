@@ -63,7 +63,7 @@ const categorias = await listCategoriesFromUser();
 
             <!-- CONFIRM DELETE SNIPPET -->
             <div
-              class="_snippet-confirm flex flex-col gap-2 items-center mb-3 hidden bg-slate-800/50 p-6 rounded-md"
+              class="_snippet-confirm flex flex-col gap-2 items-center mb-3 fade-hidden hidden bg-slate-800/50 p-6 rounded-md"
             >
               <p class="flex flex-1 w-full justify-center items-center text-md text-balance bg-amber-900/10 text-amber-600 mb-2 border border-amber-800 rounded p-2.5">
                 <Icon name="warning" class="w-8 h-8 mr-3 text-amber-600" />
@@ -119,7 +119,7 @@ const categorias = await listCategoriesFromUser();
             </div>
 
             <!-- CATEGORIES -->
-              <div class="_snippet-categories hidden group-[.is-editing]:flex flex-wrap gap-2 items-center justify-between w-full mt-1"> 
+              <div class="_snippet-categories fade-hidden hidden group-[.is-editing]:flex flex-wrap gap-2 items-center justify-between w-full mt-1"> 
                 <select class="_snippet-category-select bg-trasnparent w-full mb-4 rounded border border-slate-600 p-3 text-slate-200 focus:ring-2 focus:ring-green-800 focus:outline-none" data-snippet-id={snippet.id}>
                   {/* <option value="0">Todas las categorías</option> */}
                   {

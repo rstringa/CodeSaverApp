@@ -42,13 +42,13 @@ window?.addEventListener('click', function (e) {
 /* Show or hide snippets based on the selected category */
 function showSnippets(categoryId) {
     let hasVisibleSnippets = false;
-
+   
     snippets.forEach(snippet => {
+
         const isVisible = categoryId === "0" || (snippet as HTMLElement).dataset.category_id === categoryId;
-        setTimeout(() => {
-            snippet.classList.toggle('hidden', !isVisible);
-        }, 250); // Allow the browser to render before toggling classes
-       
+        snippet.classList.toggle('hidden', !isVisible);
+    
+        // Check if any snippet is visible
         if (isVisible) hasVisibleSnippets = true;
     });
 
@@ -65,7 +65,7 @@ function updateCategoryName(name) {
         setTimeout(() => {
         categoryName.textContent = name || ''
         }
-        , 250); // Allow the browser to render before updating the text
+        , 50); // Allow the browser to render before updating the text
     }
 }
 
