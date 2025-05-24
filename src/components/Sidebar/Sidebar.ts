@@ -5,19 +5,19 @@ const snippetsNumber = document.querySelectorAll('_sidebar ._category-item ._num
 
 
 /**
- * Sets the current category state in the sidebar based on the value stored in localStorage.
+ * Sets the current category state in the sidebar based on the value stored in sessionStorage.
 */
-// (function setCategoryState() {
-//     const selectedCategoryId = localStorage.getItem('selectedCategory');
-//     const selectedCategoryItem = document.querySelector(`._category-item[data-category_id="${selectedCategoryId}"]`);
-//     const selectedCategoryName = selectedCategoryItem?.querySelector('._category-name')?.textContent;
-//     if (selectedCategoryId && selectedCategoryId !== "0") {
-//         showSnippets(selectedCategoryId);
-//         catLink.forEach(link => link.classList.remove('is-active'));
-//         selectedCategoryItem?.classList.add('is-active');
-//         updateCategoryName(selectedCategoryName);
-//     }
-// })();
+(function setCategoryState() {
+    const selectedCategoryId = sessionStorage.getItem('selectedCategory');
+    const selectedCategoryItem = document.querySelector(`._category-item[data-category_id="${selectedCategoryId}"]`);
+    const selectedCategoryName = selectedCategoryItem?.querySelector('._category-name')?.textContent;
+    if (selectedCategoryId && selectedCategoryId !== "0") {
+        showSnippets(selectedCategoryId);
+        catLink.forEach(link => link.classList.remove('is-active'));
+        selectedCategoryItem?.classList.add('is-active');
+        updateCategoryName(selectedCategoryName);
+    }
+})();
 
 /* Update the number of snippets for each category*/
 catLink.forEach(link => {
@@ -38,8 +38,8 @@ catLink.forEach(link => {
         const categoryId = (link as HTMLElement).dataset.category_id;
         const categoryNameText = link.querySelector('._category-name')?.textContent;
         showSnippets(categoryId);
-        localStorage.setItem('selectedCategory', categoryId || '');
-        localStorage.setItem('selectedCategoryName', categoryNameText || '');
+        sessionStorage.setItem('selectedCategory', categoryId || '');
+        sessionStorage.setItem('selectedCategoryName', categoryNameText || '');
         updateCategoryName(categoryNameText);
     });
 });

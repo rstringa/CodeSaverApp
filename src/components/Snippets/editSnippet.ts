@@ -165,8 +165,8 @@ async function saveSnippet(snippetId: string, snippetTitle: string, snippetConte
         // Ocultar spinner loader
         hideSpinner(snippetElement);
 
-        // Actualizar el ID del snippet editado en el localStorage
-        localStorage.setItem("edited-snippet", snippetId);
+        // Actualizar el ID del snippet editado en el sessionStorage
+        sessionStorage.setItem("edited-snippet", snippetId);
         //window.location.href = currentUrl;
     } catch (error) {
         console.error("Error al guardar el snippet:", error);
