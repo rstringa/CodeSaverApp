@@ -1,6 +1,6 @@
 // Este archivo permite editar, guardar y cancelar cambios en snippets de código.
 // También incluye la funcionalidad para actualizar un snippet en el servidor mediante una API.
-
+import hljs from 'highlight.js';
 // Selección de elementos clave
 const editSnippetLinks = document.querySelectorAll('._edit-snippet');
 const deleteSnippetLinks = document.querySelectorAll('._delete-snippet');
@@ -151,12 +151,23 @@ async function saveSnippet(snippetId: string, snippetTitle: string, snippetConte
         const result = await response.json();
         console.log("Snippet guardado correctamente:", result);
 
+        // Actualizar el contenido del snippet en la interfaz formateada mostrando los cambios editados.
+        const snippetTitleElement = snippetElement.querySelector('._snippet-title a');
+        if (snippetTitleElement) {
+            snippetTitleElement.textContent = snippetTitle;
+        }
+        const snippetContentElement = snippetElement.querySelector('._snippet-content-formated');
+        if (snippetContentElement) {
+            const snippetContentElementFormated = hljs.highlightAuto(snippetContent).value;
+            snippetContentElement.innerHTML = snippetContentElementFormated;
+
+        }
         // Ocultar spinner loader
         hideSpinner(snippetElement);
 
-        // Actualizar la página para reflejar los cambios
+        // Actualizar el ID del snippet editado en el localStorage
         localStorage.setItem("edited-snippet", snippetId);
-        window.location.href = currentUrl;
+        //window.location.href = currentUrl;
     } catch (error) {
         console.error("Error al guardar el snippet:", error);
         hideSpinner(snippetElement);
