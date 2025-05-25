@@ -65,18 +65,18 @@ order-none lg:order-none
 </aside>
 
 <script type="module">
-//  document.addEventListener('DOMContentLoaded', () => {
-//   const backButton = document.querySelector('._btn-back');
-//   if (backButton) {
-//     backButton.addEventListener('click', (event) => {
-//       event.preventDefault();
-//       if (document.startViewTransition) {
-//       document.startViewTransition(() => history.back());
-//     } else {
-//       history.back();
-//     }
-//     });
-//   }
-// })
+ document.addEventListener('DOMContentLoaded', () => {
+  const backButton = document.querySelector('._btn-back');
+  if (backButton) {
+    backButton.addEventListener('click', (event) => {
+      event.preventDefault();
+      if (document.startViewTransition) {
+      document.startViewTransition(() => history.back());
+    } else {
+      history.back();
+    }
+    });
+  }
+})
 
 </script>

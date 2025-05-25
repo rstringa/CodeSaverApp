@@ -8,15 +8,16 @@ const snippetsNumber = document.querySelectorAll('_sidebar ._category-item ._num
  * Sets the current category state in the sidebar based on the value stored in sessionStorage.
 */
 (function setCategoryState() {
-    const selectedCategoryId = sessionStorage.getItem('selectedCategory');
-    const selectedCategoryItem = document.querySelector(`._category-item[data-category_id="${selectedCategoryId}"]`);
-    const selectedCategoryName = selectedCategoryItem?.querySelector('._category-name')?.textContent;
-    if (selectedCategoryId && selectedCategoryId !== "0") {
-        showSnippets(selectedCategoryId);
-        catLink.forEach(link => link.classList.remove('is-active'));
-        selectedCategoryItem?.classList.add('is-active');
-        updateCategoryName(selectedCategoryName);
-    }
+    // const selectedCategoryId = sessionStorage.getItem('selectedCategory');
+    // const selectedCategoryItem = document.querySelector(`._category-item[data-category_id="${selectedCategoryId}"]`);
+    // const selectedCategoryName = selectedCategoryItem?.querySelector('._category-name')?.textContent;
+    // if (selectedCategoryId && selectedCategoryId !== "0") {
+    //     showSnippets(selectedCategoryId);
+    //     catLink.forEach(link => link.classList.remove('is-active'));
+    //     selectedCategoryItem?.classList.add('is-active');
+    //     updateCategoryName(selectedCategoryName);
+    // }
+    categorySelectedUpdate();
 })();
 
 /* Update the number of snippets for each category*/
@@ -33,16 +34,40 @@ catLink.forEach(link => {
 catLink.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
-        catLink.forEach(link => link.classList.remove('is-active'));
-        link.classList.add('is-active');
         const categoryId = (link as HTMLElement).dataset.category_id;
-        const categoryNameText = link.querySelector('._category-name')?.textContent;
-        showSnippets(categoryId);
-        sessionStorage.setItem('selectedCategory', categoryId || '');
-        sessionStorage.setItem('selectedCategoryName', categoryNameText || '');
-        updateCategoryName(categoryNameText);
+        //sessionStorage.setItem('selectedCategory', categoryId || '0');
+        categorySelectedUpdate(categoryId);
+        // sessionStorage.setItem('selectedCategoryName', categoryNameText || '');
+
     });
 });
+
+function categorySelectedUpdate(categoryId: string){
+    const selectedCategoryItem = document.querySelector(`._category-item[data-category_id="${categoryId}"]`);
+    const selectedCategoryName = selectedCategoryItem?.querySelector('._category-name')?.textContent;
+    catLink.forEach(link => link.classList.remove('is-active'));
+
+    if (categoryId && categoryId !== "0") {
+        showSnippets(categoryId);
+        selectedCategoryItem?.classList.add('is-active');
+        updateCategoryName(selectedCategoryName);
+    } else {
+         showSnippets("0");
+         document.querySelector('._category-item[data-category_id="0"]')?.classList.add('is-active');
+        // updateCategoryName('Todos mis snippets');
+    }
+}
+
+/* Update the displayed category name */
+function updateCategoryName(selectedCategoryName) {
+    const categoryName = document.querySelector('._content ._category-name ._category-text');
+    if (categoryName) {
+        setTimeout(() => {
+            categoryName.textContent = selectedCategoryName || ''
+        }, 50); // Allow the browser to render before updating the text
+    }
+}
+
 
 // CLOSE ITEMS ACTIONS ON CLICK OUTSIDE
 window?.addEventListener('click', function (e) {
@@ -75,16 +100,7 @@ function showSnippets(categoryId) {
     }
 }
 
-/* Update the displayed category name */
-function updateCategoryName(name) {
-    const categoryName = document.querySelector('._content ._category-name ._category-text');
-    if (categoryName) {
-        setTimeout(() => {
-            categoryName.textContent = name || ''
-        }
-            , 50); // Allow the browser to render before updating the text
-    }
-}
+
 
 /* SHOW ACTIONS (EDIT, DELETE) */
 const actions = document.querySelectorAll('._actions');
@@ -168,7 +184,24 @@ async function deleteCategory(categoryId) {
         console.error("Error deleting category:", response.statusText);
     } else {
         console.log("Category deleted:", categoryId);
-        window.location.reload();
+        // Remove the category element from the sidebar
+        const categoryElem = document.querySelector(`[data-category_id="${categoryId}"]`);
+        if (categoryElem) {
+            // Remove the category item and its associated actions panel if present
+            const actionsPanel = categoryElem.nextElementSibling;
+            categoryElem.remove();
+            if (actionsPanel && actionsPanel.classList.contains('_category-item-actions')) {
+                actionsPanel.remove();
+            }
+
+        }
+        // Optionally, update snippet visibility or show a placeholder if no categories remain
+        // e.g., showSnippets("0");
+        showSnippets("0");
+        updateCategoryName('Todos mis snippets');
+        // Reset the selected category in sessionStorage
+        sessionStorage.setItem('selectedCategory','0');
+        sessionStorage.setItem('selectedCategoryName','Todos mis snippets');
     }
 }
 

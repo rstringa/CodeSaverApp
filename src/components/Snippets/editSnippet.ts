@@ -3,9 +3,6 @@
 import hljs from 'highlight.js';
 // Selección de elementos clave
 const editSnippetLinks = document.querySelectorAll('._edit-snippet');
-const deleteSnippetLinks = document.querySelectorAll('._delete-snippet');
-const currentUrl = window.location.href;
-
 let isEditing = false;
 
 /**
@@ -32,6 +29,7 @@ function toggleEditingState(snippetElement: Element, clickedLink: Element) {
     const snippetTitleElement = snippetElement.querySelector('._snippet-title a');
     const initialTitle = snippetTitleElement?.textContent || '';
     const categoryElement = snippetElement.querySelector('._snippet-categories') as HTMLSelectElement; 
+
     // Habilitar edición del título
     snippetTitleElement?.setAttribute('contenteditable', 'true');
     snippetTitleElement?.setAttribute('spellcheck', 'false');
@@ -63,7 +61,7 @@ function toggleEditingState(snippetElement: Element, clickedLink: Element) {
 function setupEditEvents(snippetElement: Element, initialTitle: string, snippetTitleElement: Element | null, categoryElement: Element | null) {
     const saveButton = snippetElement.querySelector('._save-changes');
     const cancelButton = snippetElement.querySelector('._cancel-changes');
-
+    
     // Evento para guardar cambios
     saveButton?.addEventListener('click', (e) => {
         e.preventDefault();
@@ -91,12 +89,11 @@ function saveSnippetChanges(snippetElement: Element, snippetTitleElement: Elemen
     const snippetTitle = snippetTitleElement?.textContent || '';
     const snippetCategory = (snippetElement.querySelector('._snippet-categories select') as HTMLSelectElement)?.value || '';
     const snippetId = (snippetElement.querySelector('._save-changes') as HTMLElement)?.dataset.id || '';
-
+    
     console.log("Guardando snippet:", { snippetId, snippetTitle, snippetContent, snippetCategory });
-
+    
     // Mostrar spinner loader
     showSpinner(snippetElement);
-
     saveSnippet(snippetId, snippetTitle, snippetContent, snippetCategory, snippetElement);
 }
 
@@ -126,8 +123,10 @@ function cancelSnippetChanges(snippetElement: Element, initialTitle: string, sni
 async function saveSnippet(snippetId: string, snippetTitle: string, snippetContent: string, snippetCategory: string, snippetElement: Element) {
     console.log("Enviando cambios al servidor para el snippet:", snippetId);
 
-    // Sanitizar el título para evitar inyección de código
+    // Sanitizar el título y el contenido para evitar inyección de código
     snippetTitle = snippetTitle.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+    //snippetContent = snippetContent.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+    snippetCategory = snippetCategory.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 
     try {
         const response = await fetch("/api/editSnippet", {
@@ -155,18 +154,23 @@ async function saveSnippet(snippetId: string, snippetTitle: string, snippetConte
         const snippetTitleElement = snippetElement.querySelector('._snippet-title a');
         if (snippetTitleElement) {
             snippetTitleElement.textContent = snippetTitle;
+            snippetTitleElement.setAttribute('contenteditable', 'false');
+            snippetTitleElement.setAttribute('spellcheck', 'true');
         }
         const snippetContentElement = snippetElement.querySelector('._snippet-content-formated');
+        
         if (snippetContentElement) {
+            console.log("snippetContent", snippetContent);
             const snippetContentElementFormated = hljs.highlightAuto(snippetContent).value;
             snippetContentElement.innerHTML = snippetContentElementFormated;
-
+            snippetContentElement.setAttribute('contenteditable', 'false');
+            snippetContentElement.setAttribute('spellcheck', 'true');
         }
         // Ocultar spinner loader
         hideSpinner(snippetElement);
 
         // Actualizar el ID del snippet editado en el sessionStorage
-        sessionStorage.setItem("edited-snippet", snippetId);
+        sessionStorage.setItem("editedSnippet", snippetId);
         //window.location.href = currentUrl;
     } catch (error) {
         console.error("Error al guardar el snippet:", error);

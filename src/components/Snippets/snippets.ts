@@ -68,6 +68,10 @@ async function handleDeleteSnippet(snippetId: string) {
         }
 
         console.log("Snippet eliminado correctamente:", snippetId);
+        const snippet = document.querySelector(`[data-snippet-id="${snippetId}"]`);
+        if (snippet) {
+            snippet.remove();
+        }
         window.location.href = "/"; // Recargar la página
     } catch (error) {
         console.error("Error al eliminar el snippet:", error);
