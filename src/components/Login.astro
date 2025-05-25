@@ -39,15 +39,51 @@ const loginMessage = Astro.url.searchParams.get('message')
 					class="bg-trasnparent mb-4 rounded border border-slate-600 p-3 text-white focus:ring-2 focus:ring-green-800 focus:outline-none"
 				/>
 			</div>
-			<div class="mb-3 grid grid-cols-1 gap-2">
+			<div class="mb-3 grid grid-cols-1 gap-2 relative">
 				<label for="password" class="font-regular text-md text-slate-300">Password</label>
-				<input
-					id="password"
-					type="password"
-					name="password"
-					autocomplete="current-password"
-					class="bg-trasnparent mb-4 rounded border border-slate-600 p-3 text-white focus:ring-2 focus:ring-green-800 focus:outline-none"
-				/>
+				<div class="relative">
+					<input
+						id="password"
+						type="password"
+						name="password"
+						autocomplete="current-password"
+						class="bg-transparent mb-4 rounded border border-slate-600 p-3 text-white focus:ring-2 focus:ring-green-800 focus:outline-none w-full"
+					/>
+					<button
+						id="toggle-password-btn"
+						type="button"
+						class="absolute right-3 top-[calc(50%-6px)] -translate-y-1/2 text-slate-400 hover:text-slate-200 focus:outline-none"
+					>
+					<svg
+					id="password-icon"
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-5 w-5"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+					stroke-width="2"
+				>
+					<path
+						id="eye-open"
+						d="M12 4.5C7.305 4.5 3.27 7.11 1.5 12c1.77 4.89 5.805 7.5 10.5 7.5s8.73-2.61 10.5-7.5c-1.77-4.89-5.805-7.5-10.5-7.5zm0 12a4.5 4.5 0 110-9 4.5 4.5 0 010 9z"
+					/>
+					<g id="eye-closed" class="hidden">
+						<path
+							d="M12 4.5C7.305 4.5 3.27 7.11 1.5 12c1.77 4.89 5.805 7.5 10.5 7.5s8.73-2.61 10.5-7.5c-1.77-4.89-5.805-7.5-10.5-7.5zm0 12a4.5 4.5 0 110-9 4.5 4.5 0 010 9z"
+						/>
+						<line
+							x1="4"
+							y1="4"
+							x2="20"
+							y2="20"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+						/>
+					</g>
+				</svg>
+					</button>
+				</div>
 			</div>
 			<button
 				type="submit"
@@ -67,3 +103,34 @@ const loginMessage = Astro.url.searchParams.get('message')
 		</div>
 	</section>
 </main>
+
+<script>
+	// Función para alternar la visibilidad de la contraseña
+	function togglePasswordVisibility() {
+		const passwordInput = document.getElementById('password') as HTMLInputElement | null;
+		const eyeOpen = document.getElementById('eye-open');
+		const eyeClosed = document.getElementById('eye-closed');
+
+		if (
+			passwordInput &&
+			eyeOpen &&
+			eyeClosed
+		) {
+			if (passwordInput.type === 'password') {
+				passwordInput.type = 'text';
+				eyeOpen.classList.add('hidden');
+				eyeClosed.classList.remove('hidden');
+			} else {
+				passwordInput.type = 'password';
+				eyeOpen.classList.remove('hidden');
+				eyeClosed.classList.add('hidden');
+			}
+		}
+	}
+
+	// Agregar el evento al botón de alternar visibilidad
+	const toggleBtn = document.getElementById('toggle-password-btn');
+	if (toggleBtn) {
+		toggleBtn.addEventListener('click', togglePasswordVisibility);
+	}
+</script>
