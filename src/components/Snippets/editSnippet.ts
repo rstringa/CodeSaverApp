@@ -166,16 +166,42 @@ async function saveSnippet(snippetId: string, snippetTitle: string, snippetConte
             snippetContentElement.setAttribute('contenteditable', 'false');
             snippetContentElement.setAttribute('spellcheck', 'true');
         }
+
+        snippetElement.setAttribute('data-category_id', snippetCategory);
+        
         // Ocultar spinner loader
         hideSpinner(snippetElement);
 
         // Actualizar el ID del snippet editado en el sessionStorage
         sessionStorage.setItem("editedSnippet", snippetId);
+
+        // Actualizar el número de snippets en cada categoría del Sidebar
+        setTimeout(() => {
+            updateCategoriesNumber();
+        },100)             
+
         //window.location.href = currentUrl;
     } catch (error) {
         console.error("Error al guardar el snippet:", error);
         hideSpinner(snippetElement);
     }
+}
+
+// =====================
+// Update Categories Number
+// =====================
+function updateCategoriesNumber() {
+    const catLink = document.querySelectorAll('._sidebar ._category-item');
+    const snippets = document.querySelectorAll('._snippet');
+    catLink.forEach(link => {
+        console.log("link", link);
+        const categoryId = (link as HTMLElement).dataset.category_id;
+        const linkNumber = link.querySelector('._number');
+        const totalSnippets = Array.from(snippets).filter(snippet =>
+            (snippet as HTMLElement).dataset.category_id === categoryId
+        ).length;
+        if (linkNumber) linkNumber.textContent = totalSnippets.toString();
+    });
 }
 
 /**

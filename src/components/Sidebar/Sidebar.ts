@@ -17,7 +17,7 @@ const snippetsNumber = document.querySelectorAll('_sidebar ._category-item ._num
     //     selectedCategoryItem?.classList.add('is-active');
     //     updateCategoryName(selectedCategoryName);
     // }
-    categorySelectedUpdate();
+    categorySelectedUpdate("0");
 })();
 
 /* Update the number of snippets for each category*/
