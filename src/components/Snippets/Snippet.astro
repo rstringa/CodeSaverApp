@@ -38,6 +38,7 @@ const categorias = await listCategoriesFromUser();
                   href={`/snippet/${snippet.id}`}
                   class="_link-snippet _btn-normal px-2! text-slate-400"
                   data-id={snippet.id}
+                  data-astro-prefetch="viewport"
                   title="Enlace al snippet"
                 >
                   <Icon name="expand2" class="w-4 h-4 pointer-events-none" />
