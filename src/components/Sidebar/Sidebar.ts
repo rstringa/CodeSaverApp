@@ -54,7 +54,7 @@ function categorySelectedUpdate(categoryId: string){
     } else {
          showSnippets("0");
          document.querySelector('._category-item[data-category_id="0"]')?.classList.add('is-active');
-        // updateCategoryName('Todos mis snippets');
+         updateCategoryName('Todos mis snippets');
     }
 }
 
@@ -63,7 +63,7 @@ function updateCategoryName(selectedCategoryName) {
     const categoryName = document.querySelector('._content ._category-name ._category-text');
     if (categoryName) {
         setTimeout(() => {
-            categoryName.textContent = selectedCategoryName || ''
+            categoryName.textContent = selectedCategoryName || '';
         }, 50); // Allow the browser to render before updating the text
     }
 }

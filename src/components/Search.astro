@@ -11,6 +11,8 @@
 <script>
  const input = document.querySelector('._search-snippets');
  const snippets = document.querySelectorAll('._snippet');
+ const allCategories = document.querySelectorAll('._category-item ');
+ const categoryName = document.querySelector('._category-name ._category-text');
  input?.addEventListener('input', (e) => {
    if (!e.target) return;
    const searchText = (e.target as HTMLInputElement).value.toLowerCase();
@@ -19,6 +21,10 @@
    const snippetTitle = snippet.querySelector('._snippet-title a');
    if (snippetTitle?.textContent?.toLowerCase().includes(searchText)) {
      snippet.classList.remove('hidden');
+     // Remove 'is-active' class from all categories
+     allCategories.forEach(category => category.classList.remove('is-active'));
+     // Show all snippets if any match
+     categoryName ? categoryName.textContent = 'Resultados de la búsqueda' : null;
    } else {
      snippet.classList.add('hidden');
    }
