@@ -36,7 +36,7 @@ catLink.forEach(link => {
         e.preventDefault();
         const categoryId = (link as HTMLElement).dataset.category_id;
         //sessionStorage.setItem('selectedCategory', categoryId || '0');
-        categorySelectedUpdate(categoryId);
+        categorySelectedUpdate(categoryId || "0");
         // sessionStorage.setItem('selectedCategoryName', categoryNameText || '');
 
     });
@@ -71,7 +71,7 @@ function updateCategoryName(selectedCategoryName) {
 
 // CLOSE ITEMS ACTIONS ON CLICK OUTSIDE
 window?.addEventListener('click', function (e) {
-    //console.log('clickoutside');
+
     catLink.forEach(link => {
 
         let nextElement = link.nextElementSibling;

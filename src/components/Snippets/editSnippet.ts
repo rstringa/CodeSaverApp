@@ -160,7 +160,7 @@ async function saveSnippet(snippetId: string, snippetTitle: string, snippetConte
         const snippetContentElement = snippetElement.querySelector('._snippet-content-formated');
         
         if (snippetContentElement) {
-            console.log("snippetContent", snippetContent);
+           // console.log("snippetContent", snippetContent);
             const snippetContentElementFormated = hljs.highlightAuto(snippetContent).value;
             snippetContentElement.innerHTML = snippetContentElementFormated;
             snippetContentElement.setAttribute('contenteditable', 'false');
@@ -187,20 +187,26 @@ async function saveSnippet(snippetId: string, snippetTitle: string, snippetConte
     }
 }
 
-// =====================
-// Update Categories Number
-// =====================
+/**
+ * Update Categories Number
+ */
 function updateCategoriesNumber() {
     const catLink = document.querySelectorAll('._sidebar ._category-item');
     const snippets = document.querySelectorAll('._snippet');
     catLink.forEach(link => {
-        console.log("link", link);
+        
         const categoryId = (link as HTMLElement).dataset.category_id;
         const linkNumber = link.querySelector('._number');
         const totalSnippets = Array.from(snippets).filter(snippet =>
             (snippet as HTMLElement).dataset.category_id === categoryId
         ).length;
         if (linkNumber) linkNumber.textContent = totalSnippets.toString();
+
+        // Hacer click en la categoria seleccionada para renovar la vista de snippets
+        const actualCategorySelected = document.querySelector('._sidebar ._category-item.is-active');
+        if( actualCategorySelected ) {
+            (actualCategorySelected as HTMLElement).click();
+        }
     });
 }
 

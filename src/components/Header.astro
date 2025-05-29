@@ -3,7 +3,7 @@ import { Icon } from 'astro-icon/components'
 import { supabase } from '@lib/supabaseClient';
 const { data: userSession } = await supabase.auth.getSession()
 const userSessionId = userSession?.session?.user.id
-console.log(userSession?.session?.user?.user_metadata?.display_name)
+
 // Get page url
 const url = new URL(Astro.url.pathname, Astro.url.origin);
 const urlPath = url.pathname;
@@ -98,7 +98,7 @@ flex justify-between p-6 py-3 m-auto border-b-1 border-slate-700
 </script>
 <style>
 ._loading-line {
-  --time: 3s;
+  --time: 2s;
   --width:50px;
   position: absolute;
   width: var(--width);
@@ -117,6 +117,9 @@ body.is-loading ._loading-line {
 	0% {
 		left: 0;
 	}
+  40% {
+    --width: 50px;
+  }
   50% {
     --width:100px;
   }
