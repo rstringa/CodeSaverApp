@@ -2,7 +2,7 @@ const catLink = document.querySelectorAll('._sidebar ._category-item');
 const snippets = document.querySelectorAll('._snippet');
 const sidebar = document.querySelector('._sidebar');
 const snippetsNumber = document.querySelectorAll('_sidebar ._category-item ._number');
-
+const body = document.querySelector('body');
 
 /**
  * Sets the current category state in the sidebar based on the value stored in sessionStorage.
@@ -34,10 +34,11 @@ catLink.forEach(link => {
 catLink.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
+        console.log(e.target);
         const categoryId = (link as HTMLElement).dataset.category_id;
         //sessionStorage.setItem('selectedCategory', categoryId || '0');
         categorySelectedUpdate(categoryId || "0");
-       // document.body.classList.remove('categories-mobile-open');
+        document.body.classList.remove('categories-mobile-open');
         // sessionStorage.setItem('selectedCategoryName', categoryNameText || '');
 
     });
@@ -110,7 +111,9 @@ actions.forEach(action => {
         e.preventDefault();
         e.stopPropagation();
         //action.classList.remove('hidden');
-        (action?.closest('._category-item') as HTMLElement).click();
+        if( body && !body.classList.contains('categories-mobile-open') ){
+            (action?.closest('._category-item') as HTMLElement).click();
+        }
         (action?.closest('._category-item')?.nextElementSibling as HTMLElement)?.classList.remove('hidden');
     });
 });
