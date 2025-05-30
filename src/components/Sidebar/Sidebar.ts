@@ -37,6 +37,7 @@ catLink.forEach(link => {
         const categoryId = (link as HTMLElement).dataset.category_id;
         //sessionStorage.setItem('selectedCategory', categoryId || '0');
         categorySelectedUpdate(categoryId || "0");
+       // document.body.classList.remove('categories-mobile-open');
         // sessionStorage.setItem('selectedCategoryName', categoryNameText || '');
 
     });

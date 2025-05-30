@@ -1,5 +1,6 @@
 ---
 import { userLoggedIn } from "@utils/userLoggedIn";
+import { Icon } from 'astro-icon/components'
 import DialogCreateCategory from '@components/Sidebar/DialogCreateCategory.astro';
 import ListCategories from '@components/Sidebar/ListCategories.astro';
 import { listCategoriesFromUser } from '@utils/listCategoriesFromUser';
@@ -11,9 +12,14 @@ const categorias = await listCategoriesFromUser();
 relative w-full h-full border-r-1 border-slate-700 p-6 pt-6 pb-16
 order-none lg:order-none mb-6 lg:mb-8
 ">  
+    <h4 class="_categories-mobile text-green-600 p-3 text-center uppercase 
+    relatieve
+    md:hidden">Categorías
+        <Icon name="arrowRight" class="w-6 h-6" />
+        <Icon name="close" class="hidden w-6 h-6 text-slate-400 absolute top-3 right-4" />
+    </h4>
     <div class="_content m-auto sticky top-6">
-  
-       
+
        <ListCategories 
 categorias={categorias}
        userLogged={userLogged}
@@ -79,8 +85,62 @@ body.logged-out ._sidebar {
     display: flex;
 }  */}
 </style>  
- 
+ <style>
+    @media (max-width: 768px){
+        ._sidebar {
+            position: fixed;
+            bottom: auto;
+            top:calc((100dvh - 3rem));
+            left: 0;
+            width: 100%;
+            height:75dvh;
+            z-index: 50;
+            background-color: var(--color-slate-900);
+            border-right: none;
+            border-top:1px solid var(--color-green-700);
+            padding:0px;
+            transition: top 0.3s ease-in-out;
+  
+        }
+        ._sidebar ._content {
+            padding: 1rem;
+        }
+        ._sidebar ._content > div {
+            margin-bottom: 1rem;
+        }
+        ._sidebar ._categories-mobile {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            & svg {
+                rotate: -90deg;
+            }
+        }
+        body.categories-mobile-open {
+            overflow: hidden;
+            & ._sidebar ._categories-mobile {
+                & svg {
+                    rotate: 90deg;
+                }
+                & [data-icon="close"] {
+                    display: block;
+                    opacity:1;
+                }
+            }
+        }
+        body.categories-mobile-open ._sidebar {
+            top: 25dvh;
+            transition: top 0.3s ease-in-out;
+        }
+       
+    }
+ </style>
 
 <script>
     import "./Sidebar.ts";
+    const btnCategoriesMobile = document.querySelector("._categories-mobile");
+    const body = document.querySelector("body");
+    btnCategoriesMobile?.addEventListener("click", () => {
+        body?.classList.toggle("categories-mobile-open");
+    });
 </script>
