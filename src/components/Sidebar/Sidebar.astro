@@ -11,6 +11,7 @@ const categorias = await listCategoriesFromUser();
 <aside class="_sidebar 
 relative w-full h-full border-r-1 border-slate-700 p-6 pt-6 pb-16
 order-none lg:order-none mb-6 lg:mb-8
+
 ">  
     <h4 class="_categories-mobile text-green-600 p-3 text-center uppercase 
     relatieve
@@ -90,7 +91,7 @@ body.logged-out ._sidebar {
         ._sidebar {
             position: fixed;
             bottom: auto;
-            top:calc((100dvh - 3rem));
+            top:calc((100vh - 3rem));
             left: 0;
             width: 100%;
             height:75vh;
@@ -130,7 +131,7 @@ body.logged-out ._sidebar {
             }
         }
         body.categories-mobile-open ._sidebar {
-            top: 25dvh;
+            top: 25vh;
             transition: top 0.3s ease-in-out;
         }
        

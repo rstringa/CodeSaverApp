@@ -34,15 +34,21 @@ catLink.forEach(link => {
 catLink.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
-        console.log(e.target);
+        e.stopPropagation();
         const categoryId = (link as HTMLElement).dataset.category_id;
         //sessionStorage.setItem('selectedCategory', categoryId || '0');
         categorySelectedUpdate(categoryId || "0");
-        document.body.classList.remove('categories-mobile-open');
+        const isEditable = link.querySelector('._category-name')?.getAttribute('contenteditable') === 'true';
+        if (!isEditable) {
+           
+            document.body.classList.remove('categories-mobile-open');
+        }
+
         // sessionStorage.setItem('selectedCategoryName', categoryNameText || '');
 
     });
 });
+
 
 function categorySelectedUpdate(categoryId: string){
     const selectedCategoryItem = document.querySelector(`._category-item[data-category_id="${categoryId}"]`);
@@ -145,6 +151,7 @@ function enableCategoryEditing(categoryId) {
                 categoryName.textContent = sanitizeInput(editedName);
                 categoryName.removeAttribute("contenteditable");
                 updateCategory(categoryId, editedName);
+                updateCategoryName(editedName);
             } else {
                 categoryName.textContent = initialName || '';
             }
