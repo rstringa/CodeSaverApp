@@ -129,10 +129,14 @@ async function saveSnippet(snippetId: string, snippetTitle: string, snippetConte
     snippetCategory = snippetCategory.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 
     try {
+        // Obtener el token JWT de Supabase desde sessionStorage
+        const token = sessionStorage.getItem('sb-access-token');
+
         const response = await fetch("/api/editSnippet", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                ...(token ? { "Authorization": `Bearer ${token}` } : {})
             },
             body: JSON.stringify({
                 id: snippetId,
