@@ -125,19 +125,16 @@ async function saveSnippet(snippetId: string, snippetTitle: string, snippetConte
 
     // Sanitizar el título y el contenido para evitar inyección de código
     snippetTitle = snippetTitle.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-    //snippetContent = snippetContent.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
     snippetCategory = snippetCategory.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 
     try {
-        // Obtener el token JWT de Supabase desde sessionStorage
-        const token = sessionStorage.getItem('sb-access-token');
-
+        // ✅ CORRECCIÓN: Usar cookies en lugar de sessionStorage
         const response = await fetch("/api/editSnippet", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
-                ...(token ? { "Authorization": `Bearer ${token}` } : {})
             },
+            credentials: 'include', // 👈 Esto envía las cookies automáticamente
             body: JSON.stringify({
                 id: snippetId,
                 titulo: snippetTitle,
@@ -146,12 +143,27 @@ async function saveSnippet(snippetId: string, snippetTitle: string, snippetConte
             }),
         });
 
-        if (!response.ok) {
-            console.error("Error al guardar el snippet:", response.statusText);
+        // ✅ CORRECCIÓN: Mejor manejo de errores
+        let result;
+        try {
+            result = await response.json();
+        } catch (jsonError) {
+            console.error("Error al parsear respuesta JSON:", jsonError);
+            hideSpinner(snippetElement);
+            alert("Error al guardar: Respuesta inválida del servidor");
             return;
         }
 
-        const result = await response.json();
+        if (!response.ok) {
+            console.error("Error al guardar el snippet:", response.status, response.statusText, result);
+            hideSpinner(snippetElement);
+            
+            // ✅ MOSTRAR ERROR AL USUARIO
+            const errorMessage = result?.error || `Error ${response.status}: ${response.statusText}`;
+            alert(`Error al guardar el snippet: ${errorMessage}`);
+            return;
+        }
+
         console.log("Snippet guardado correctamente:", result);
 
         // Actualizar el contenido del snippet en la interfaz formateada mostrando los cambios editados.
@@ -164,7 +176,6 @@ async function saveSnippet(snippetId: string, snippetTitle: string, snippetConte
         const snippetContentElement = snippetElement.querySelector('._snippet-content-formated');
         
         if (snippetContentElement) {
-           // console.log("snippetContent", snippetContent);
             const snippetContentElementFormated = hljs.highlightAuto(snippetContent).value;
             snippetContentElement.innerHTML = snippetContentElementFormated;
             snippetContentElement.setAttribute('contenteditable', 'false');
@@ -182,12 +193,15 @@ async function saveSnippet(snippetId: string, snippetTitle: string, snippetConte
         // Actualizar el número de snippets en cada categoría del Sidebar
         setTimeout(() => {
             updateCategoriesNumber();
-        },100)             
+        }, 100);
 
-        //window.location.href = currentUrl;
     } catch (error) {
         console.error("Error al guardar el snippet:", error);
         hideSpinner(snippetElement);
+        
+        // ✅ MOSTRAR ERROR AL USUARIO
+        const errorMessage = error instanceof Error ? error.message : "Error de conexión";
+        alert(`Error al guardar el snippet: ${errorMessage}`);
     }
 }
 
