@@ -7,6 +7,16 @@ const { id: snippetId } = Astro.params
 import { supabase } from '@lib/supabaseClient'
 
 // Obtener la sesión de usuario
+const accessToken = Astro.cookies.get('sb-access-token')?.value
+const refreshToken = Astro.cookies.get('sb-refresh-token')?.value
+
+if (accessToken && refreshToken) {
+	await supabase.auth.setSession({
+		access_token: accessToken,
+		refresh_token: refreshToken
+	})
+}
+
 const { data: userSession } = await supabase.auth.getSession()
 const userSessionId = userSession?.session?.user.id
 ---

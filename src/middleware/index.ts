@@ -13,26 +13,35 @@ const protectedRoutes = [
   "/api/createCategory",
   "/api/editCategory",
   "/api/deleteCategory",
-  "/api/auth/deleteAccount"
+  "/api/auth/deleteAccount",
+  "/snippet/**"
 ];
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const { request, cookies, redirect } = context;
   const url = new URL(request.url);
 
-  if (micromatch.isMatch(url.pathname, protectedRoutes)) {
-    const token = cookies.get("sb-access-token")?.value;
-    if (!token) {
-      console.warn("Token missing. Redirecting to /login");
-      return redirect("/login");
-    }
+  const accessToken = cookies.get("sb-access-token")?.value;
+  const refreshToken = cookies.get("sb-refresh-token")?.value;
 
-    const { data: user, error } = await supabase.auth.getUser(token);
+  if (accessToken && refreshToken) {
+    const { data, error } = await supabase.auth.setSession({
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    });
+    if (error) {
+      console.error("Error setting session from cookies:", error.message);
+      // Optional: clear cookies if session is invalid
+    }
+  }
+
+  if (micromatch.isMatch(url.pathname, protectedRoutes)) {
+    const { data: { user }, error } = await supabase.auth.getUser();
     if (error || !user) {
-      console.error("Invalid token. Redirecting to /login");
+      console.warn("User not authenticated. Redirecting to /login");
       return redirect("/login");
     }
-    console.log("User authenticated:", user);
+    console.log("User authenticated:", user.id);
   }
 
   // En todos los casos devolvemos next(), que retorna un Response

@@ -13,6 +13,16 @@ let snippet: {
 } | null = null
 
 // Obtener la sesión de usuario
+const accessToken = Astro.cookies.get("sb-access-token")?.value;
+const refreshToken = Astro.cookies.get("sb-refresh-token")?.value;
+
+if (accessToken && refreshToken) {
+    await supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken,
+    });
+}
+
 const { data: userSession } = await supabase.auth.getSession()
 const userSessionId = userSession?.session?.user.id
 
@@ -42,6 +52,14 @@ import { listCategoriesFromUser } from '@utils/listCategoriesFromUser'
 const categorias = await listCategoriesFromUser()
 ---
 
+{ !snippet ? (
+  <div class="flex flex-col items-center justify-center p-12 bg-slate-800/10 rounded-lg border border-slate-700 min-h-[400px]">
+    <Icon name="warning" class="w-16 h-16 text-amber-500 mb-4 opacity-50" />
+    <h2 class="text-2xl font-semibold mb-2 text-slate-300">Snippet no encontrado</h2>
+    <p class="text-slate-500 text-center max-w-md">Es posible que el snippet haya sido eliminado, no tengas permisos para verlo o tu sesión haya expirado.</p>
+    <a href="/" class="_btn-normal mt-8 px-8!">Volver al inicio</a>
+  </div>
+) : (
 <div
 	class="_snippet group mb-12 flex flex-col gap-3 rounded bg-slate-600/10 p-6 text-sm transition-all transition-discrete duration-300"
 	data-category_id={snippet?.categoria_id}
@@ -105,16 +123,19 @@ const categorias = await listCategoriesFromUser()
 	</div>
 
 	<div
-		class="_snippet-content scrollbar-custom relative flex max-h-[100vh] flex-col overflow-auto overflow-y-auto scroll-smooth rounded bg-slate-800 p-4 px-3 min-h-[200px] lg:max-h-[150vh] lg:p-4 lg:px-6"
+		class="_snippet-content scrollbar-custom relative flex max-h-[100vh] min-h-[200px] flex-col overflow-auto overflow-y-auto scroll-smooth rounded bg-slate-800 p-4 px-3 lg:max-h-[150vh] lg:p-4 lg:px-6"
 	>
 		<pre
 			class="hljs _snippet-content-formated m-0 p-0 break-words whitespace-pre">
       <code>
         {
           (() => {
-            // const formattedCode = useFormattedCode({ contenido: snippet?.contenido });
-
-            return <div set:html={ hljs.highlightAuto(snippet?.contenido).value } /> 
+            if (!snippet?.contenido) return <div>No hay contenido</div>;
+            try {
+              return <div set:html={ hljs.highlightAuto(snippet.contenido).value } /> 
+            } catch (e) {
+              return <div>{snippet.contenido}</div>;
+            }
           })()
         }
         </code>
@@ -179,7 +200,9 @@ const categorias = await listCategoriesFromUser()
 		</div>
 	</div>
 
-	<div class="_snippet-edit-actions mt-1 flex w-full flex-wrap items-center justify-between gap-3">
+	<div
+		class="_snippet-edit-actions mt-1 flex w-full flex-wrap items-center justify-between gap-3"
+	>
 		<a
 			href="#"
 			class="_save-changes _btn-featured [min-width:150px] flex-1 whitespace-nowrap"
@@ -198,6 +221,7 @@ const categorias = await listCategoriesFromUser()
 		</a>
 	</div>
 </div>
+) }
 
 <script>
 	import './snippets.ts'

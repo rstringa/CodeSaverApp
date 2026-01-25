@@ -101,9 +101,12 @@ const categorias = await listCategoriesFromUser();
               
                 {
                   (() => {
-                    // const formattedCode = useFormattedCode({ contenido: snippet.contenido });
-
-                    return <div set:html={ hljs.highlightAuto(snippet.contenido).value } /> 
+                    if (!snippet.contenido) return <div>No hay contenido</div>;
+                    try {
+                      return <div set:html={ hljs.highlightAuto(snippet.contenido).value } /> 
+                    } catch (e) {
+                      return <div>{snippet.contenido}</div>;
+                    }
                   })()
                 }
  

@@ -7,15 +7,25 @@
 import { supabase } from '@lib/supabaseClient';
 import type { APIRoute } from 'astro';
 
-export const PUT: APIRoute = async ({ request }) => {
+export const PUT: APIRoute = async ({ request, cookies }) => {
+    const accessToken = cookies.get("sb-access-token")?.value;
+    const refreshToken = cookies.get("sb-refresh-token")?.value;
+
+    if (accessToken && refreshToken) {
+        await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+        });
+    }
+
     const { data: userSession } = await supabase.auth.getSession();
+    const usuario_id = userSession?.session?.user.id;
 
     const body = await request.json();
     const id = body.id;
     const content = body.contenido;
     const title = body.titulo;
     const categoria_id = body.categoria;
-    const usuario_id = userSession?.session?.user.id;
 
 
     if (!usuario_id) {
