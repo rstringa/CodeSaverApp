@@ -10,6 +10,7 @@ let snippet: {
 	titulo: any
 	contenido: any
 	categoria_id: any
+	es_favorito: any
 } | null = null
 
 // Obtener la sesión de usuario
@@ -34,7 +35,8 @@ if (userSessionId) {
       id,
       titulo,
       contenido,
-      categoria_id
+      categoria_id,
+      es_favorito
     `
 		)
 		.eq('usuario_id', userSessionId)
@@ -73,6 +75,18 @@ const categorias = await listCategoriesFromUser()
 
 		<!-- Editar / Eliminar -->
 		<div class="_snippet-top-actions flex items-center gap-2 transition-opacity duration-300">
+			<a
+				href="#"
+				class="_toggle-favorite _btn-normal px-2! text-slate-400 group/fav"
+				data-id={snippet?.id}
+				data-es-favorito={snippet?.es_favorito ? "true" : "false"}
+				title={snippet?.es_favorito ? "Quitar de favoritos" : "Añadir a favoritos"}
+			>
+				<Icon 
+					name={snippet?.es_favorito ? "heartFilled" : "heart"} 
+					class={`w-4 h-4 pointer-events-none transition-colors duration-300 ${snippet?.es_favorito ? "text-red-500!" : "group-hover/fav:text-red-400"}`} 
+				/>
+			</a>
 			<a
 				href="#"
 				class="_edit-snippet _btn-normal px-2! text-slate-400"

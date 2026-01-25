@@ -22,7 +22,8 @@ if (userSessionId) {
       id,
       titulo,
       contenido,
-      categoria_id
+      categoria_id,
+      es_favorito
     `
 		)
 		.eq('usuario_id', userSessionId)
@@ -62,7 +63,7 @@ if (userSessionId) {
 <div
 	class="_no-snippets-in-category hidden flex-col items-center justify-center rounded border border-slate-800 p-6 py-12"
 >
-	<p class="text-md tracking-wide text-slate-400 text-center">
+	<p class="text-md text-center tracking-wide text-slate-400">
 		No tienes snippets aún en ésta categoría.
 		<br />
 	</p>

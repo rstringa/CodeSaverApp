@@ -21,12 +21,21 @@ overflow-y-hidden
 <div class="overflow-y-auto  h-auto max-h-[55vh] lg:max-h-none pr-2 lg:pr-0 pb-8 lg:pb-0 relative scrollbar-custom scroll-smooth"> 
 <a
 title="Ver todos los snippets creados"
-class=`_category-item is-active _btn-normal justify-start! mb-3 px-3! py-3!
+class=`_category-item is-active _btn-normal justify-start! mb-0.5 px-3! py-3!
 ${(!userLogged || !categoriasLength) ? "pointer-events-none opacity-40" : "" }
 `
 href="#" data-category_id='0'>
 <Icon name="folderCode" class="w-6 h-5 mr-2 " /> 
     <span class="_category-name text-sm">Todos mis snippets</span>
+</a>
+<a
+title="Ver mis snippets favoritos"
+class=`_category-item _btn-normal justify-start! mb-3 px-3! py-3!
+${(!userLogged || !categoriasLength) ? "pointer-events-none opacity-40" : "" }
+`
+href="#" data-category_id='fav'>
+<Icon name="heartFilled" class="w-6 h-5 mr-2 text-red-500!" /> 
+    <span class="_category-name text-sm">Favoritos</span>
 </a>
 {!categoriasLength && userLogged ?
 <div class="flex flex-col items-center justify-center">

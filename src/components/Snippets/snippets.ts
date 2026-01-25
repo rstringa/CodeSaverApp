@@ -151,3 +151,48 @@ function expandSnippetContent(snippetId: string) {
         snippet.classList.remove("is-expanded");
     });
 }
+
+// =====================
+// FAVORITOS
+// =====================
+
+const favoriteButtons = document.querySelectorAll("._toggle-favorite");
+
+favoriteButtons.forEach((btn) => {
+    btn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        const target = e.currentTarget as HTMLElement;
+        const id = target.dataset.id;
+        const isFav = target.dataset.esFavorito === "true";
+
+        if (!id) return;
+
+        try {
+            const response = await fetch("/api/toggleFavorite", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, es_favorito: !isFav }),
+            });
+
+            if (response.ok) {
+                const newStatus = !isFav;
+                target.dataset.esFavorito = newStatus ? "true" : "false";
+                target.title = newStatus ? "Quitar de favoritos" : "Añadir a favoritos";
+
+                // Actualizar icono
+                const icon = target.querySelector("svg");
+                if (icon) {
+                    if (newStatus) {
+                        icon.classList.add("text-red-500!");
+                        icon.setAttribute("fill", "currentColor");
+                    } else {
+                        icon.classList.remove("text-red-500!");
+                        icon.setAttribute("fill", "none");
+                    }
+                }
+            }
+        } catch (error) {
+            console.error("Error al marcar favorito:", error);
+        }
+    });
+});

@@ -40,7 +40,7 @@ catLink.forEach(link => {
         categorySelectedUpdate(categoryId || "0");
         const isEditable = link.querySelector('._category-name')?.getAttribute('contenteditable') === 'true';
         if (!isEditable) {
-           
+
             document.body.classList.remove('categories-mobile-open');
         }
 
@@ -50,19 +50,23 @@ catLink.forEach(link => {
 });
 
 
-function categorySelectedUpdate(categoryId: string){
+function categorySelectedUpdate(categoryId: string) {
     const selectedCategoryItem = document.querySelector(`._category-item[data-category_id="${categoryId}"]`);
     const selectedCategoryName = selectedCategoryItem?.querySelector('._category-name')?.textContent;
     catLink.forEach(link => link.classList.remove('is-active'));
 
-    if (categoryId && categoryId !== "0") {
+    if (categoryId && categoryId !== "0" && categoryId !== "fav") {
         showSnippets(categoryId);
         selectedCategoryItem?.classList.add('is-active');
         updateCategoryName(selectedCategoryName);
+    } else if (categoryId === "fav") {
+        showSnippets("fav");
+        selectedCategoryItem?.classList.add('is-active');
+        updateCategoryName('Favoritos');
     } else {
-         showSnippets("0");
-         document.querySelector('._category-item[data-category_id="0"]')?.classList.add('is-active');
-         updateCategoryName('Todos mis snippets');
+        showSnippets("0");
+        document.querySelector('._category-item[data-category_id="0"]')?.classList.add('is-active');
+        updateCategoryName('Todos mis snippets');
     }
 }
 
@@ -94,8 +98,15 @@ function showSnippets(categoryId) {
     let hasVisibleSnippets = false;
 
     snippets.forEach(snippet => {
+        let isVisible = false;
+        if (categoryId === "0") {
+            isVisible = true;
+        } else if (categoryId === "fav") {
+            isVisible = (snippet as HTMLElement).dataset.esFavorito === "true";
+        } else {
+            isVisible = (snippet as HTMLElement).dataset.category_id === categoryId;
+        }
 
-        const isVisible = categoryId === "0" || (snippet as HTMLElement).dataset.category_id === categoryId;
         snippet.classList.toggle('hidden', !isVisible);
 
         // Check if any snippet is visible
@@ -117,7 +128,7 @@ actions.forEach(action => {
         e.preventDefault();
         e.stopPropagation();
         //action.classList.remove('hidden');
-        if( body && !body.classList.contains('categories-mobile-open') ){
+        if (body && !body.classList.contains('categories-mobile-open')) {
             (action?.closest('._category-item') as HTMLElement).click();
         }
         (action?.closest('._category-item')?.nextElementSibling as HTMLElement)?.classList.remove('hidden');
@@ -211,8 +222,8 @@ async function deleteCategory(categoryId) {
         showSnippets("0");
         updateCategoryName('Todos mis snippets');
         // Reset the selected category in sessionStorage
-        sessionStorage.setItem('selectedCategory','0');
-        sessionStorage.setItem('selectedCategoryName','Todos mis snippets');
+        sessionStorage.setItem('selectedCategory', '0');
+        sessionStorage.setItem('selectedCategoryName', 'Todos mis snippets');
     }
 }
 
