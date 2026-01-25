@@ -1,6 +1,6 @@
 export const prerender = false;
 import type { APIRoute } from "astro";
-import { supabase } from "@lib/supabaseClient"; 
+import { supabase } from "@lib/supabaseClient";
 import type { Provider } from "@supabase/auth-js";
 
 const redirectUrl = "/";
@@ -29,8 +29,8 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw new Error("Email o password incorrectos");
 
-    cookies.set("sb-access-token", data.session.access_token, { sameSite: "none", path: "/", secure: true });
-    cookies.set("sb-refresh-token", data.session.refresh_token, { sameSite: "none", path: "/", secure: true });
+    cookies.set("sb-access-token", data.session.access_token, { sameSite: "lax", path: "/", secure: true, httpOnly: true });
+    cookies.set("sb-refresh-token", data.session.refresh_token, { sameSite: "lax", path: "/", secure: true, httpOnly: true });
 
     return redirect(redirectUrl);
   } catch (err) {

@@ -45,5 +45,24 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
 
   // En todos los casos devolvemos next(), que retorna un Response
-  return next();
+  const response = await next();
+
+  // Security Headers
+  response.headers.set("X-Content-Type-Options", "nosniff");
+  response.headers.set("X-Frame-Options", "DENY");
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+
+  // Content Security Policy (Basic)
+  // Nota: Ajusta las fuentes según tus necesidades (ej. Google Fonts, Supabase, etc.)
+  response.headers.set(
+    "Content-Security-Policy",
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; " +
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+    "font-src 'self' https://fonts.gstatic.com; " +
+    "img-src 'self' data: https://*.supabase.co; " +
+    "connect-src 'self' https://*.supabase.co;"
+  );
+
+  return response;
 });
