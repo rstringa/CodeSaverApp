@@ -179,6 +179,12 @@ favoriteButtons.forEach((btn) => {
                 target.dataset.esFavorito = newStatus ? "true" : "false";
                 target.title = newStatus ? "Quitar de favoritos" : "Añadir a favoritos";
 
+                // Actualizar el elemento padre para el filtrado
+                const parentSnippet = target.closest("._snippet") as HTMLElement;
+                if (parentSnippet) {
+                    parentSnippet.dataset.esFavorito = newStatus ? "true" : "false";
+                }
+
                 // Actualizar icono
                 const icon = target.querySelector("svg");
                 if (icon) {

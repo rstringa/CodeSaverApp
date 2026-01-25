@@ -24,6 +24,7 @@ const categorias = await listCategoriesFromUser();
             class="_snippet group flex flex-col gap-2 rounded bg-slate-600/10 p-4 lg:p-6 text-sm transition-all transition-discrete duration-300"
             data-category_id={snippet.categoria_id}
             data-snippet-id={snippet.id}
+            data-es-favorito={snippet.es_favorito ? "true" : "false"}
             transition:name=`animacion-${snippet.id}`
           >
             <div class="flex flex-wrap justify-between items-center gap-2 mb-1.5 ml-2">
