@@ -58,11 +58,11 @@ const getCatName = (id:any)=> {
 			<a class="hover:text-green-400 transition">{snippet?.titulo}</a>
 		</h2>
 		<div class="_snippet-top-actions flex items-center gap-1.5 shrink-0">
-			<button type="button" class="_toggle-favorite group/fav flex h-8 w-8 items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600" data-id={snippet?.id} data-es-favorito={snippet?.es_favorito ? "true" : "false"} title={snippet?.es_favorito ? "Quitar de favoritos" : "Añadir a favoritos"}>
+			<button type="button" class="_toggle-favorite group/fav flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-red-400 transition" data-id={snippet?.id} data-es-favorito={snippet?.es_favorito ? "true" : "false"} title={snippet?.es_favorito ? "Quitar de favoritos" : "Añadir a favoritos"}>
 				<Icon name={snippet?.es_favorito ? "heartFilled" : "heart"} class={`h-4 w-4 pointer-events-none ${snippet?.es_favorito ? "text-red-500!" : "group-hover/fav:text-red-400"}`} />
 			</button>
-			<button type="button" class="_edit-snippet flex h-8 w-8 items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-green-400" data-id={snippet?.id} title="Editar"><Icon name="edit" class="h-4 w-4 pointer-events-none" /></button>
-			<button type="button" class="_delete-snippet flex h-8 w-8 items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-red-900/50 hover:text-red-400" data-id={snippet?.id} title="Eliminar"><Icon name="delete" class="h-4 w-4 pointer-events-none" /></button>
+			<button type="button" class="_edit-snippet flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-green-400" data-id={snippet?.id} title="Editar"><Icon name="edit" class="h-4 w-4 pointer-events-none" /></button>
+			<button type="button" class="_delete-snippet flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-green-400" data-id={snippet?.id} title="Eliminar"><Icon name="delete" class="h-4 w-4 pointer-events-none" /></button>
 		</div>
 	</div>
 
@@ -89,7 +89,7 @@ const getCatName = (id:any)=> {
 			</div>
 		</div>
 		<div class="_copy-snippet-actions">
-			<button type="button" class="_copy-snippet group-[.is-editing]:hidden absolute bottom-5 right-3 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-slate-200 hover:bg-slate-700 transition _btn-normal px-2! py-2!" data-snippet-id={snippet?.id} title="Copiar"><Icon name="copy" class="h-4 w-4 pointer-events-none" /></button>
+			<button type="button" class="_copy-snippet group-[.is-editing]:hidden absolute bottom-5 right-3 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-green-400 transition _btn-normal px-2! py-2!" data-snippet-id={snippet?.id} title="Copiar"><Icon name="copy" class="h-4 w-4 pointer-events-none" /></button>
 			<div class="_copy-snippet-message pointer-events-none absolute bottom-5 right-12 flex items-center rounded-full border border-green-700/40 bg-green-500/15 px-3 py-1 font-mono text-xs text-green-400 opacity-0">Copiado!</div>
 		</div>
 	</div>
