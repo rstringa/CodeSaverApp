@@ -2,7 +2,6 @@
 import '@components/Snippets/Snippet.css'
 import { Icon } from 'astro-icon/components'
 const { snippetId } = Astro.props
-import { useFormattedCode } from '@utils/formatCode'
 import hljs from 'highlight.js'
 import { supabase } from '@lib/supabaseClient'
 let snippet: {
@@ -13,227 +12,105 @@ let snippet: {
 	es_favorito: any
 } | null = null
 
-// Obtener la sesión de usuario
 const accessToken = Astro.cookies.get("sb-access-token")?.value;
 const refreshToken = Astro.cookies.get("sb-refresh-token")?.value;
-
 if (accessToken && refreshToken) {
-    await supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken,
-    });
+    await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
 }
-
 const { data: userSession } = await supabase.auth.getSession()
 const userSessionId = userSession?.session?.user.id
-
 if (userSessionId) {
-	const { data, error } = await supabase
-		.from('snippets')
-		.select(
-			`
-      id,
-      titulo,
-      contenido,
-      categoria_id,
-      es_favorito
-    `
-		)
-		.eq('usuario_id', userSessionId)
-		.eq('id', snippetId)
-
-	if (error) {
-		console.error('Error fetching snippets:', error)
-	} else {
-		// console.log('data', data[0])
-		snippet = data[0]
-	}
+	const { data, error } = await supabase.from('snippets').select(`id,titulo,contenido,categoria_id,es_favorito`).eq('usuario_id', userSessionId).eq('id', snippetId)
+	if (!error) snippet = data[0]
 }
-
 import { listCategoriesFromUser } from '@utils/listCategoriesFromUser'
 const categorias = await listCategoriesFromUser()
+const getCatName = (id:any)=> {
+  const c = categorias.find((x:any)=>x.id===id);
+  return !c ? 'Sin categoría' : c.nombre==='Base' ? 'Sin categoría' : c.nombre;
+}
 ---
 
 { !snippet ? (
-  <div class="flex flex-col items-center justify-center p-12 bg-slate-800/10 rounded-lg border border-slate-700 min-h-[400px]">
+  <div class="flex flex-col items-center justify-center p-12 bg-slate-800/30 rounded-[20px] border border-slate-700 min-h-[400px] backdrop-blur">
     <Icon name="warning" class="w-16 h-16 text-amber-500 mb-4 opacity-50" />
     <h2 class="text-2xl font-semibold mb-2 text-slate-300">Snippet no encontrado</h2>
     <p class="text-slate-500 text-center max-w-md">Es posible que el snippet haya sido eliminado, no tengas permisos para verlo o tu sesión haya expirado.</p>
     <a href="/" class="_btn-normal mt-8 px-8!">Volver al inicio</a>
   </div>
 ) : (
-<div
-	class="_snippet group mb-12 flex flex-col gap-3 rounded bg-slate-600/10 p-6 text-sm transition-all transition-discrete duration-300"
-	data-category_id={snippet?.categoria_id}
-	data-snippet-id={snippet?.id}
-	data-es-favorito={snippet?.es_favorito ? "true" : "false"}
-	transition:name=`animacion-${snippet?.id}`
->
-	<div class="mb-2 flex items-center justify-between gap-2">
-		<h2 class="_snippet-title p-2 text-xl font-semibold text-green-600 lg:text-3xl">
-			<a class="hover:text-green-600">{snippet?.titulo}</a>
+<div class="_snippet group relative flex flex-col overflow-hidden rounded-[20px] border border-slate-700/60 bg-slate-800/70 shadow-2xl backdrop-blur-xl" data-category_id={snippet?.categoria_id} data-snippet-id={snippet?.id} data-es-favorito={snippet?.es_favorito ? "true" : "false"} transition:name={`animacion-${snippet?.id}`}>
+	<!-- TITLEBAR - sin pill categoria -->
+	<div class="flex items-center justify-between gap-2 border-b border-slate-700/60 bg-slate-900/60 px-4 py-3">
+		<div class="flex items-center gap-1.5 shrink-0">
+			<span class="h-3 w-3 rounded-full bg-red-500/80"></span>
+			<span class="h-3 w-3 rounded-full bg-yellow-500/80"></span>
+			<span class="h-3 w-3 rounded-full bg-green-500/80"></span>
+		</div>
+		<a href="/" class="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-slate-700 bg-slate-800 px-3 py-1 font-mono text-xs text-slate-400 hover:text-slate-200">
+			<Icon name="arrowBack" class="h-3.5 w-3.5" /> Volver
+		</a>
+	</div>
+
+	<!-- TITLE ROW + ACTIONS -->
+	<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 pt-4 pb-2">
+		<h2 class="_snippet-title flex-1 min-w-0 text-xl font-black tracking-tight text-slate-100 lg:text-2xl">
+			<a class="hover:text-green-400 transition">{snippet?.titulo}</a>
 		</h2>
-
-		<!-- Editar / Eliminar -->
-		<div class="_snippet-top-actions flex items-center gap-2 transition-opacity duration-300">
-			<a
-				href="#"
-				class="_toggle-favorite _btn-normal px-2! text-slate-400 group/fav"
-				data-id={snippet?.id}
-				data-es-favorito={snippet?.es_favorito ? "true" : "false"}
-				title={snippet?.es_favorito ? "Quitar de favoritos" : "Añadir a favoritos"}
-			>
-				<Icon 
-					name={snippet?.es_favorito ? "heartFilled" : "heart"} 
-					class={`w-4 h-4 pointer-events-none transition-colors duration-300 ${snippet?.es_favorito ? "text-red-500!" : "group-hover/fav:text-red-400"}`} 
-				/>
-			</a>
-			<a
-				href="#"
-				class="_edit-snippet _btn-normal px-2! text-slate-400"
-				data-id={snippet?.id}
-				title="Editar"
-			>
-				<Icon name="edit" class="pointer-events-none h-4 w-4" />
-			</a>
-			<a
-				href="#"
-				class="_delete-snippet _btn-normal px-2! text-slate-400"
-				data-id={snippet?.id}
-				title="Eliminar"
-			>
-				<Icon name="delete" class="pointer-events-none h-4 w-4" />
-			</a>
+		<div class="_snippet-top-actions flex items-center gap-1.5 shrink-0">
+			<button type="button" class="_toggle-favorite group/fav flex h-8 w-8 items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600" data-id={snippet?.id} data-es-favorito={snippet?.es_favorito ? "true" : "false"} title={snippet?.es_favorito ? "Quitar de favoritos" : "Añadir a favoritos"}>
+				<Icon name={snippet?.es_favorito ? "heartFilled" : "heart"} class={`h-4 w-4 pointer-events-none ${snippet?.es_favorito ? "text-red-500!" : "group-hover/fav:text-red-400"}`} />
+			</button>
+			<button type="button" class="_edit-snippet flex h-8 w-8 items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-green-400" data-id={snippet?.id} title="Editar"><Icon name="edit" class="h-4 w-4 pointer-events-none" /></button>
+			<button type="button" class="_delete-snippet flex h-8 w-8 items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-red-900/50 hover:text-red-400" data-id={snippet?.id} title="Eliminar"><Icon name="delete" class="h-4 w-4 pointer-events-none" /></button>
 		</div>
 	</div>
 
-	<!-- CONFIRM DELETE SNIPPET -->
-	<div
-		class="_snippet-confirm mb-3 flex hidden flex-col items-center gap-2 rounded-md bg-slate-800/50 p-6"
-	>
-		<p
-			class="text-md mb-2 flex w-full flex-1 items-center justify-center rounded border border-amber-800 bg-amber-900/10 p-2.5 text-balance text-amber-600"
-		>
-			<Icon name="warning" class="mr-3 h-8 w-8 text-amber-600" />
-			Una vez eliminado, no podrás recuperar el snippet.
-		</p>
-		<div class="flex w-full flex-wrap items-center justify-between gap-3">
-			<a
-				href="#"
-				class="_snippet-confirm-delete _btn-normal [min-width:150px] flex-1"
-				data-id={snippet?.id}
-				title="Editar"
-			>
-				Sí, eliminar
-			</a>
-			<a
-				href="#"
-				class="_snippet-confirm-cancel _btn-normal [min-width:150px] flex-1"
-				data-id={snippet?.id}
-				title="Eliminar"
-			>
-				No, cancelar
-			</a>
+	<!-- CONFIRM -->
+	<div class="_snippet-confirm hidden mx-5 mb-3 flex-col gap-2 rounded-xl border border-amber-800/40 bg-amber-900/10 p-4">
+		<p class="flex w-full items-center justify-center gap-2 text-sm text-amber-500"><Icon name="warning" class="h-5 w-5" />Una vez eliminado, no podrás recuperarlo.</p>
+		<div class="flex w-full gap-2">
+			<button type="button" class="_snippet-confirm-delete flex-1 rounded-lg border border-red-800 bg-red-900/30 px-3 py-2 text-center text-sm font-semibold text-red-300" data-id={snippet?.id}>Sí, eliminar</button>
+			<button type="button" class="_snippet-confirm-cancel flex-1 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-center text-sm font-semibold text-slate-300" data-id={snippet?.id}>Cancelar</button>
 		</div>
 	</div>
 
-	<div
-		class="_snippet-content scrollbar-custom relative flex max-h-[100vh] min-h-[200px] flex-col overflow-auto overflow-y-auto scroll-smooth rounded bg-slate-800 p-4 px-3 lg:max-h-[150vh] lg:p-4 lg:px-6"
-	>
-		<pre
-			class="hljs _snippet-content-formated m-0 p-0 break-words whitespace-pre">
-      <code>
-        {
+	<!-- CODE -->
+	<div class="relative mx-5 flex flex-col overflow-hidden rounded-xl border border-slate-700/50 bg-slate-900/60">
+		<div class="_snippet-content scrollbar-custom relative flex min-h-[280px] flex-col overflow-auto">
+			<pre class="hljs _snippet-content-formated m-0 bg-transparent p-5 font-mono text-[13px] leading-7 whitespace-pre break-words"><code>{
           (() => {
-            if (!snippet?.contenido) return <div>No hay contenido</div>;
-            try {
-              return <div set:html={ hljs.highlightAuto(snippet.contenido).value } /> 
-            } catch (e) {
-              return <div>{snippet.contenido}</div>;
-            }
+            if (!snippet?.contenido) return <div class="text-slate-500">No hay contenido</div>;
+            try { return <div set:html={ hljs.highlightAuto(snippet.contenido).value } /> } catch(e){ return <div>{snippet.contenido}</div>; }
           })()
-        }
-        </code>
-          
-       
-      </pre>
-
-		<div class="_snippet-content-unformated overflow-hidden">
-			{
-				/* <pre class="hljs m-0 p-0 whitespace-pre-line break-words" contenteditable="true">
-        <code>
-         { snippet.contenido }
-        </code>
-      </pre> */
-			}
-			<textarea
-				class="scrollbar-custom h-full min-h-72 w-full text-slate-100 outline-0"
-				value={snippet?.contenido}>{snippet?.contenido}</textarea
-			>
+        }</code></pre>
+			<div class="_snippet-content-unformated hidden p-3">
+				<textarea class="scrollbar-custom min-h-72 w-full bg-transparent font-mono text-[13px] leading-6 text-slate-100 outline-0" value={snippet?.contenido}>{snippet?.contenido}</textarea>
+			</div>
+		</div>
+		<div class="_copy-snippet-actions">
+			<button type="button" class="_copy-snippet group-[.is-editing]:hidden absolute bottom-5 right-3 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-slate-200 hover:bg-slate-700 transition _btn-normal px-2! py-2!" data-snippet-id={snippet?.id} title="Copiar"><Icon name="copy" class="h-4 w-4 pointer-events-none" /></button>
+			<div class="_copy-snippet-message pointer-events-none absolute bottom-5 right-12 flex items-center rounded-full border border-green-700/40 bg-green-500/15 px-3 py-1 font-mono text-xs text-green-400 opacity-0">Copiado!</div>
 		</div>
 	</div>
 
-	<!-- CATEGORIES -->
-	<div
-		class="_snippet-categories mt-1 hidden w-full flex-wrap items-center justify-between gap-2 group-[.is-editing]:flex"
-	>
-		<select
-			class="_snippet-category-select bg-trasnparent mb-4 w-full rounded border border-slate-600 p-3 text-slate-200 focus:ring-2 focus:ring-green-800 focus:outline-none"
-			data-snippet-id={snippet?.id}
-		>
-			{/* <option value="0">Todas las categorías</option> */}
-			{
-				categorias.map((category) => {
+	<div class="_snippet-categories hidden group-[.is-editing]:flex mx-5 mt-3">
+		<select class="_snippet-category-select w-full rounded-xl border border-slate-600 bg-slate-900 p-3 font-mono text-sm text-slate-200 focus:border-green-700 focus:ring-2 focus:ring-green-800/30 focus:outline-none" data-snippet-id={snippet?.id}>
+			{categorias.map((category) => {
 					const nombre = category.nombre === 'Base' ? 'Sin categoría' : category.nombre
-					return (
-						<option
-							class="bg-slate-900 text-slate-400"
-							selected={snippet?.categoria_id === category.id}
-							value={category.id}
-						>
-							{nombre}
-						</option>
-					)
-				})
-			}
+					return <option class="bg-slate-900 text-slate-400" selected={snippet?.categoria_id === category.id} value={category.id}>{nombre}</option>
+				})}
 		</select>
 	</div>
 
-	<div class="_copy-snippet-actions relative z-5">
-		<a
-			href="#"
-			class="_copy-snippet _btn-normal absolute right-3 bottom-6 px-2! text-slate-400 group-[.is-editing]:hidden"
-			data-snippet-id={snippet?.id}
-			title="Copiar código"
-		>
-			<Icon name="copy" class="pointer-events-none h-6 w-6" />
-		</a>
-		<div
-			class="_copy-snippet-message _btn-normal //[&.is-visible]:opacity-100 pointer-events-none absolute right-6 bottom-7 border-0! bg-green-800 opacity-0"
-		>
-			Snippet copiado al portapapeles
-		</div>
+	<div class="_snippet-edit-actions hidden group-[.is-editing]:flex mx-5 mt-3 mb-4 gap-2">
+		<button type="button" class="_save-changes flex-1 rounded-xl bg-green-600 px-4 py-3 text-center text-sm font-bold text-white hover:bg-green-500" data-id={snippet?.id}>Guardar cambios</button>
+		<button type="button" class="_cancel-changes flex-1 rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-center text-sm font-semibold text-slate-300" data-id={snippet?.id}>Descartar</button>
 	</div>
 
-	<div
-		class="_snippet-edit-actions mt-1 flex w-full flex-wrap items-center justify-between gap-3"
-	>
-		<a
-			href="#"
-			class="_save-changes _btn-featured [min-width:150px] flex-1 whitespace-nowrap"
-			data-id={snippet?.id}
-			title="Editar"
-		>
-			Guardar cambios
-		</a>
-		<a
-			href="#"
-			class="_cancel-changes _btn-normal [min-width:150px] flex-1 whitespace-nowrap"
-			data-id={snippet?.id}
-			title="Eliminar"
-		>
-			Descartar cambios
-		</a>
+	<div class="mt-4 flex items-center justify-between border-t border-slate-700/60 bg-slate-900/40 px-5 py-3 text-xs font-mono text-slate-400">
+		<span class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-green-500"></span>{getCatName(snippet?.categoria_id)} {snippet?.es_favorito && <span class="text-red-400">• ♥ favorito</span>}</span>
+		<span class="hidden sm:inline text-slate-500">JetBrains Mono • highlight.js</span>
 	</div>
 </div>
 ) }

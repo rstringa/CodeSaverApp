@@ -10,20 +10,26 @@ interface Snippet {
   created_at: string
 }
 
+const accessToken = Astro.cookies.get("sb-access-token")?.value;
+const refreshToken = Astro.cookies.get("sb-refresh-token")?.value;
+if (accessToken && refreshToken) {
+  await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
+}
 const { data: session } = await supabase.auth.getSession()
 const userId = session?.session?.user.id
-if (!userId) throw new Error('Usuario no autenticado')
 
 let lastSnippets:any = [];
-const { data, error } = await supabase
-.from('snippets')
-  .select('*')
-  .eq('usuario_id', userId)
-  .order('created_at', { ascending: false })
-  .limit(10)
+if (userId) {
+  const { data, error } = await supabase
+  .from('snippets')
+    .select('*')
+    .eq('usuario_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(10)
 
-if (error) console.error(error);
-lastSnippets = data;
+  if (error) console.error(error);
+  else lastSnippets = data;
+}
 
 ---
 <aside class="_sidebar 

@@ -5,192 +5,138 @@ const { snippetsWithCategories } = Astro.props;
 import hljs from 'highlight.js';
 import {listCategoriesFromUser} from '@utils/listCategoriesFromUser';  
 const categorias = await listCategoriesFromUser();
-
+const getCatName = (id:any) => {
+  const c = categorias.find((x:any)=> x.id===id);
+  if(!c) return 'Sin categoría';
+  return c.nombre === 'Base' ? 'Sin categoría' : c.nombre;
+}
 ---
 
-<ul class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"  style="content-visibility: auto;">
+<ul class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3" style="content-visibility: auto;">
     {
       snippetsWithCategories.length === 0 && (
-        <div class="flex flex-col gap-2 items-center justify-center w-full h-full">
-          <Icon name="empty" class="w-20 h-20 text-slate-500" />
+        <div class="col-span-full flex flex-col gap-2 items-center justify-center w-full py-12 rounded-[20px] border border-dashed border-slate-700 bg-slate-800/30">
+          <Icon name="folderCode" class="w-12 h-12 text-slate-600" />
           <p class="text-slate-500 text-sm">No tienes snippets creados</p>
         </div>
       )
     }
     {
       snippetsWithCategories.map((snippet) => {
+        const catName = getCatName(snippet.categoria_id);
         return (
           <li
-            class="_snippet group flex flex-col gap-2 rounded bg-slate-600/10 p-4 lg:p-6 text-sm transition-all transition-discrete duration-300"
+            class="_snippet group relative flex h-full flex-col overflow-hidden rounded-[8px] border border-slate-800/60 bg-slate-800/70 shadow-xl backdrop-blur-xl transition-all duration-300 hover:border-slate-900 hover:shadow-2xl"
             data-category_id={snippet.categoria_id}
             data-snippet-id={snippet.id}
             data-es-favorito={snippet.es_favorito ? "true" : "false"}
-            transition:name=`animacion-${snippet.id}`
+            transition:name={`animacion-${snippet.id}`}
           >
-            <div class="flex flex-wrap justify-between items-center gap-2 mb-1.5 ml-2">
-              <h2 class="_snippet-title flex text-xl items-center font-semibold w-full lg:max-w-80 order-2 lg:order-0 ">
-                <a href={`/snippet/${snippet.id}`} >{snippet.titulo}</a>
-                <Icon name="arrowRight" class="w-4 h-4 ml-1 text-slate-300 translate-y-0.75 scale-110 shrink-0" />    
+            {/* TITLEBAR - dots + actions (sin pill categoria) */}
+            <div class="flex items-center justify-between gap-2 border-b border-slate-800/60 bg-slate-900/60 px-4 py-3">
+              <div class="flex items-center gap-1.5 shrink-0">
+                <span class="h-3 w-3 rounded-full bg-red-500/80"></span>
+                <span class="h-3 w-3 rounded-full bg-yellow-500/80"></span>
+                <span class="h-3 w-3 rounded-full bg-green-500/80"></span>
+              </div>
+              <div class="_snippet-top-actions flex items-center gap-1 shrink-0">
+                <button type="button" class="_toggle-favorite group/fav flex h-7 w-7 items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-red-400 transition" data-id={snippet.id} data-es-favorito={snippet.es_favorito ? "true" : "false"} title={snippet.es_favorito ? "Quitar de favoritos" : "Añadir a favoritos"}>
+                  <Icon name={snippet.es_favorito ? "heartFilled" : "heart"} class={`h-3.5 w-3.5 pointer-events-none ${snippet.es_favorito ? "text-red-500!" : "group-hover/fav:text-red-400"}`} />
+                </button>
+                <a href={`/snippet/${snippet.id}`} class="_link-snippet flex h-7 w-7 items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-slate-200 transition" data-id={snippet.id} data-astro-prefetch="viewport" title="Ver detalle">
+                  <Icon name="expand2" class="h-3.5 w-3.5 pointer-events-none" />
+                </a>
+                <button type="button" class="_edit-snippet flex h-7 w-7 items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-green-400 transition" data-id={snippet.id} title="Editar">
+                  <Icon name="edit" class="h-3.5 w-3.5 pointer-events-none" />
+                </button>
+                <button type="button" class="_delete-snippet flex h-7 w-7 items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-red-900/50 hover:text-red-400 transition" data-id={snippet.id} title="Eliminar">
+                  <Icon name="delete" class="h-3.5 w-3.5 pointer-events-none" />
+                </button>
+              </div>
+            </div>
+
+            {/* TITLE ROW */}
+            <div class="px-4 pt-3 pb-2 flex items-center gap-2 min-w-0">
+              <h2 class="_snippet-title flex-1 min-w-0 truncate text-[16px] font-bold tracking-tight text-slate-100">
+                <a href={`/snippet/${snippet.id}`} class="truncate hover:text-green-400 transition" title={snippet.titulo}>{snippet.titulo}</a>
               </h2>
-
-              <!-- Editar / Eliminar -->
-              <div class="_snippet-top-actions transition-opacity duration-300 flex gap-2 items-center ml-auto">
-                <a
-                  href="#"
-                  class="_toggle-favorite _btn-normal px-2! text-slate-400 group/fav"
-                  data-id={snippet.id}
-                  data-es-favorito={snippet.es_favorito ? "true" : "false"}
-                  title={snippet.es_favorito ? "Quitar de favoritos" : "Añadir a favoritos"}
-                >
-                  <Icon 
-                    name={snippet.es_favorito ? "heartFilled" : "heart"} 
-                    class={`w-4 h-4 pointer-events-none transition-colors duration-300 ${snippet.es_favorito ? "text-red-500!" : "group-hover/fav:text-red-400"}`} 
-                  />
-                </a>
-                <a
-                  href={`/snippet/${snippet.id}`}
-                  class="_link-snippet _btn-normal px-2! text-slate-400"
-                  data-id={snippet.id}
-                  data-astro-prefetch="viewport"
-                  title="Enlace al snippet"
-                >
-                  <Icon name="expand2" class="w-4 h-4 pointer-events-none" />
-                </a> 
-                <a
-                  href="#"
-                  class="_edit-snippet _btn-normal px-2! text-slate-400"
-                  data-id={snippet.id}
-                  title="Editar"
-                >
-                  <Icon name="edit" class="w-4 h-4 pointer-events-none" />
-                </a>
-                <a
-                  href="#"
-                  class="_delete-snippet _btn-normal px-2! text-slate-400"
-                  data-id={snippet.id}
-                  title="Eliminar"
-                >
-                  <Icon name="delete" class="w-4 h-4 pointer-events-none" />
-                </a>
-              </div>
+              <Icon name="arrowRight" class="h-3.5 w-3.5 shrink-0 text-slate-500 group-hover:text-green-400 transition" />
             </div>
 
-            <!-- CONFIRM DELETE SNIPPET -->
-            <div
-              class="_snippet-confirm flex flex-col gap-2 items-center mb-3 fade-hidden hidden bg-slate-800/50 p-6 rounded-md"
-            >
-              <p class="flex flex-1 w-full justify-center items-center text-md text-balance bg-amber-900/10 text-amber-600 mb-2 border border-amber-800 rounded p-2.5">
-                <Icon name="warning" class="w-8 h-8 mr-3 text-amber-600" />
-                Una vez eliminado, no podrás recuperar el snippet.
+            <!-- CONFIRM DELETE -->
+            <div class="_snippet-confirm hidden flex-col gap-2 items-center mx-3 mb-2 rounded-xl border border-amber-800/40 bg-amber-900/10 p-4">
+              <p class="flex w-full items-center justify-center gap-2 text-center text-sm text-amber-500">
+                <Icon name="warning" class="h-5 w-5 shrink-0" />
+                Una vez eliminado, no podrás recuperarlo.
               </p>
-              <div class="flex flex-wrap gap-3 items-center justify-between w-full">
-                <a
-                  href="#"
-                  class="_snippet-confirm-delete _btn-normal flex-1 [min-width:150px]"
-                  data-id={snippet.id}
-                  title="Editar"
-                >
-                  Sí, eliminar
-                </a>
-                <a
-                  href="#"
-                  class="_snippet-confirm-cancel _btn-normal flex-1 [min-width:150px]"
-                  data-id={snippet.id}
-                  title="Eliminar"
-                >
-                  No, cancelar
-                </a>
+              <div class="flex w-full gap-2">
+                <button type="button" class="_snippet-confirm-delete flex-1 rounded-lg border border-red-800 bg-red-900/30 px-3 py-2 text-center text-sm font-semibold text-red-300 hover:bg-red-900/50" data-id={snippet.id}>Sí, eliminar</button>
+                <button type="button" class="_snippet-confirm-cancel flex-1 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-center text-sm font-semibold text-slate-300 hover:bg-slate-700" data-id={snippet.id}>Cancelar</button>
               </div>
             </div>
+
             <div class="_snippet-close-expanded hidden text-slate-400 hover:text-green-500"><Icon name="close" class="w-8 h-8" /></div>
-            <div
-              tabindex="0"
-              class="_snippet-content 
-              will-change-auto overflow-x-hidden relative scrollbar-custom bg-slate-800 p-2 lg:p-4 rounded flex flex-col min-h-[200px] max-h-60 lg:max-h-90 overflow-y-auto scroll-smooth
-              
-              ">
-             
-              <pre class="hljs _snippet-content-formated m-0 p-0 whitespace-pre break-words">
-              
-                {
-                  (() => {
-                    if (!snippet.contenido) return <div>No hay contenido</div>;
-                    try {
-                      return <div set:html={ hljs.highlightAuto(snippet.contenido).value } /> 
-                    } catch (e) {
-                      return <div>{snippet.contenido}</div>;
-                    }
-                  })()
-                }
- 
-                  
-               
-              </pre>
-    
 
-              <div class="_snippet-content-unformated overflow-hidden">
-
-               <textarea class="w-full h-full min-h-72 text-slate-100 outline-0 scrollbar-custom" value={snippet.contenido}>{snippet.contenido}</textarea>
-              </div>
-
-            </div>
-
-            <!-- CATEGORIES -->
-              <div class="_snippet-categories fade-hidden hidden group-[.is-editing]:flex flex-wrap gap-2 items-center justify-between w-full mt-1"> 
-                <select class="_snippet-category-select bg-trasnparent w-full mb-4 rounded border border-slate-600 p-3 text-slate-200 focus:ring-2 focus:ring-green-800 focus:outline-none" data-snippet-id={snippet.id}>
-                  {/* <option value="0">Todas las categorías</option> */}
+            {/* CODE WINDOW */}
+            <div class="relative mx-3 flex flex-col overflow-hidden rounded-xl border border-slate-700/50 bg-slate-900/60">
+              <div tabindex="0" class="_snippet-content scrollbar-custom relative flex min-h-[180px] max-h-60 flex-col overflow-y-auto overflow-x-hidden lg:max-h-80">
+                <pre class="hljs _snippet-content-formated m-0 bg-transparent p-4 font-mono text-[12px] leading-6 whitespace-pre break-words lg:p-5 lg:text-[13px]">
                   {
-                    categorias.map((category) => {
-                      const nombre = category.nombre === "Base" ? "Sin categoría" : category.nombre;
-                      return (
-                        <option
-                        class="bg-slate-900 text-slate-400"
-                        selected={snippet.categoria_id === category.id}
-                        value={category.id}>{nombre}
-                        </option>
-                      );
-                    })
-                  } 
-                </select>
+                    (() => {
+                      if (!snippet.contenido) return <div class="text-slate-500 p-2">No hay contenido</div>;
+                      try {
+                        return <div set:html={ hljs.highlightAuto(snippet.contenido).value } />
+                      } catch (e) {
+                        return <div>{snippet.contenido}</div>;
+                      }
+                    })()
+                  }
+                </pre>
+                <div class="_snippet-content-unformated hidden overflow-hidden p-3">
+                  <textarea class="min-h-48 w-full bg-transparent font-mono text-[13px] leading-6 text-slate-100 outline-0 scrollbar-custom" value={snippet.contenido}>{snippet.contenido}</textarea>
+                </div>
               </div>
-            
-            <div class="_copy-snippet-actions relative z-5">
-              <a href="#" class="_copy-snippet group-[.is-editing]:hidden _btn-normal 
-              absolute bottom-5 right-3  
-              px-2! text-slate-400 bg-slate-800" 
-              data-snippet-id={snippet.id}
-              title="Copiar código">
-                <Icon name="copy" class="w-4 h-4 pointer-events-none" />
-              </a>
-              <div class="_copy-snippet-message
-              absolute bottom-5 right-3 _btn-normal bg-green-800 border-0! opacity-0 pointer-events-none
-              //[&.is-visible]:opacity-100
-     
-              ">Snippet copiado al portapapeles
-              </div> 
+              {/* copy overlay - igual a vercel original */}
+              <div class="_copy-snippet-actions">
+                <button type="button" class="_copy-snippet group-[.is-editing]:hidden absolute bottom-5 right-3 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-slate-200 hover:bg-slate-700 transition _btn-normal px-2! py-2!" data-snippet-id={snippet.id} title="Copiar código">
+                  <Icon name="copy" class="h-4 w-4 pointer-events-none" />
+                </button>
+                <div class="_copy-snippet-message pointer-events-none absolute bottom-5 right-12 flex items-center rounded-full border border-green-700/40 bg-green-500/15 px-3 py-1 font-mono text-xs text-green-400 opacity-0 transition">Copiado!</div>
+              </div>
             </div>
 
-            <div class="_snippet-edit-actions flex flex-wrap gap-3 mt-1 items-center justify-between w-full">
-
-              <a
-                href="#"
-                class="_save-changes _btn-featured flex-1 [min-width:150px] whitespace-nowrap"
-                data-id={snippet.id}
-                title="Editar"
-              >
-                Guardar cambios
-              </a>
-              <a
-                href="#"
-                class="_cancel-changes _btn-normal flex-1 [min-width:150px]  whitespace-nowrap"
-                data-id={snippet.id}
-                title="Eliminar"
-              >
-                Descartar cambios
-              </a>
-
+            <!-- CATEGORIES SELECT (editing) -->
+            <div class="_snippet-categories hidden group-[.is-editing]:flex mx-3 mt-2 flex-wrap gap-2">
+              <select class="_snippet-category-select w-full rounded-xl border border-slate-600 bg-slate-900 p-3 font-mono text-sm text-slate-200 focus:border-green-700 focus:ring-2 focus:ring-green-800/30 focus:outline-none" data-snippet-id={snippet.id}>
+                {
+                  categorias.map((category) => {
+                    const nombre = category.nombre === "Base" ? "Sin categoría" : category.nombre;
+                    return (
+                      <option class="bg-slate-900 text-slate-400" selected={snippet.categoria_id === category.id} value={category.id}>{nombre}</option>
+                    );
+                  })
+                }
+              </select>
             </div>
-       
+
+            {/* EDIT ACTIONS */}
+            <div class="_snippet-edit-actions hidden group-[.is-editing]:flex mx-3 mt-2 mb-3 gap-2">
+              <button type="button" class="_save-changes flex-1 rounded-xl bg-green-600 px-4 py-2.5 text-center text-sm font-bold text-white shadow hover:bg-green-500 transition" data-id={snippet.id}>Guardar cambios</button>
+              <button type="button" class="_cancel-changes flex-1 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2.5 text-center text-sm font-semibold text-slate-300 hover:bg-slate-700 transition" data-id={snippet.id}>Descartar</button>
+            </div>
+
+            <div class="flex-1 min-h-3" aria-hidden="true"></div>
+
+            {/* BOTTOM BAR */}
+            <div class="mt-3 flex items-center justify-between border-t border-slate-700/60 bg-slate-900/40 px-4 py-2.5 text-xs">
+              <span class="flex items-center gap-2 truncate font-mono text-slate-400">
+                <span class="h-2 w-2 shrink-0 rounded-full bg-green-500"></span>
+                <span class="truncate">{catName}</span>
+                {snippet.es_favorito && <span class="hidden sm:inline text-red-400">• ♥ favorito</span>}
+              </span>
+              <span class="hidden font-mono text-slate-500 sm:inline">⌘K • {catName}</span>
+              <span class="font-mono text-[11px] text-slate-600 sm:hidden">{snippet.titulo.slice(0,12)}</span>
+            </div>
           </li>
         );
       })
@@ -198,128 +144,19 @@ const categorias = await listCategoriesFromUser();
   </ul>
 
 <style>
-._snippet {
-  content-visibility: auto;
-  scroll-margin-top: 200px;
-}
-._snippet.is-expanded {
-  position: relative;
-  z-index: 50;
-  box-shadow: 0 0 100vw rgba(0, 0, 0, 0.55);
-} 
-._snippet.is-expanded ._snippet-content {
-  transition: all 1s ease-in-out;
-  width: 90vw;
-  overflow: auto;
-  height: 90vh; 
-  max-height: 90vh;
-  padding: 60px 5%;
-  position: fixed;
-  top:7vh;
-  left: 5vw;
-  border-radius: 8px;
-  opacity: 1;
-  @starting-style{
-   top:0;
-   opacity: 0;
-  }
-}
-._snippet.is-expanded ._snippet-content pre{
-  white-space:break-spaces; 
-}
-._snippet.is-expanded ._snippet-title {
-  position: fixed;
-    z-index: 50;
-    top: calc(2vh);
-    left: calc(5vw);
-    height: -moz-fit-content;
-    height: fit-content;
-    max-height: 120px;
-    padding: 12px 5% 12px 5%;
-    background-color: var(--color-slate-800);
-    pointer-events: none;
-    font-size: var(--text-xl);
-    width: calc(100% - 10%);
-    max-width: none;
-    border-bottom: 1px solid var(--color-slate-700);
-    border-radius: 8px 8px 0 0;
-    padding-right: 60px;
+._snippet { content-visibility: auto; scroll-margin-top: 200px; }
+._snippet.is-expanded { position: relative; z-index: 50; box-shadow: 0 0 100vw rgba(0,0,0,0.55); }
+._snippet.is-expanded ._snippet-content { transition: all 1s ease-in-out; width: 90vw; overflow: auto; height: 90vh; max-height: 90vh; padding: 60px 5%; position: fixed; top:7vh; left: 5vw; border-radius: 16px; opacity: 1; background: var(--color-slate-900); border:1px solid var(--color-slate-700); }
+._snippet.is-expanded ._snippet-content pre{ white-space:break-spaces; }
+._snippet.is-expanded ._snippet-close-expanded { display:flex; position:fixed; z-index:55; top:calc(2vh + 12px); right:calc(5vw + 20px); cursor:pointer; }
+._snippet.is-expanded ._copy-snippet{ position:fixed; z-index:51; bottom:calc(5vh + 20px); right:calc(5vw + 20px); }
+._snippet.is-expanded ._copy-snippet-message{ position:fixed; z-index:52; bottom:calc(5vh + 20px); right:calc(5vw + 60px); }
+._snippet.is-edited { border-color: var(--color-green-700); background-color: color-mix(in oklab, var(--color-green-500) 8%, var(--color-slate-800)); }
+body.snippet-is-expanded{ overflow:hidden; }
+body.snippet-is-expanded:after{ content:""; position:fixed; inset:0; background: rgba(0,0,0,0.35); backdrop-filter: blur(10px); z-index:5; }
+</style>
 
-    /* display: -webkit-box; */
-    /* -webkit-line-clamp: 1; */
-    /* -webkit-box-orient: vertical; */
-    /* overflow: hidden; */
-    /* text-overflow: ellipsis;*/
-  & a {
-    color:var(--color-slate-400)!important;
-  }
-  & svg {
-    display: none;
-  }
-}
-._snippet.is-expanded ._snippet-close-expanded {
-  display: flex;
-  position: fixed;
-  z-index: 55;
-  top: calc(2vh + 12px);
-  right: calc(5vw + 20px);
-  cursor: pointer;
-}
-._snippet.is-expanded ._copy-snippet{
-  position: fixed;
-  z-index: 51;
-  bottom: calc(5vh + 20px);
-  right: calc(5vw + 20px);
-}
-._snippet.is-expanded ._snippet-content-inner {
-  overflow: auto;
-  margin-right: 0px;
-}
-._snippet.is-expanded  ._copy-snippet-message {
-  position: fixed;
-  z-index: 52;
-  bottom: calc(5vh + 20px);
-  right: calc(5vw + 60px);
-}
-._snippet.is-edited {
-
-  border:1px solid var(--color-green-700);
-  background-color: color-mix(in oklab, var(--color-green-500) 2%, transparent);
-}
-/* ._snippet ._snippet-content:focus {
-  position:relative;
-}
-._snippet ._snippet-content:focus {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 650px;
-}
-._snippet:nth-child(3n) ._snippet-content:focus{
-  top:0;
-  right: 0;
-  left: -180px;
- 
-} */
-body.snippet-is-expanded {
-  overflow: hidden;
-}
-body.snippet-is-expanded:after {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.15);
-  z-index: 5;
-  backdrop-filter: blur(10px);
-}
-
-</style>  
-
-<script>
-  import "./snippets.ts";
-  import "./editSnippet.ts";
-</script>
-  
+  <script>
+    import "./snippets.ts";
+    import "./editSnippet.ts";
+  </script>

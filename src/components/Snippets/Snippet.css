@@ -1,17 +1,13 @@
 ._snippet {
     outline: none;
-    border: 1px dashed transparent;
     transition: all 0.25s;
     transition-behavior: allow-discrete;
-        /* @starting-style {
-           opacity: 0;  
-        } */
   }
   ._snippet ._snippet-top-actions {
-    opacity: 0.4; 
+    opacity: 0.85;
   }
-  ._snippet:hover ._snippet-top-actions {
-    opacity: 1;
+  ._snippet:hover {
+    border-color: color-mix(in oklab, var(--color-slate-600) 70%, transparent);
   }
    ._snippet ._snippet-content pre div {
     background: transparent !important;
@@ -19,7 +15,9 @@
     outline: none;
   } 
   ._snippet.is-editing {
-    border: 1px dashed var(--color-slate-600);
+    border-color: var(--color-green-700) !important;
+    border-style: dashed !important;
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-green-500) 20%, transparent);
   }
   ._snippet.is-editing ._snippet-content {
     background-color: var(--color-slate-900);
@@ -93,9 +91,11 @@
   }
   /* Copy Snippet */
   ._snippet ._copy-snippet-message.is-visible {
-    opacity: 100;
-    right: 55px; 
-    padding-block: 0.45rem;
-    transition: right 0.75s ease-in, opacity 0.25s ease-in 0.3s;
-    transition-behavior: allow-discrete; 
-  }  
+    opacity: 1 !important;
+    display: flex !important;
+    transition: opacity 0.25s ease-in;
+  }
+  ._snippet .hljs { background: transparent !important; }
+  ._snippet pre div { background: transparent !important; }
+  ._snippet.is-editing ._snippet-content-unformated { display: block !important; }
+  ._snippet:not(.is-editing) ._snippet-content-unformated { display: none !important; }  
