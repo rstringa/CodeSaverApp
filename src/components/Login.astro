@@ -4,6 +4,9 @@ const title = 'Ingresar a tu cuenta'
 // Get the error message from the query parameter
 const error = Astro.url.searchParams.get('error')
 const loginMessage = Astro.url.searchParams.get('message')
+const isDemo = Astro.url.searchParams.get('demo') === '1'
+const demoEmail = isDemo ? 'userdemo@codesaverapp.com' : ''
+const demoPass = isDemo ? 'userdemo' : ''
 ---
 
 <main class="flex flex-col items-center justify-center p-4 py-8 lg:min-h-[calc(100dvh-100px)]">
@@ -11,6 +14,7 @@ const loginMessage = Astro.url.searchParams.get('message')
 		<h1 class="mb-0 w-full text-2xl leading-normal font-semibold text-slate-100">
 			{title}
 		</h1>
+		{isDemo && <div class="rounded-md bg-green-500/15 border border-green-700/40 p-3 text-sm text-green-300">Credenciales demo precargadas — solo presioná Ingresar</div>}
 		<p class="-mt-1 mb-2 w-full text-sm text-zinc-500 dark:text-zinc-400">
 			Eres nuevo en la aplicación? <a href="/register" class="text-green-600">Crea tu cuenta</a>
 		</p>
@@ -36,6 +40,7 @@ const loginMessage = Astro.url.searchParams.get('message')
 					type="email"
 					name="email"
 					autocomplete="email"
+					value={demoEmail}
 					class="bg-trasnparent mb-4 rounded border border-slate-600 p-3 text-white focus:ring-2 focus:ring-green-800 focus:outline-none"
 				/>
 			</div>
@@ -47,6 +52,7 @@ const loginMessage = Astro.url.searchParams.get('message')
 						type="password"
 						name="password"
 						autocomplete="current-password"
+						value={demoPass}
 						class="bg-transparent mb-4 rounded border border-slate-600 p-3 text-white focus:ring-2 focus:ring-green-800 focus:outline-none w-full"
 					/>
 					<button

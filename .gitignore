@@ -3,7 +3,10 @@ dist/
 # generated types
 .astro/
 .vercel/
-.opencode/
+.opencode/*
+.agents/*
+.claude/*
+
 # dependencies
 node_modules/
 
