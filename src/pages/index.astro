@@ -1,11 +1,10 @@
 ---
 import LayoutBase from '@layouts/LayoutBase.astro'
 import Sidebar from '@components/Sidebar/Sidebar.astro'
-import Welcome from '@components/Welcome.astro'
 import ShowSnippets from '@components/Snippets/ShowSnippets.astro'
 import Search from '@components/Search.astro'
-//import { userLoggedIn, userData } from '@utils/userLoggedIn'
 import CreateSnippet from '@components/Snippets/CreateSnippet.astro'
+import Landing from '@components/Landing/Landing.astro'
 
 import { supabase } from '@lib/supabaseClient'
 
@@ -16,53 +15,27 @@ const userSessionId = userSession?.session?.user.id
 
 <>
 	<LayoutBase>
-		<main
-			class={`
-				relative grid-cols-[1fr] grid
-				lg:grid-cols-[270px_1fr]
-				min-h-[calc(100dvh-100px)]
-				${userSessionId ? 'logged-in' : 'logged-out'}
-			  `}
-		>
-			<Sidebar />
-
-			<div class="_content max-[100vw] h-full p-6 pb-12">
-				<div class="_top mb-4 flex flex-row items-start justify-between gap-4 lg:flex-row">
-					<div class="flex gap-2 justify-between items-center w-full">
-						{
-							userSessionId ? (
-						
-								<Search />
-							) : null
-						}
+		{!userSessionId ? (
+			<Landing />
+		) : (
+			<main class="relative grid min-h-[calc(100dvh-100px)] grid-cols-[1fr] lg:grid-cols-[270px_1fr]">
+				<Sidebar />
+				<div class="_content max-[100vw] h-full p-6 pb-12">
+					<div class="_top mb-4 flex flex-row items-start justify-between gap-4 lg:flex-row">
+						<div class="flex w-full items-center justify-between gap-2">
+							<Search />
+						</div>
+						<div class="mb-3">
+							<a class="_new_snippet _btn-featured font-semibold" href="#">+ Crear Snippet</a>
+						</div>
 					</div>
-					<div class=`mb-3 ${!userSessionId ? "hidden lg:flex" : ""} `>
-						<a 
-							class=`_new_snippet _btn-featured font-semibold ${!userSessionId
-            ? "pointer-events-none opacity-50" : "" }`
-							href="#"
-							>+ Crear Snippet
-						</a>
-					</div>
-				</div>
-
-				{!userSessionId ? 
-					<Welcome />  
-					:
 					<ShowSnippets />
 					<CreateSnippet />
-				}
-			</div>
-		</main>
+				</div>
+			</main>
+		)}
 	</LayoutBase>
 </>
-<style>
-	body.logged-out ._top {
-		@media (max-width: 1024px) {
-			flex-direction: column;
-		}
-	}
-</style>
 
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
@@ -73,7 +46,6 @@ const userSessionId = userSession?.session?.user.id
 		if (snippetElement) {
 			snippetElement.classList.add('is-edited');
 			snippetElement.scrollIntoView({ behavior: 'smooth' });
-
 			sessionStorage.removeItem('edited-snippet');
 			setTimeout(() => {
 				snippetElement.classList.remove('is-edited');
@@ -81,5 +53,4 @@ const userSessionId = userSession?.session?.user.id
 		}
 	}
 	});
-
 </script>

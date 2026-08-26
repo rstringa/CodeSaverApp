@@ -1,0 +1,124 @@
+---
+import { Icon } from 'astro-icon/components'
+---
+
+<section class="hero relative overflow-hidden border-b border-slate-800 bg-slate-900">
+  <!-- mesh + grid + grain -->
+  <div class="pointer-events-none absolute inset-0">
+    <div class="absolute inset-0 opacity-[0.07]" style="background-image: linear-gradient(to right, rgb(51 65 85 / 1) 1px, transparent 1px), linear-gradient(to bottom, rgb(51 65 85 / 1) 1px, transparent 1px); background-size: 32px 32px;"></div>
+    <div class="absolute -top-32 -right-32 h-[600px] w-[700px] rounded-full bg-green-500/20 blur-[80px]"></div>
+    <div class="absolute -bottom-40 -left-40 h-[500px] w-[600px] rounded-full bg-emerald-500/15 blur-[70px]"></div>
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22 opacity=%220.4%22/></svg>')"></div>
+  </div>
+
+  <div class="relative mx-auto max-w-[1280px] px-4 py-10 sm:px-6 lg:px-8 lg:py-16">
+    <div class="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+      <!-- left -->
+      <div class="reveal">
+        <div class="mb-4 inline-flex items-center gap-2 rounded-full border border-green-700/40 bg-green-500/10 px-3 py-1 text-xs font-medium tracking-wide text-green-400">
+          <span class="h-2 w-2 animate-pulse rounded-full bg-green-500"></span>
+          NUEVO — Búsqueda instantánea & categorías
+          <Icon name="arrowRight" class="h-3 w-3" />
+        </div>
+        <h1 class="text-[clamp(2.2rem,6vw,4.2rem)] font-black leading-[0.9] tracking-tighter text-slate-100">
+          Tus
+          <span class="relative inline-block">
+            <span class="relative z-10 bg-gradient-to-r from-green-400 to-emerald-300 bg-clip-text text-transparent">snippets</span>
+            <span class="absolute bottom-1 left-0 h-3 w-full bg-green-500/20 -rotate-1"></span>
+          </span>
+          <br />
+          siempre a
+          <span class="font-mono text-[0.85em] font-bold tracking-tight text-green-500">mano<span class="animate-pulse">_</span></span>
+        </h1>
+        <p class="mt-5 max-w-[52ch] text-pretty text-base leading-relaxed text-slate-400 sm:text-lg">
+          Guarda, organiza y encuentra tu código en menos de 2 segundos. Sin carpetas perdidas, sin Gist olvidados. Todo en un mismo lugar, privado y ultrarrápido.
+        </p>
+        <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+          <a href="/register" class="group inline-flex items-center justify-center gap-2 rounded-xl bg-green-600 px-7 py-3.5 text-sm font-bold text-white shadow-[0_0_30px_rgba(34,197,94,0.35)] transition hover:bg-green-500">
+            Empezar gratis
+            <Icon name="arrowRight" class="h-4 w-4 transition group-hover:translate-x-0.5" />
+          </a>
+          <a href="#demo" class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-800/60 px-7 py-3.5 text-sm font-semibold text-slate-200 backdrop-blur transition hover:border-slate-600 hover:bg-slate-800">
+            <span class="h-2 w-2 rounded-full bg-green-500"></span>
+            Ver demo
+          </a>
+          <span class="hidden items-center gap-2 text-xs text-slate-500 sm:inline-flex">
+            <Icon name="copy" class="h-4 w-4" /> Sin tarjeta • 30s
+          </span>
+        </div>
+        <div class="mt-6 flex items-center gap-4 text-xs text-slate-500">
+          <div class="flex -space-x-2">
+            <img src="https://i.pravatar.cc/100?img=1" class="h-7 w-7 rounded-full border-2 border-slate-900" alt="" />
+            <img src="https://i.pravatar.cc/100?img=8" class="h-7 w-7 rounded-full border-2 border-slate-900" alt="" />
+            <img src="https://i.pravatar.cc/100?img=3" class="h-7 w-7 rounded-full border-2 border-slate-900" alt="" />
+          </div>
+          <span>+500 devs ya lo usan • ★ 4.9/5</span>
+        </div>
+      </div>
+
+      <!-- right: terminal -->
+      <div class="reveal relative lg:pl-4" style="animation-delay:120ms">
+        <!-- blobs behind -->
+        <div class="pointer-events-none absolute -top-6 -right-6 h-40 w-40 rounded-full bg-green-500/20 blur-2xl"></div>
+        <div class="pointer-events-none absolute -bottom-6 -left-6 h-32 w-32 rounded-full bg-emerald-400/15 blur-2xl"></div>
+
+        <div class="relative overflow-hidden rounded-[20px] border border-slate-700/60 bg-slate-800/70 shadow-2xl backdrop-blur-xl">
+          <!-- titlebar -->
+          <div class="flex items-center justify-between border-b border-slate-700/60 bg-slate-900/60 px-4 py-3">
+            <div class="flex items-center gap-1.5">
+              <span class="h-3 w-3 rounded-full bg-red-500/80"></span>
+              <span class="h-3 w-3 rounded-full bg-yellow-500/80"></span>
+              <span class="h-3 w-3 rounded-full bg-green-500/80"></span>
+            </div>
+            <div class="flex gap-1.5 text-[11px]">
+              <span class="rounded-full bg-green-500 px-2.5 py-1 font-mono font-bold text-slate-900">JS</span>
+              <span class="rounded-full bg-slate-700 px-2.5 py-1 font-mono text-slate-300">Python</span>
+              <span class="hidden rounded-full bg-slate-700 px-2.5 py-1 font-mono text-slate-300 sm:inline">SQL</span>
+            </div>
+            <span class="hidden text-xs text-slate-500 sm:block">utils/format.ts</span>
+          </div>
+          <!-- code -->
+          <div class="relative">
+            <pre class="overflow-x-auto p-4 text-[12px] leading-6 sm:p-5 sm:text-[13px]"><code class="font-mono text-slate-200"><span class="text-slate-500">// guarda tu snippet favorito</span>
+<span class="text-violet-400">export</span> <span class="text-violet-400">async</span> <span class="text-blue-400">function</span> <span class="text-yellow-300">saveSnippet</span>(<span class="text-orange-300">code</span>: <span class="text-emerald-300">string</span>) &#123;
+  <span class="text-violet-400">const</span> &#123; <span class="text-orange-300">data</span> &#125; = <span class="text-violet-400">await</span> <span class="text-blue-300">supabase</span>.<span class="text-blue-300">from</span>(<span class="text-green-300">'snippets'</span>).<span class="text-blue-300">insert</span>(&#123; code &#125;)
+  <span class="text-violet-400">return</span> data <span class="text-slate-500">// &lt; 50ms</span>
+&#125;</code></pre>
+            <div class="absolute bottom-3 right-3 flex items-center gap-2">
+              <span class="hidden items-center gap-1.5 rounded-full border border-green-700/40 bg-green-500/15 px-3 py-1 font-mono text-xs text-green-400 sm:inline-flex">
+                <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span> guardado
+              </span>
+              <button class="rounded-lg bg-green-600 p-2 text-white shadow-lg">
+                <Icon name="copy" class="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+          <!-- bottom bar -->
+          <div class="flex items-center justify-between border-t border-slate-700/60 bg-slate-900/40 px-4 py-2.5 text-xs">
+            <span class="flex items-center gap-2 text-slate-400"><span class="h-2 w-2 rounded-full bg-green-500"></span> Categorías • Favoritos • Búsqueda</span>
+            <span class="font-mono text-slate-500">⌘K para buscar</span>
+          </div>
+        </div>
+
+        <!-- floating stats -->
+        <div class="absolute -left-2 top-8 hidden rounded-2xl border border-slate-700 bg-slate-800 px-3 py-2 shadow-xl sm:flex sm:items-center sm:gap-3 lg:-left-6">
+          <span class="rounded-lg bg-green-500/15 p-2 text-green-400"><Icon name="heartFilled" class="h-4 w-4" /></span>
+          <div>
+            <p class="text-xs font-bold leading-none text-slate-100">127 snippets</p>
+            <p class="text-[11px] text-slate-500">organizados</p>
+          </div>
+        </div>
+        <div class="absolute -right-2 bottom-10 hidden rounded-2xl border border-slate-700 bg-slate-800 px-3 py-2 shadow-xl sm:flex sm:items-center sm:gap-2 lg:-right-4">
+          <span class="h-2 w-2 rounded-full bg-green-500"></span>
+          <span class="text-xs font-semibold text-slate-200">Búsqueda &lt; 50ms</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .reveal{animation: reveal 0.7s cubic-bezier(0.16,1,0.3,1) both}
+  @keyframes reveal{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  @media(prefers-reduced-motion:reduce){.reveal{animation:none}}
+</style>

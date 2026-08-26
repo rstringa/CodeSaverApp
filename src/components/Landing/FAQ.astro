@@ -1,0 +1,41 @@
+---
+const faqs = [
+  { q:'¿Es gratis CodeSaverApp?', a:'Sí, 100% gratis. Sin tarjeta, sin trial. Crea tu cuenta y guarda snippets ilimitados. Usamos Supabase y lo mantenemos simple.' },
+  { q:'¿Mis snippets son privados?', a:'Totalmente. Cada snippet está ligado a tu usuario vía Supabase Auth y RLS. Nadie más puede verlos, ni siquiera por URL directa sin tu sesión.' },
+  { q:'¿Qué lenguajes soporta el highlight?', a:'Más de 100 vía highlight.js: JavaScript, TypeScript, Python, SQL, Go, Rust, PHP, Java, CSS, Bash y más. Se detecta automáticamente.' },
+  { q:'¿Puedo organizar por categorías?', a:'Sí. Crea, renombra y elimina categorías. Filtra por categoría y combina con búsqueda por texto. Las categorías vacías se pueden ocultar.' },
+  { q:'¿Funciona en el móvil?', a:'Diseño 100% responsive. Guarda desde el desktop y consulta desde el móvil. El sidebar se adapta a bottom-sheet en pantallas pequeñas.' },
+  { q:'¿Cómo funciona la búsqueda?', a:'Búsqueda instantánea por título, descripción y código. Sin recargar la página, resultados en milisegundos.' },
+  { q:'¿Puedo marcar favoritos o copiar rápido?', a:'Sí. Marca favoritos con el corazón y copia cualquier snippet en 1 click con feedback visual.' },
+  { q:'¿Puedo borrar mi cuenta?', a:'Sí, desde “Dar de baja mi cuenta” en el sidebar (solo visible logueado). Borra tu usuario, snippets y categorías asociadas.' },
+]
+---
+
+<section class="border-b border-slate-800 bg-slate-900 px-4 py-12 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-[900px]">
+    <div class="text-center">
+      <p class="font-mono text-xs uppercase tracking-[0.18em] text-green-500">FAQ</p>
+      <h2 class="mt-2 text-[clamp(1.6rem,4vw,2.4rem)] font-black tracking-tighter text-slate-100">Preguntas frecuentes</h2>
+    </div>
+    <div class="mt-8 divide-y divide-slate-800 rounded-[20px] border border-slate-700/50 bg-slate-800/30">
+      {faqs.map(f => (
+        <details class="group px-5 py-4 open:bg-slate-800/50 sm:px-6">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-semibold text-slate-100">
+            {f.q}
+            <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-slate-700 bg-slate-900 text-slate-400 transition group-open:rotate-45 group-open:border-green-700 group-open:text-green-400">+</span>
+          </summary>
+          <p class="mt-3 max-w-[70ch] text-sm leading-relaxed text-slate-400">{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+  <!-- JSON-LD -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity": faqs.map(f=>({"@type":"Question","name":f.q,"acceptedAnswer":{"@type":"Answer","text":f.a}}))
+  })} />
+</section>
+<style>
+  details summary::-webkit-details-marker{display:none}
+</style>

@@ -1,0 +1,31 @@
+---
+const steps = [
+  { n:'01', title:'Crea tu cuenta', desc:'Registro en 30 segundos. Email o Google, sin tarjeta.', code:'POST /api/auth/register → 201' },
+  { n:'02', title:'Guarda tu snippet', desc:'Título, lenguaje, categoría y código. Highlight automático.', code:'snippets.create({ title, code })' },
+  { n:'03', title:'Encuentra al instante', desc:'Busca por texto o filtra por categoría. Copia en 1 click.', code:'⌘K  →  copy(snippet)' },
+]
+---
+
+<section class="border-b border-slate-800 bg-slate-900 px-4 py-12 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-[1280px]">
+    <div class="mx-auto max-w-2xl text-center">
+      <p class="font-mono text-xs uppercase tracking-[0.18em] text-green-500">Cómo funciona</p>
+      <h2 class="mt-2 text-[clamp(1.6rem,4vw,2.4rem)] font-black tracking-tighter text-slate-100">De 0 a snippet en 3 pasos</h2>
+      <p class="mt-3 text-sm text-slate-400">Tan simple que duele no haberlo usado antes.</p>
+    </div>
+
+    <div class="relative mt-10 grid gap-6 md:grid-cols-3">
+      <!-- connector line desktop -->
+      <div class="pointer-events-none absolute left-[16%] right-[16%] top-[2.2rem] hidden h-px bg-gradient-to-r from-slate-700 via-green-700/50 to-slate-700 md:block"></div>
+
+      {steps.map(s => (
+        <div class="relative rounded-[20px] border border-slate-700/50 bg-slate-800/50 p-6 text-center backdrop-blur">
+          <div class="mx-auto flex h-11 w-11 items-center justify-center rounded-full border border-green-700/40 bg-green-500/10 font-mono text-sm font-black text-green-400">{s.n}</div>
+          <h3 class="mt-4 text-sm font-bold text-slate-100">{s.title}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate-400">{s.desc}</p>
+          <div class="mt-4 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 font-mono text-[11px] text-slate-500">{s.code}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

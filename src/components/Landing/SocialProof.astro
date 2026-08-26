@@ -1,0 +1,44 @@
+---
+---
+
+<section class="border-b border-slate-800 bg-slate-900/50">
+  <div class="mx-auto max-w-[1280px] px-4 py-6 sm:px-6 lg:px-8">
+    <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
+      <div class="grid w-full grid-cols-3 gap-4 sm:w-auto sm:gap-8">
+        <div>
+          <p class="font-mono text-2xl font-black tracking-tighter text-slate-100">+500</p>
+          <p class="text-xs text-slate-500">devs activos</p>
+        </div>
+        <div>
+          <p class="font-mono text-2xl font-black tracking-tighter text-slate-100">&lt;50ms</p>
+          <p class="text-xs text-slate-500">búsqueda media</p>
+        </div>
+        <div>
+          <p class="font-mono text-2xl font-black tracking-tighter text-slate-100">100%</p>
+          <p class="text-xs text-slate-500">tus snippets privados</p>
+        </div>
+      </div>
+      <div class="w-full overflow-hidden border-t border-slate-800 pt-4 sm:w-auto sm:border-t-0 sm:pt-0">
+        <p class="mb-2 text-center font-mono text-[11px] uppercase tracking-widest text-slate-500 sm:text-left">Lenguajes soportados</p>
+        <div class="marquee flex gap-2 overflow-hidden">
+          <div class="marquee-track flex shrink-0 gap-2">
+            {['JavaScript','TypeScript','Python','SQL','Go','Rust','PHP','CSS','Bash','Java'].map(l => (
+              <span class="whitespace-nowrap rounded-full border border-slate-700 bg-slate-800 px-3 py-1 font-mono text-xs text-slate-300">{l}</span>
+            ))}
+          </div>
+          <div aria-hidden="true" class="marquee-track flex shrink-0 gap-2">
+            {['JavaScript','TypeScript','Python','SQL','Go','Rust','PHP','CSS','Bash','Java'].map(l => (
+              <span class="whitespace-nowrap rounded-full border border-slate-700 bg-slate-800 px-3 py-1 font-mono text-xs text-slate-300">{l}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .marquee{mask: linear-gradient(to right, transparent, black 10%, black 90%, transparent)}
+  .marquee-track{animation: marquee 18s linear infinite}
+  @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+  @media(prefers-reduced-motion:reduce){.marquee-track{animation:none}}
+</style>

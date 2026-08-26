@@ -1,0 +1,87 @@
+---
+---
+
+<section id="demo" class="border-b border-slate-800 bg-slate-900 px-4 py-12 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-[1280px]">
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-widest text-green-500">Demo interactiva</p>
+        <h2 class="mt-2 text-2xl font-black tracking-tighter text-slate-100 sm:text-3xl">Proba la busqueda</h2>
+      </div>
+      <p class="max-w-[40ch] text-sm text-slate-400">Filtra por categoria como lo harias dentro de la app. Sin login, solo para ver la velocidad.</p>
+    </div>
+
+    <div class="mt-6 grid gap-6 lg:grid-cols-12">
+      <div class="flex gap-2 overflow-x-auto pb-2 lg:col-span-3 lg:flex-col lg:overflow-visible">
+        <button data-cat="all" class="cat-btn active whitespace-nowrap rounded-full border border-green-700 bg-green-600 px-4 py-2 font-mono text-xs font-bold text-white">Todos</button>
+        <button data-cat="js" class="cat-btn whitespace-nowrap rounded-full border border-slate-700 bg-slate-800 px-4 py-2 font-mono text-xs text-slate-300">JavaScript</button>
+        <button data-cat="python" class="cat-btn whitespace-nowrap rounded-full border border-slate-700 bg-slate-800 px-4 py-2 font-mono text-xs text-slate-300">Python</button>
+        <button data-cat="sql" class="cat-btn whitespace-nowrap rounded-full border border-slate-700 bg-slate-800 px-4 py-2 font-mono text-xs text-slate-300">SQL</button>
+        <button data-cat="css" class="cat-btn whitespace-nowrap rounded-full border border-slate-700 bg-slate-800 px-4 py-2 font-mono text-xs text-slate-300">CSS</button>
+      </div>
+
+      <div id="demo-grid" class="grid gap-4 sm:grid-cols-2 lg:col-span-9">
+        <article data-demo-cat="js" class="demo-card overflow-hidden rounded-xl border border-slate-700 bg-slate-800">
+          <div class="flex items-center justify-between border-b border-slate-700 bg-slate-900/50 px-3 py-2">
+            <span class="font-mono text-xs font-bold text-slate-300">debounce.js</span>
+            <span class="rounded-full bg-yellow-500/15 px-2 py-0.5 font-mono text-xs text-yellow-400">JS</span>
+          </div>
+          <pre class="p-3 font-mono text-xs leading-5 text-slate-300"><code>function debounce(fn, ms) &#123;
+  let t; return (...a) =&gt; &#123;
+    clearTimeout(t);
+    t=setTimeout(()=&gt;fn(...a), ms)
+  &#125;
+&#125;</code></pre>
+        </article>
+        <article data-demo-cat="python" class="demo-card overflow-hidden rounded-xl border border-slate-700 bg-slate-800">
+          <div class="flex items-center justify-between border-b border-slate-700 bg-slate-900/50 px-3 py-2">
+            <span class="font-mono text-xs font-bold text-slate-300">slugify.py</span>
+            <span class="rounded-full bg-blue-500/15 px-2 py-0.5 font-mono text-xs text-blue-400">Python</span>
+          </div>
+          <pre class="p-3 font-mono text-xs leading-5 text-slate-300"><code>import re
+def slugify(s):
+  return re.sub(r'[^a-z0-9]+','-',s.lower()).strip('-')</code></pre>
+        </article>
+        <article data-demo-cat="sql" class="demo-card overflow-hidden rounded-xl border border-slate-700 bg-slate-800">
+          <div class="flex items-center justify-between border-b border-slate-700 bg-slate-900/50 px-3 py-2">
+            <span class="font-mono text-xs font-bold text-slate-300">top_users.sql</span>
+            <span class="rounded-full bg-emerald-500/15 px-2 py-0.5 font-mono text-xs text-emerald-400">SQL</span>
+          </div>
+          <pre class="p-3 font-mono text-xs leading-5 text-slate-300"><code>SELECT user_id, COUNT(*) as n
+FROM snippets GROUP BY user_id
+ORDER BY n DESC LIMIT 10;</code></pre>
+        </article>
+        <article data-demo-cat="css" class="demo-card overflow-hidden rounded-xl border border-slate-700 bg-slate-800">
+          <div class="flex items-center justify-between border-b border-slate-700 bg-slate-900/50 px-3 py-2">
+            <span class="font-mono text-xs font-bold text-slate-300">glass.css</span>
+            <span class="rounded-full bg-pink-500/15 px-2 py-0.5 font-mono text-xs text-pink-400">CSS</span>
+          </div>
+          <pre class="p-3 font-mono text-xs leading-5 text-slate-300"><code>.glass&#123;
+  backdrop-filter: blur(12px);
+  border:1px solid rgb(255 255 255 / .1)
+&#125;</code></pre>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  const btns = document.querySelectorAll('.cat-btn');
+  const cards = document.querySelectorAll('.demo-card');
+  btns.forEach(b=> b.addEventListener('click', ()=>{
+    btns.forEach(x=>{
+      x.classList.remove('active','bg-green-600','text-white','border-green-700');
+      x.classList.add('bg-slate-800','text-slate-300','border-slate-700');
+    });
+    b.classList.add('active','bg-green-600','text-white','border-green-700');
+    b.classList.remove('bg-slate-800','text-slate-300','border-slate-700');
+    const cat = b.dataset.cat;
+    cards.forEach(c=>{
+      const show = cat==='all' || c.dataset.demoCat===cat;
+      c.style.display = show ? '' : 'none';
+    });
+  }));
+</script>
+<style>
+  .cat-btn.active{box-shadow:0 0 20px rgba(34,197,94,0.3)}
+</style>

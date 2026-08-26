@@ -1,0 +1,38 @@
+---
+import { Icon } from 'astro-icon/components'
+---
+
+<section class="border-b border-slate-800 bg-slate-900 px-4 py-12 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-[1280px]">
+    <div class="grid gap-6 lg:grid-cols-2">
+      <!-- antes -->
+      <div class="rounded-[20px] border border-slate-800 bg-slate-800/30 p-6 sm:p-8">
+        <p class="font-mono text-xs uppercase tracking-widest text-slate-500">Antes</p>
+        <h3 class="mt-2 text-xl font-bold tracking-tight text-slate-400">Código disperso, tiempo perdido</h3>
+        <ul class="mt-6 space-y-3 text-sm text-slate-500">
+          <li class="flex gap-2"><span class="text-red-400">✕</span> Notas en 5 apps distintas</li>
+          <li class="flex gap-2"><span class="text-red-400">✕</span> Buscar el mismo snippet 10 veces</li>
+          <li class="flex gap-2"><span class="text-red-400">✕</span> Gists sin categorías ni favoritos</li>
+          <li class="flex gap-2"><span class="text-red-400">✕</span> Sin acceso rápido desde el móvil</li>
+        </ul>
+        <div class="mt-6 rounded-xl border border-slate-700 bg-slate-900 p-3 font-mono text-xs text-slate-600">~/notas/random.txt ... sin organizar</div>
+      </div>
+      <!-- después -->
+      <div class="relative overflow-hidden rounded-[20px] border border-green-700/40 bg-gradient-to-br from-green-500/10 via-slate-800 to-slate-800 p-6 shadow-[0_0_40px_rgba(34,197,94,0.15)] sm:p-8">
+        <div class="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-green-500/15 blur-2xl"></div>
+        <p class="font-mono text-xs uppercase tracking-widest text-green-400">Con CodeSaverApp</p>
+        <h3 class="mt-2 text-xl font-black tracking-tight text-slate-100">Todo centralizado, a 1 click</h3>
+        <ul class="mt-6 space-y-3 text-sm text-slate-300">
+          <li class="flex gap-2"><span class="text-green-400">✓</span> Una sola biblioteca privada y segura</li>
+          <li class="flex gap-2"><span class="text-green-400">✓</span> Búsqueda instantánea por código o título</li>
+          <li class="flex gap-2"><span class="text-green-400">✓</span> Categorías + favoritos + copy rápido</li>
+          <li class="flex gap-2"><span class="text-green-400">✓</span> Accesible desde cualquier dispositivo</li>
+        </ul>
+        <div class="mt-6 flex flex-wrap gap-2">
+          <span class="rounded-full bg-green-600 px-3 py-1 font-mono text-xs font-bold text-white">Ahorra ~5h/mes</span>
+          <span class="rounded-full border border-slate-700 bg-slate-900 px-3 py-1 font-mono text-xs text-slate-300">Privado por defecto</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

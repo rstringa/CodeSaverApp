@@ -1,0 +1,26 @@
+---
+import Hero from './Hero.astro'
+import SocialProof from './SocialProof.astro'
+import FeaturesBento from './FeaturesBento.astro'
+import Benefits from './Benefits.astro'
+import HowItWorks from './HowItWorks.astro'
+import CodePreview from './CodePreview.astro'
+import FAQ from './FAQ.astro'
+import CTAFinal from './CTAFinal.astro'
+---
+
+<div class="landing bg-slate-900">
+  <Hero />
+  <SocialProof />
+  <FeaturesBento />
+  <Benefits />
+  <HowItWorks />
+  <CodePreview />
+  <FAQ />
+  <CTAFinal />
+</div>
+
+<style is:global>
+  .landing{scroll-behavior:smooth}
+  @media(prefers-reduced-motion:reduce){.landing{scroll-behavior:auto}}
+</style>
