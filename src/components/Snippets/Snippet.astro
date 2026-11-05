@@ -40,16 +40,16 @@ const getCatName = (id:any) => {
                 <span class="h-3 w-3 rounded-full bg-green-500/80"></span>
               </div>
               <div class="_snippet-top-actions flex items-center gap-1 shrink-0">
-                <button type="button" class="_toggle-favorite group/fav flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-red-400 transition" data-id={snippet.id} data-es-favorito={snippet.es_favorito ? "true" : "false"} title={snippet.es_favorito ? "Quitar de favoritos" : "Añadir a favoritos"}>
+                <button type="button" class="_toggle-favorite group/fav flex h-7 w-7 cursor-pointer items-center justify-center rounded border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-red-400 transition" data-id={snippet.id} data-es-favorito={snippet.es_favorito ? "true" : "false"} title={snippet.es_favorito ? "Quitar de favoritos" : "Añadir a favoritos"}>
                   <Icon name={snippet.es_favorito ? "heartFilled" : "heart"} class={`h-3.5 w-3.5 pointer-events-none ${snippet.es_favorito ? "text-red-500!" : "group-hover/fav:text-red-400"}`} />
                 </button>
-                <a href={`/snippet/${snippet.id}`} class="_link-snippet flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-green-400 transition" data-id={snippet.id} data-astro-prefetch="viewport" title="Ver detalle">
+                <a href={`/snippet/${snippet.id}`} class="_link-snippet flex h-7 w-7 cursor-pointer items-center justify-center roundedborder border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-green-400 transition" data-id={snippet.id} data-astro-prefetch="viewport" title="Ver detalle">
                   <Icon name="expand2" class="h-3.5 w-3.5 pointer-events-none" />
                 </a>
-                <button type="button" class="_edit-snippet flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-green-400 transition" data-id={snippet.id} title="Editar">
+                <button type="button" class="_edit-snippet flex h-7 w-7 cursor-pointer items-center justify-center rounded border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-green-400 transition" data-id={snippet.id} title="Editar">
                   <Icon name="edit" class="h-3.5 w-3.5 pointer-events-none" />
                 </button>
-                <button type="button" class="_delete-snippet flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-green-400 transition" data-id={snippet.id} title="Eliminar">
+                <button type="button" class="_delete-snippet flex h-7 w-7 cursor-pointer items-center justify-center rounded border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-green-400 transition" data-id={snippet.id} title="Eliminar">
                   <Icon name="delete" class="h-3.5 w-3.5 pointer-events-none" />
                 </button>
               </div>
