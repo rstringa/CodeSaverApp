@@ -285,23 +285,21 @@ function sanitizeInput(input) {
    DRAG & DROP PARA REORDENAR CATEGORÍAS
    Mantén pulsada una categoría ~300 ms y arrástrala para cambiar su posición.
    ========================================================================== */
-const LONG_PRESS_MS = 300;
-const MOVE_TOLERANCE = 8;
+const DRAG_START_DISTANCE = 4;
 
 interface CategoryDragState {
     pointerId: number;
     wrapper: HTMLElement;
+    handle: HTMLElement;
     startX: number;
     startY: number;
     offsetX: number;
     offsetY: number;
     ghost: HTMLElement | null;
-    timer: number | null;
     active: boolean;
 }
 
 let categoryDrag: CategoryDragState | null = null;
-let suppressCategoryClick = false;
 
 function getCategoryScroller(): HTMLElement | null {
     return document.querySelector('._categories-scroll');
@@ -315,10 +313,19 @@ function getCategoryWrappers(): HTMLElement[] {
 
 function resetCategoryDrag() {
     if (!categoryDrag) return;
-    if (categoryDrag.timer !== null) window.clearTimeout(categoryDrag.timer);
+
     categoryDrag.ghost?.remove();
     categoryDrag.wrapper.classList.remove('is-drag-placeholder');
     document.body.classList.remove('is-dragging-category');
+
+    try {
+        if (categoryDrag.handle.hasPointerCapture(categoryDrag.pointerId)) {
+            categoryDrag.handle.releasePointerCapture(categoryDrag.pointerId);
+        }
+    } catch {
+        // El puntero ya no está activo
+    }
+
     categoryDrag = null;
 }
 
@@ -345,7 +352,6 @@ function startCategoryDrag() {
     categoryDrag.ghost = ghost;
     wrapper.classList.add('is-drag-placeholder');
     document.body.classList.add('is-dragging-category');
-    suppressCategoryClick = true;
     window.getSelection()?.removeAllRanges();
 }
 
@@ -416,33 +422,33 @@ document.addEventListener('pointerdown', (event) => {
     if (event.button !== 0) return;
 
     const target = event.target as HTMLElement;
+    const handle = target.closest<HTMLElement>('._category-drag-handle');
+    if (!handle) return;
 
-    // No iniciar el arrastre desde acciones, edición o elementos interactivos
-    if (target.closest('._actions, ._category-item-actions, [contenteditable="true"]')) return;
-
-    const wrapper = target.closest<HTMLElement>('._category-wrapper');
+    const wrapper = handle.closest<HTMLElement>('._category-wrapper');
     if (!wrapper) return;
 
     if (categoryDrag) resetCategoryDrag();
 
-    const state: CategoryDragState = {
+    event.preventDefault();
+
+    try {
+        handle.setPointerCapture(event.pointerId);
+    } catch {
+        // Algunos navegadores no permiten capturar el puntero en este punto
+    }
+
+    categoryDrag = {
         pointerId: event.pointerId,
         wrapper,
+        handle,
         startX: event.clientX,
         startY: event.clientY,
         offsetX: 0,
         offsetY: 0,
         ghost: null,
-        timer: null,
         active: false,
     };
-
-    state.timer = window.setTimeout(() => {
-        if (!categoryDrag || categoryDrag.pointerId !== state.pointerId) return;
-        startCategoryDrag();
-    }, LONG_PRESS_MS);
-
-    categoryDrag = state;
 });
 
 document.addEventListener(
@@ -456,9 +462,9 @@ document.addEventListener(
                 event.clientY - categoryDrag.startY
             );
 
-            // Si se mueve antes de tiempo, se cancela la pulsación larga
-            if (distance > MOVE_TOLERANCE) resetCategoryDrag();
-            return;
+            if (distance <= DRAG_START_DISTANCE) return;
+
+            startCategoryDrag();
         }
 
         event.preventDefault();
@@ -476,35 +482,14 @@ document.addEventListener('pointerup', (event) => {
     if (!wasActive) return;
 
     saveCategoryOrder();
-    window.setTimeout(() => {
-        suppressCategoryClick = false;
-    }, 400);
 });
 
 document.addEventListener('pointercancel', () => {
     const wasActive = categoryDrag?.active ?? false;
     resetCategoryDrag();
 
-    if (wasActive) {
-        saveCategoryOrder();
-        window.setTimeout(() => {
-            suppressCategoryClick = false;
-        }, 400);
-    }
+    if (wasActive) saveCategoryOrder();
 });
-
-// Evita que el click de selección de categoría se dispare después de arrastrar
-document.addEventListener(
-    'click',
-    (event) => {
-        if (!suppressCategoryClick) return;
-
-        suppressCategoryClick = false;
-        event.preventDefault();
-        event.stopPropagation();
-    },
-    true
-);
 
 // Evita el arrastre nativo del enlace mientras se mantiene pulsada la categoría
 document.addEventListener('dragstart', (event) => {
@@ -512,9 +497,10 @@ document.addEventListener('dragstart', (event) => {
     if (target.closest('._category-wrapper')) event.preventDefault();
 });
 
-// En táctil, evita el menú contextual y el scroll mientras se arrastra
+// En táctil, evita el menú contextual mientras se usa el asa o se arrastra
 document.addEventListener('contextmenu', (event) => {
-    if (categoryDrag) event.preventDefault();
+    const target = event.target as HTMLElement;
+    if (categoryDrag || target.closest('._category-drag-handle')) event.preventDefault();
 });
 
 document.addEventListener(

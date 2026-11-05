@@ -87,6 +87,53 @@ body.logged-out ._sidebar {
     position: relative;
     -webkit-touch-callout: none;
 }
+._category-drag-handle {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 38px;
+    padding: 0;
+    transform: translateY(-50%);
+    border: 1px solid transparent;
+    border-left: none;
+    border-radius: 0 999px 999px 0;
+    background-color: transparent;
+    color: var(--color-slate-500);
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+}
+._category-wrapper:hover ._category-drag-handle,
+._category-drag-handle:hover,
+._category-drag-handle:focus-visible {
+    opacity: 1;
+}
+._category-drag-handle:active {
+    cursor: grabbing;
+}
+._category-drag-handle:focus-visible {
+    outline: 2px solid var(--color-green-600);
+    outline-offset: 2px;
+}
+._drag-grip {
+    width: 6px;
+    height: 16px;
+    background-image: radial-gradient(currentColor 1.2px, transparent 1.3px);
+    background-size: 4px 5px;
+    opacity: 0.9;
+    pointer-events: none;
+}
+._category-wrapper:has(._category-item-actions:not(.hidden)) ._category-drag-handle {
+    opacity: 0;
+    pointer-events: none;
+}
 ._category-wrapper.is-drag-placeholder {
     opacity: 0.35;
 }
