@@ -14,10 +14,23 @@ export const POST: APIRoute = async ({ request }) => {
     );
   }
 
+  // Calcular la última posición para añadir la nueva categoría al final
+  const { data: lastCategory } = await supabase
+    .from('categorias')
+    .select('orden')
+    .eq('usuario_id', usuario_id)
+    .order('orden', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  const nextOrden = (lastCategory?.orden ?? -1) + 1;
+
   // Crear categoría
   const { data, error } = await supabase.from('categorias').insert([
     {
       nombre: name,
+      usuario_id,
+      orden: nextOrden,
       // parent_id: body.parent_id,
     },
   ]);

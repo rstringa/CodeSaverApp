@@ -9,7 +9,9 @@ export async function listCategoriesFromUser() {
     const { data, error } = await supabase
         .from("categorias")
         .select("*")
-        .eq("usuario_id", userSessionId);
+        .eq("usuario_id", userSessionId)
+        .order("orden", { ascending: true })
+        .order("created_at", { ascending: true });
 
     if (error) {
         console.error("Error obteniendo categorías:", error);

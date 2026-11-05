@@ -18,7 +18,7 @@ h-auto max-h-[55vh] lg:max-h-none relative
 overflow-y-hidden  
  
 ">
-<div class="overflow-y-auto  h-auto max-h-[55vh] lg:max-h-none pr-2 lg:pr-0 pb-8 lg:pb-0 relative scrollbar-custom scroll-smooth"> 
+<div class="_categories-scroll overflow-y-auto  h-auto max-h-[55vh] lg:max-h-none pr-2 lg:pr-0 pb-8 lg:pb-0 relative scrollbar-custom scroll-smooth"> 
 <a
 title="Ver todos los snippets creados"
 class=`_category-item is-active _btn-normal justify-start! mb-3 px-3! py-3!
@@ -47,7 +47,7 @@ href="#" data-category_id='fav'>
 { 
     userLogged && categorias?.map((categoria) => (
         categoria.nombre != "Base" && (
-            <div>
+            <div class="_category-wrapper" data-category-wrapper-id=`${categoria.id}`>
              
 
              <a class="group _category-item _btn-normal

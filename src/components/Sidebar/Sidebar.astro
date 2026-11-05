@@ -82,6 +82,38 @@ body.logged-out ._sidebar {
 ._category-item:has(*[contenteditable="true"]) ._number {
     background-color: var(--color-slate-900);
 }  
+/* Drag & drop de categorías */
+._category-wrapper {
+    position: relative;
+    -webkit-touch-callout: none;
+}
+._category-wrapper.is-drag-placeholder {
+    opacity: 0.35;
+}
+._category-wrapper.is-drag-placeholder ._category-item {
+    border-style: dashed;
+    border-color: var(--color-green-700);
+}
+._drag-ghost {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.95;
+    transform: scale(1.02) rotate(-0.5deg);
+    box-shadow: 0 12px 30px rgb(0 0 0 / 0.45);
+    will-change: left, top;
+}
+._drag-ghost ._category-item {
+    margin-bottom: 0 !important;
+}
+body.is-dragging-category {
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: grabbing;
+}
+body.is-dragging-category ._category-item {
+    cursor: grabbing;
+}
 {/* ._category-item._actions-enabled ._category-item-actions {
     display: flex;
 }  */}

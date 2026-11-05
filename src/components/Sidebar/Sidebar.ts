@@ -281,5 +281,249 @@ function sanitizeInput(input) {
     return input.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
+/* ==========================================================================
+   DRAG & DROP PARA REORDENAR CATEGORÍAS
+   Mantén pulsada una categoría ~300 ms y arrástrala para cambiar su posición.
+   ========================================================================== */
+const LONG_PRESS_MS = 300;
+const MOVE_TOLERANCE = 8;
+
+interface CategoryDragState {
+    pointerId: number;
+    wrapper: HTMLElement;
+    startX: number;
+    startY: number;
+    offsetX: number;
+    offsetY: number;
+    ghost: HTMLElement | null;
+    timer: number | null;
+    active: boolean;
+}
+
+let categoryDrag: CategoryDragState | null = null;
+let suppressCategoryClick = false;
+
+function getCategoryScroller(): HTMLElement | null {
+    return document.querySelector('._categories-scroll');
+}
+
+function getCategoryWrappers(): HTMLElement[] {
+    const scroller = getCategoryScroller();
+    if (!scroller) return [];
+    return Array.from(scroller.querySelectorAll<HTMLElement>('._category-wrapper'));
+}
+
+function resetCategoryDrag() {
+    if (!categoryDrag) return;
+    if (categoryDrag.timer !== null) window.clearTimeout(categoryDrag.timer);
+    categoryDrag.ghost?.remove();
+    categoryDrag.wrapper.classList.remove('is-drag-placeholder');
+    document.body.classList.remove('is-dragging-category');
+    categoryDrag = null;
+}
+
+function startCategoryDrag() {
+    if (!categoryDrag) return;
+
+    const { wrapper, startX, startY } = categoryDrag;
+    const rect = wrapper.getBoundingClientRect();
+
+    categoryDrag.offsetX = startX - rect.left;
+    categoryDrag.offsetY = startY - rect.top;
+    categoryDrag.active = true;
+
+    const ghost = wrapper.cloneNode(true) as HTMLElement;
+    ghost.querySelectorAll('._category-item-actions').forEach((element) => element.remove());
+    ghost.classList.remove('is-active');
+    ghost.classList.add('_drag-ghost');
+    ghost.style.width = `${rect.width}px`;
+    ghost.style.height = `${rect.height}px`;
+    ghost.style.left = `${rect.left}px`;
+    ghost.style.top = `${rect.top}px`;
+    document.body.appendChild(ghost);
+
+    categoryDrag.ghost = ghost;
+    wrapper.classList.add('is-drag-placeholder');
+    document.body.classList.add('is-dragging-category');
+    suppressCategoryClick = true;
+    window.getSelection()?.removeAllRanges();
+}
+
+function autoScrollCategoryList(clientY: number) {
+    const scroller = getCategoryScroller();
+    if (!scroller || scroller.scrollHeight <= scroller.clientHeight) return;
+
+    const rect = scroller.getBoundingClientRect();
+    const edge = 40;
+
+    if (clientY < rect.top + edge) {
+        scroller.scrollTop -= 14;
+    } else if (clientY > rect.bottom - edge) {
+        scroller.scrollTop += 14;
+    }
+}
+
+function updateCategoryDragPosition(clientX: number, clientY: number) {
+    if (!categoryDrag?.active || !categoryDrag.ghost) return;
+
+    categoryDrag.ghost.style.left = `${clientX - categoryDrag.offsetX}px`;
+    categoryDrag.ghost.style.top = `${clientY - categoryDrag.offsetY}px`;
+
+    autoScrollCategoryList(clientY);
+
+    const scroller = getCategoryScroller();
+    if (!scroller) return;
+
+    const otherWrappers = getCategoryWrappers().filter(
+        (wrapper) => wrapper !== categoryDrag?.wrapper
+    );
+
+    const insertBefore = otherWrappers.find((wrapper) => {
+        const rect = wrapper.getBoundingClientRect();
+        return clientY < rect.top + rect.height / 2;
+    });
+
+    if (insertBefore) {
+        scroller.insertBefore(categoryDrag.wrapper, insertBefore);
+    } else if (otherWrappers.length > 0) {
+        scroller.appendChild(categoryDrag.wrapper);
+    }
+}
+
+async function saveCategoryOrder() {
+    const ids = getCategoryWrappers()
+        .map((wrapper) => wrapper.dataset.categoryWrapperId)
+        .filter((id): id is string => Boolean(id));
+
+    if (ids.length === 0) return;
+
+    try {
+        const response = await fetch('/api/reorderCategories', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ids }),
+        });
+
+        if (!response.ok) {
+            console.error('Error guardando el orden de las categorías:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error guardando el orden de las categorías:', error);
+    }
+}
+
+document.addEventListener('pointerdown', (event) => {
+    if (event.button !== 0) return;
+
+    const target = event.target as HTMLElement;
+
+    // No iniciar el arrastre desde acciones, edición o elementos interactivos
+    if (target.closest('._actions, ._category-item-actions, [contenteditable="true"]')) return;
+
+    const wrapper = target.closest<HTMLElement>('._category-wrapper');
+    if (!wrapper) return;
+
+    if (categoryDrag) resetCategoryDrag();
+
+    const state: CategoryDragState = {
+        pointerId: event.pointerId,
+        wrapper,
+        startX: event.clientX,
+        startY: event.clientY,
+        offsetX: 0,
+        offsetY: 0,
+        ghost: null,
+        timer: null,
+        active: false,
+    };
+
+    state.timer = window.setTimeout(() => {
+        if (!categoryDrag || categoryDrag.pointerId !== state.pointerId) return;
+        startCategoryDrag();
+    }, LONG_PRESS_MS);
+
+    categoryDrag = state;
+});
+
+document.addEventListener(
+    'pointermove',
+    (event) => {
+        if (!categoryDrag || event.pointerId !== categoryDrag.pointerId) return;
+
+        if (!categoryDrag.active) {
+            const distance = Math.hypot(
+                event.clientX - categoryDrag.startX,
+                event.clientY - categoryDrag.startY
+            );
+
+            // Si se mueve antes de tiempo, se cancela la pulsación larga
+            if (distance > MOVE_TOLERANCE) resetCategoryDrag();
+            return;
+        }
+
+        event.preventDefault();
+        updateCategoryDragPosition(event.clientX, event.clientY);
+    },
+    { passive: false }
+);
+
+document.addEventListener('pointerup', (event) => {
+    if (!categoryDrag || event.pointerId !== categoryDrag.pointerId) return;
+
+    const wasActive = categoryDrag.active;
+    resetCategoryDrag();
+
+    if (!wasActive) return;
+
+    saveCategoryOrder();
+    window.setTimeout(() => {
+        suppressCategoryClick = false;
+    }, 400);
+});
+
+document.addEventListener('pointercancel', () => {
+    const wasActive = categoryDrag?.active ?? false;
+    resetCategoryDrag();
+
+    if (wasActive) {
+        saveCategoryOrder();
+        window.setTimeout(() => {
+            suppressCategoryClick = false;
+        }, 400);
+    }
+});
+
+// Evita que el click de selección de categoría se dispare después de arrastrar
+document.addEventListener(
+    'click',
+    (event) => {
+        if (!suppressCategoryClick) return;
+
+        suppressCategoryClick = false;
+        event.preventDefault();
+        event.stopPropagation();
+    },
+    true
+);
+
+// Evita el arrastre nativo del enlace mientras se mantiene pulsada la categoría
+document.addEventListener('dragstart', (event) => {
+    const target = event.target as HTMLElement;
+    if (target.closest('._category-wrapper')) event.preventDefault();
+});
+
+// En táctil, evita el menú contextual y el scroll mientras se arrastra
+document.addEventListener('contextmenu', (event) => {
+    if (categoryDrag) event.preventDefault();
+});
+
+document.addEventListener(
+    'touchmove',
+    (event) => {
+        if (categoryDrag?.active) event.preventDefault();
+    },
+    { passive: false }
+);
+
 
 

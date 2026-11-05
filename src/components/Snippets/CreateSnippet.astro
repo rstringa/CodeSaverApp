@@ -10,6 +10,8 @@ if (userSessionId) {
 		.from('categorias')
 		.select('*')
 		.eq('usuario_id', userSessionId)
+		.order('orden', { ascending: true })
+		.order('created_at', { ascending: true })
 
 	if (error) console.error(error)
 	categorias = data

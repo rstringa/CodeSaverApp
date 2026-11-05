@@ -57,10 +57,10 @@ const getCatName = (id:any) => {
 
             {/* TITLE ROW */}
             <div class="px-4 pt-3 pb-2 flex items-center gap-2 min-w-0">
-              <h2 class="_snippet-title flex-1 min-w-0 truncate text-[16px] font-bold tracking-tight text-slate-100">
+              <h2 class="_snippet-title flex-1 min-w-0 max-w-fit truncate text-[16px] font-bold tracking-tight text-slate-100">
                 <a href={`/snippet/${snippet.id}`} class="truncate hover:text-green-400 transition" title={snippet.titulo}>{snippet.titulo}</a>
               </h2>
-              <Icon name="arrowRight" class="h-3.5 w-3.5 shrink-0 text-slate-500 group-hover:text-green-400 transition" />
+              <Icon name="arrowRight" class="relative top-px h-4 w-4 shrink-0 text-green-600 group-hover:text-green-400 transition" />
             </div>
 
             <!-- CONFIRM DELETE -->
